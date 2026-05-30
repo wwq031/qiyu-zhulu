@@ -70,16 +70,16 @@ public class CampaignService {
         if (state.getActionPoints() < 1) return mapOf("ok", false, "message", "行动点不足");
 
         // 查找该省敌人
-        Map<String, Object> enemyInfo = null;
-        List<Map<String, Object>> enemies = listEnemyProvinces(state);
-        for (Map<String, Object> e : enemies) {
-            if (provincePid.equals(e.get("pid"))) { enemyInfo = e; break; }
+        EnemyProvince enemyInfo = null;
+        List<EnemyProvince> enemies = listEnemyProvinces(state);
+        for (EnemyProvince e : enemies) {
+            if (provincePid.equals(e.getPid())) { enemyInfo = e; break; }
         }
         if (enemyInfo == null) return mapOf("ok", false, "message", "该省不是有效的攻击目标");
 
         // 跨区/互不侵犯检查
-        if ("faction".equals(enemyInfo.get("owner_type"))) {
-            String efid = (String) enemyInfo.get("owner_fid");
+        if ("faction".equals(enemyInfo.getOwnerType())) {
+            String efid = enemyInfo.getOwnerFid();
             var ef = engine.getFaction(efid).orElse(null);
             var pf = engine.getFaction(state.getPlayerFactionId()).orElse(null);
             if (ef != null && pf != null && !ef.getRegion().equals(pf.getRegion())) {
@@ -87,9 +87,9 @@ public class CampaignService {
                     return mapOf("ok", false, "message", "尚未统一本区域，无法跨区作战");
             }
             if (engine.hasNonAggression(state, state.getPlayerFactionId(), efid))
-                return mapOf("ok", false, "message", "与" + enemyInfo.get("owner") + "处于休战期，暂不可攻击");
+                return mapOf("ok", false, "message", "与" + enemyInfo.getOwner() + "处于休战期，暂不可攻击");
         }
-        if (Boolean.TRUE.equals(enemyInfo.get("in_campaign")))
+        if (enemyInfo.isInCampaign())
             return mapOf("ok", false, "message", "该省已有进行中的战役");
 
         if (attackerUnitIndices == null || attackerUnitIndices.isEmpty())
@@ -136,9 +136,9 @@ public class CampaignService {
         }
 
         // 生成防御部队
-        String enemyFid = (String) enemyInfo.get("owner_fid");
-        String enemyType = (String) enemyInfo.get("owner_type");
-        String terrain = (String) enemyInfo.get("terrain");
+        String enemyFid = enemyInfo.getOwnerFid();
+        String enemyType = enemyInfo.getOwnerType();
+        String terrain = enemyInfo.getTerrain();
         List<Unit> defending = generateEnemyGarrison(state, provincePid,
                 "npc".equals(enemyType) || "npc_faction".equals(enemyType) ? null : enemyFid);
 
@@ -176,12 +176,12 @@ public class CampaignService {
         Campaign camp = new Campaign();
         camp.setId("camp_" + state.getTurn() + "_" + state.getActiveCampaigns().size());
         camp.setProvince(provincePid);
-        camp.setProvinceName((String) enemyInfo.get("name"));
+        camp.setProvinceName(enemyInfo.getName());
         camp.setTerrain(terrain);
         camp.setAttackerFaction(state.getPlayerFactionId());
         camp.setAttackerName(fs.getName());
         camp.setDefenderFaction(enemyFid);
-        camp.setDefenderName((String) enemyInfo.get("owner"));
+        camp.setDefenderName(enemyInfo.getOwner());
         camp.setDefenderType(enemyType);
         camp.setAttackerUnits(immediate.stream().map(Unit::getName).collect(Collectors.toList()));
         camp.setDefenderUnits(defending.stream().map(Unit::getName).collect(Collectors.toList()));
@@ -213,7 +213,7 @@ public class CampaignService {
             Map<String, Object> tinfo = allTactics.get(t);
             tacNames.add(tinfo != null ? (String) tinfo.get("name") : t);
         }
-        StringBuilder msg = new StringBuilder("⚔ 战役开始：进攻" + enemyInfo.get("name")
+        StringBuilder msg = new StringBuilder("⚔ 战役开始：进攻" + enemyInfo.getName()
                 + " | 战术：" + String.join("/", tacNames)
                 + " | 我军" + immediate.size() + "支 vs 敌军" + defending.size() + "支");
         if (!reinforcements.isEmpty()) msg.append(" | ").append(reinforcements.size()).append("支行军途中");
@@ -678,7 +678,7 @@ public class CampaignService {
 
     /** 列出所有可攻击的敌方省份 */
     @SuppressWarnings("unchecked")
-    public List<Map<String, Object>> listEnemyProvinces(GameState state) {
+    public List<EnemyProvince> listEnemyProvinces(GameState state) {
         FactionState fs = state.getFactionState();
         Set<String> myTerrs = new HashSet<>(fs.getTerritories());
         String myRegion = engine.getFaction(state.getPlayerFactionId()).map(FactionDefinition::getRegion).orElse("");
@@ -698,7 +698,7 @@ public class CampaignService {
             fidNames.put(fid, afs.getName());
         }
 
-        List<Map<String, Object>> enemies = new ArrayList<>();
+        List<EnemyProvince> enemies = new ArrayList<>();
         Map<String, String> nameToOwner = new HashMap<>();
         Map<String, String> nameToOwnerFid = new HashMap<>();
         for (var e : fidTerritories.entrySet()) {
@@ -727,8 +727,8 @@ public class CampaignService {
                 int dist = distResult[0] != null ? ((Number) distResult[0]).intValue() : 999;
                 if (dist > 3) continue;
 
-                enemies.add(mapOf("pid", pid, "name", pname, "terrain", p.getTerrain(), "type", p.getType(),
-                        "owner", owner, "owner_fid", ofid, "owner_type", "faction", "in_campaign", false));
+                enemies.add(new EnemyProvince(pid, pname, p.getTerrain(), p.getType(),
+                        owner, ofid, "faction", false));
             }
         }
 
@@ -746,11 +746,11 @@ public class CampaignService {
                     if (myTerrs.contains(tname)) continue;
                     String pid = engine.getPidByName(tname);
                     if (pid == null) continue;
-                    if (enemies.stream().anyMatch(e -> pid.equals(e.get("pid")))) continue;
+                    if (enemies.stream().anyMatch(e -> pid.equals(e.getPid()))) continue;
                     Province p = engine.getProvince(pid);
-                    enemies.add(mapOf("pid", pid, "name", tname, "terrain", p != null ? p.getTerrain() : "平原",
-                            "type", p != null ? p.getType() : "", "owner", ndata.getName(), "owner_fid", nid,
-                            "owner_type", "npc", "in_campaign", false));
+                    enemies.add(new EnemyProvince(pid, tname,
+                            p != null ? p.getTerrain() : "平原", p != null ? p.getType() : "",
+                            ndata.getName(), nid, "npc", false));
                 }
             }
         }
