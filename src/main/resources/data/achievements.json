@@ -1,0 +1,303 @@
+{
+  "description": "七域逐鹿 · 局末统计与成就系统。stats_tracker 在游戏过程中由 GM 维护，终局时按 achievements 条件判定解锁。",
+
+  "stats_tracker_schema": {
+    "battles_fought": 0,
+    "battles_won": 0,
+    "betrayals": 0,
+    "alliances_formed": 0,
+    "resolutions_enacted": 0,
+    "regions_conquered": 0,
+    "total_turns": 0,
+    "epic_events_triggered": 0,
+    "foreign_powers_defied": 0,
+    "max_territory_count": 0,
+    "peak_military": 0,
+    "peak_economy": 0,
+    "wars_declared": 0,
+    "wars_received": 0,
+    "factions_eliminated": 0,
+    "naval_battles_won": 0
+  },
+
+  "achievements": [
+    {
+      "id": "first_blood",
+      "name": "初试锋芒",
+      "desc": "赢得第一场战斗",
+      "category": "征战",
+      "icon": "⚔",
+      "condition": "battles_won >= 1",
+      "flavor": "剑出鞘，便见血。"
+    },
+    {
+      "id": "hundred_battles",
+      "name": "百战不殆",
+      "desc": "累计赢得100场战斗",
+      "category": "征战",
+      "icon": "⚔",
+      "condition": "battles_won >= 100",
+      "flavor": "百战之将，闻鼓而进。"
+    },
+    {
+      "id": "blitzkrieg",
+      "name": "闪电战",
+      "desc": "在20回合内统一本区域",
+      "category": "征战",
+      "icon": "⚡",
+      "condition": "phase >= 4 AND total_turns <= 20",
+      "flavor": "天下武功，唯快不破。"
+    },
+    {
+      "id": "regional_hegemon",
+      "name": "一方霸主",
+      "desc": "统一一个区域",
+      "category": "征战",
+      "icon": "🏛",
+      "condition": "regions_conquered >= 1",
+      "flavor": "裂土称雄，方知天下之大。"
+    },
+    {
+      "id": "half_empire",
+      "name": "半壁江山",
+      "desc": "控制四个以上区域",
+      "category": "征战",
+      "icon": "🏛",
+      "condition": "regions_conquered >= 4",
+      "flavor": "半壁在手，天下在望。"
+    },
+    {
+      "id": "total_unification",
+      "name": "天下归一",
+      "desc": "统一全国（全国统一型胜利）",
+      "category": "征战",
+      "icon": "👑",
+      "condition": "victory_type == 'unification'",
+      "flavor": "江山一统，四海归心。"
+    },
+    {
+      "id": "industry_giant",
+      "name": "工业巨人",
+      "desc": "工业值达到100",
+      "category": "内政",
+      "icon": "🏭",
+      "condition": "peak_industry >= 100",
+      "flavor": "烟囱如林，机器如兽。"
+    },
+    {
+      "id": "granary",
+      "name": "天下粮仓",
+      "desc": "农业值达到100",
+      "category": "内政",
+      "icon": "🌾",
+      "condition": "peak_agriculture >= 100",
+      "flavor": "仓廪实而知礼节。"
+    },
+    {
+      "id": "economic_miracle",
+      "name": "富可敌国",
+      "desc": "经济值达到100",
+      "category": "内政",
+      "icon": "💰",
+      "condition": "peak_economy >= 100",
+      "flavor": "每一枚铜板都在歌唱。"
+    },
+    {
+      "id": "tech_pioneer",
+      "name": "科技先锋",
+      "desc": "完成全部三级科技研发",
+      "category": "内政",
+      "icon": "🔬",
+      "condition": "techs_completed >= 12",
+      "flavor": "站在巨人的肩膀上仰望星辰。"
+    },
+    {
+      "id": "resolution_king",
+      "name": "政令如雨",
+      "desc": "累计颁布20项以上决议",
+      "category": "内政",
+      "icon": "📜",
+      "condition": "resolutions_enacted >= 20",
+      "flavor": "法令如雪片，国体日新月异。"
+    },
+    {
+      "id": "diplomatic_master",
+      "name": "纵横家",
+      "desc": "同时与5个势力保持军事同盟",
+      "category": "外交",
+      "icon": "🌐",
+      "condition": "max_concurrent_alliances >= 5",
+      "flavor": "合纵连横，天下为棋盘。"
+    },
+    {
+      "id": "treaty_crusher",
+      "name": "条约粉碎机",
+      "desc": "累计废除或撕毁条约5次以上",
+      "category": "外交",
+      "icon": "💥",
+      "condition": "treaties_broken >= 5",
+      "flavor": "墨迹未干，炮声已响。"
+    },
+    {
+      "id": "foreign_defier",
+      "name": "列强挑战者",
+      "desc": "累计对抗列强干涉3次以上并获胜",
+      "category": "外交",
+      "icon": "⚠",
+      "condition": "foreign_powers_defied >= 3",
+      "flavor": "炮舰政策，到此为止。"
+    },
+    {
+      "id": "comeback",
+      "name": "绝地翻盘",
+      "desc": "军事值曾经≤20，最终统一全国",
+      "category": "特殊",
+      "icon": "🔥",
+      "condition": "min_military <= 20 AND victory_type == 'unification'",
+      "flavor": "困兽犹斗，何况人乎？"
+    },
+    {
+      "id": "pacifist",
+      "name": "和平主义者",
+      "desc": "全程从未主动向其他势力宣战",
+      "category": "特殊",
+      "icon": "🕊",
+      "condition": "wars_declared == 0",
+      "flavor": "不战而屈人之兵，善之善者也。"
+    },
+    {
+      "id": "betrayal_king",
+      "name": "背刺之王",
+      "desc": "主动撕毁同盟条约3次以上",
+      "category": "特殊",
+      "icon": "🗡",
+      "condition": "betrayals_committed >= 3",
+      "flavor": "盟约不如废纸，唯有利益永恒。"
+    },
+    {
+      "id": "lone_wolf",
+      "name": "孤家寡人",
+      "desc": "全程没有任何军事同盟",
+      "category": "特殊",
+      "icon": "🐺",
+      "condition": "alliances_formed == 0",
+      "flavor": "不信任何人的承诺，只信自己的枪。"
+    },
+    {
+      "id": "speed_run",
+      "name": "速通王者",
+      "desc": "在60回合内达成任意胜利",
+      "category": "特殊",
+      "icon": "⏱",
+      "condition": "total_turns <= 60 AND victory_achieved == true",
+      "flavor": "历史不等人，而你比历史更快。"
+    },
+    {
+      "id": "independence_victory",
+      "name": "不羁之域",
+      "desc": "以区域独立型胜利结束游戏",
+      "category": "结局",
+      "icon": "🏳",
+      "condition": "victory_type == 'independence'",
+      "flavor": "不是所有归宿都是统一。"
+    },
+    {
+      "id": "revolution_victory",
+      "name": "红旗插遍",
+      "desc": "以革命胜利型胜利结束游戏",
+      "category": "结局",
+      "icon": "☭",
+      "condition": "victory_type == 'revolution'",
+      "flavor": "旧世界打个落花流水。"
+    },
+    {
+      "id": "glorious_defeat",
+      "name": "虽败犹荣",
+      "desc": "势力覆灭但存活超过80回合",
+      "category": "结局",
+      "icon": "💀",
+      "condition": "defeated == true AND total_turns >= 80",
+      "flavor": "倒下的是旗帜，不是尊严。"
+    },
+    {
+      "id": "naval_dominance",
+      "name": "海权霸主",
+      "desc": "海军power达到100",
+      "category": "征战",
+      "icon": "⚓",
+      "condition": "peak_naval_power >= 100",
+      "flavor": "海洋不属于强者，而属于你。"
+    },
+    {
+      "id": "epic_witness",
+      "name": "历史见证者",
+      "desc": "触发全部史诗事件（14个）",
+      "category": "特殊",
+      "icon": "📖",
+      "condition": "epic_events_triggered >= 14",
+      "flavor": "你亲历了每一个转折点。"
+    },
+    {
+      "id": "chain_master",
+      "name": "命运抉择者",
+      "desc": "完成全部5条事件链",
+      "category": "特殊",
+      "icon": "🔗",
+      "condition": "chains_completed >= 5",
+      "flavor": "每一次抉择，都重写了历史。"
+    }
+  ],
+
+  "achievement_categories": {
+    "征战": "军事征服与领土扩张",
+    "内政": "经济发展与国内建设",
+    "外交": "国际关系与条约博弈",
+    "特殊": "独特玩法与极限挑战",
+    "结局": "不同胜利路径与终局"
+  },
+
+  "endgame_summary_template": {
+    "header": "\033[1;93m╔══════════════════════════════════╗\033[0m\n\033[1;93m║\033[0m  \033[1;93m终 局 统 计\033[0m                      \033[1;93m║\033[0m\n\033[1;93m╚══════════════════════════════════╝\033[0m",
+    "sections": [
+      {
+        "title": "势力档案",
+        "fields": [
+          {"label": "势力", "key": "faction_name"},
+          {"label": "进化路径", "key": "evolution_path"},
+          {"label": "最终阶段", "key": "final_phase"},
+          {"label": "存活回合", "key": "total_turns"}
+        ]
+      },
+      {
+        "title": "征战统计",
+        "fields": [
+          {"label": "战斗总次数", "key": "battles_fought"},
+          {"label": "获胜次数", "key": "battles_won"},
+          {"label": "胜率", "key": "win_rate_formatted"},
+          {"label": "宣战次数", "key": "wars_declared"},
+          {"label": "被宣战次数", "key": "wars_received"},
+          {"label": "消灭势力数", "key": "factions_eliminated"},
+          {"label": "统一区域数", "key": "regions_conquered"}
+        ]
+      },
+      {
+        "title": "治国统计",
+        "fields": [
+          {"label": "颁布决议数", "key": "resolutions_enacted"},
+          {"label": "触发史诗事件", "key": "epic_events_triggered"},
+          {"label": "完成事件链", "key": "chains_completed"},
+          {"label": "组建同盟数", "key": "alliances_formed"},
+          {"label": "列强对抗次数", "key": "foreign_powers_defied"},
+          {"label": "巅峰军事值", "key": "peak_military"},
+          {"label": "巅峰经济值", "key": "peak_economy"}
+        ]
+      }
+    ],
+    "achievements_section": {
+      "title": "成就达成",
+      "format": " \033[1;97m[{icon}]\033[0m \033[1;92m{name}\033[0m  \033[90m— {flavor}\033[0m",
+      "locked_format": " \033[90m[🔒] {name}  [未解锁]\033[0m"
+    },
+    "footer": "\033[90m感谢游玩《七域逐鹿》。历史因你的选择而不同。\033[0m"
+  }
+}

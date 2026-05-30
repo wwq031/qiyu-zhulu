@@ -1,0 +1,2387 @@
+[
+  {
+    "name_zh": "安江",
+    "name_en": "An Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.544016025517982,
+    "lng": 105.18788569167481
+  },
+  {
+    "name_zh": "巴地头顿",
+    "name_en": "Bà Rịa–Vũng Tàu",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.552692413906527,
+    "lng": 107.25729153158845
+  },
+  {
+    "name_zh": "北江",
+    "name_en": "Bắc Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.388643295299598,
+    "lng": 106.54629023941499
+  },
+  {
+    "name_zh": "北𣴓",
+    "name_en": "Bắc Kạn",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.25552809474069,
+    "lng": 105.85570571013746
+  },
+  {
+    "name_zh": "薄辽",
+    "name_en": "Bạc Liêu",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.338424800536623,
+    "lng": 105.49802219542205
+  },
+  {
+    "name_zh": "北宁",
+    "name_en": "Bắc Ninh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.135252139936316,
+    "lng": 106.17561293936018
+  },
+  {
+    "name_zh": "槟椥",
+    "name_en": "Bến Tre",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.105780721145347,
+    "lng": 106.47934153842283
+  },
+  {
+    "name_zh": "平定",
+    "name_en": "Bình Định",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 14.104693805698156,
+    "lng": 108.98431306965321
+  },
+  {
+    "name_zh": "平阳",
+    "name_en": "Bình Dương",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.202474378455609,
+    "lng": 106.68239169423593
+  },
+  {
+    "name_zh": "平福",
+    "name_en": "Bình Phước",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.756695983978405,
+    "lng": 106.92695351141735
+  },
+  {
+    "name_zh": "平顺",
+    "name_en": "Bình Thuận",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.104087718749577,
+    "lng": 108.01917691914385
+  },
+  {
+    "name_zh": "金瓯",
+    "name_en": "Cà Mau",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.063472605516981,
+    "lng": 105.04274708639205
+  },
+  {
+    "name_zh": "芹苴",
+    "name_en": "Cần Thơ",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.102001290633465,
+    "lng": 105.55267562786833
+  },
+  {
+    "name_zh": "高平",
+    "name_en": "Cao Bằng",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.7163342244641,
+    "lng": 106.08109157934308
+  },
+  {
+    "name_zh": "昆岛",
+    "name_en": "Côn Đảo",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 8.669671206011401,
+    "lng": 106.59064022056978
+  },
+  {
+    "name_zh": "岘港",
+    "name_en": "Đà Nẵng",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 16.06798020760061,
+    "lng": 108.11209061517887
+  },
+  {
+    "name_zh": "多乐",
+    "name_en": "Đắk Lắk",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 12.81289255959904,
+    "lng": 108.24028026707448
+  },
+  {
+    "name_zh": "多农",
+    "name_en": "Đắk Nông",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 12.267092458987129,
+    "lng": 107.69854182796567
+  },
+  {
+    "name_zh": "奠边",
+    "name_en": "Điện Biên",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.732549636780462,
+    "lng": 103.02273524726715
+  },
+  {
+    "name_zh": "同奈",
+    "name_en": "Đồng Nai",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.043929069615192,
+    "lng": 107.16472163032422
+  },
+  {
+    "name_zh": "同塔",
+    "name_en": "Đồng Tháp",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.56593587716611,
+    "lng": 105.62279184859588
+  },
+  {
+    "name_zh": "嘉莱",
+    "name_en": "Gia Lai",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 13.81512048938987,
+    "lng": 108.247376595075
+  },
+  {
+    "name_zh": "河江",
+    "name_en": "Hà Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.775932549869278,
+    "lng": 104.958392813199
+  },
+  {
+    "name_zh": "河南",
+    "name_en": "Hà Nam",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.52360065373645,
+    "lng": 106.01848455828679
+  },
+  {
+    "name_zh": "河内",
+    "name_en": "Hà Nội\t",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.975586997553652,
+    "lng": 105.77722691520529
+  },
+  {
+    "name_zh": "河静",
+    "name_en": "Hà Tĩnh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 18.296406387231496,
+    "lng": 105.78216900939005
+  },
+  {
+    "name_zh": "海阳",
+    "name_en": "Hải Dương",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.96115359008702,
+    "lng": 106.45121458107513
+  },
+  {
+    "name_zh": "海防",
+    "name_en": "Hải Phòng",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.852428037219983,
+    "lng": 106.69357957265541
+  },
+  {
+    "name_zh": "后江",
+    "name_en": "Hậu Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.783798527821164,
+    "lng": 105.58749449050057
+  },
+  {
+    "name_zh": "胡志明市",
+    "name_en": "Ho Chi Minh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.724914458192178,
+    "lng": 106.68144651658126
+  },
+  {
+    "name_zh": "和平",
+    "name_en": "Hòa Bình",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.661450531766338,
+    "lng": 105.38755089157499
+  },
+  {
+    "name_zh": "兴安",
+    "name_en": "Hưng Yên",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.837043965636294,
+    "lng": 106.1345891806142
+  },
+  {
+    "name_zh": "庆和",
+    "name_en": "Khánh Hòa",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 12.331981881707705,
+    "lng": 109.03402839855916
+  },
+  {
+    "name_zh": "坚江",
+    "name_en": "Kiên Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.970779842693187,
+    "lng": 105.05913042835142
+  },
+  {
+    "name_zh": "昆嵩",
+    "name_en": "Kon Tum",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 14.701830197088569,
+    "lng": 107.8903811128921
+  },
+  {
+    "name_zh": "莱州",
+    "name_en": "Lai Châu",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.310718021408412,
+    "lng": 103.21211319045938
+  },
+  {
+    "name_zh": "林同",
+    "name_en": "Lâm Đồng",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.754006381539119,
+    "lng": 108.08868717940881
+  },
+  {
+    "name_zh": "谅山",
+    "name_en": "Lạng Sơn",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.840134251219414,
+    "lng": 106.62862456875501
+  },
+  {
+    "name_zh": "老街",
+    "name_en": "Lào Cai",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.347932696301125,
+    "lng": 104.12182357728113
+  },
+  {
+    "name_zh": "隆安",
+    "name_en": "Long An",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.727650109402976,
+    "lng": 106.15160059965015
+  },
+  {
+    "name_zh": "南定",
+    "name_en": "Nam Định",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.258080070126844,
+    "lng": 106.26394857432868
+  },
+  {
+    "name_zh": "义安",
+    "name_en": "Nghệ An",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 19.253685748236478,
+    "lng": 104.9398779661357
+  },
+  {
+    "name_zh": "宁平",
+    "name_en": "Ninh Bình",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.23516393745701,
+    "lng": 105.91304352468089
+  },
+  {
+    "name_zh": "宁顺",
+    "name_en": "Ninh Thuận",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.707362820932625,
+    "lng": 108.88051650152396
+  },
+  {
+    "name_zh": "富寿",
+    "name_en": "Phú Thọ",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.305880463650798,
+    "lng": 105.19718039496898
+  },
+  {
+    "name_zh": "富安",
+    "name_en": "Phú Yên",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 13.172799662877571,
+    "lng": 109.07246937549007
+  },
+  {
+    "name_zh": "广平",
+    "name_en": "Quảng Bình",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 17.533731825178947,
+    "lng": 106.3245292114893
+  },
+  {
+    "name_zh": "广南",
+    "name_en": "Quảng Nam",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 15.607424009704975,
+    "lng": 107.99009821338278
+  },
+  {
+    "name_zh": "广义",
+    "name_en": "Quảng Ngãi",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 15.006564749277532,
+    "lng": 108.69107836342758
+  },
+  {
+    "name_zh": "广宁",
+    "name_en": "Quảng Ninh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.27841524072631,
+    "lng": 107.28239986537147
+  },
+  {
+    "name_zh": "广治",
+    "name_en": "Quảng Trị",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 16.770597553342952,
+    "lng": 106.93951782289275
+  },
+  {
+    "name_zh": "朔庄",
+    "name_en": "Sóc Trăng",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.578129211335817,
+    "lng": 105.92057006114477
+  },
+  {
+    "name_zh": "山罗",
+    "name_en": "Sơn La",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.166008861613037,
+    "lng": 104.09824360301916
+  },
+  {
+    "name_zh": "西宁",
+    "name_en": "Tây Ninh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 11.406710175482594,
+    "lng": 106.17385607012743
+  },
+  {
+    "name_zh": "太平",
+    "name_en": "Thái Bình",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.529321562634376,
+    "lng": 106.4306885306891
+  },
+  {
+    "name_zh": "太原",
+    "name_en": "Thái Nguyên",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.682831691763816,
+    "lng": 105.87025816661058
+  },
+  {
+    "name_zh": "清化",
+    "name_en": "Thanh Hóa",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 20.018088250210273,
+    "lng": 105.38155572674425
+  },
+  {
+    "name_zh": "承天顺化",
+    "name_en": "Thừa Thiên Huế",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 16.343598609259374,
+    "lng": 107.53608536790671
+  },
+  {
+    "name_zh": "前江",
+    "name_en": "Tiền Giang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.38854103827029,
+    "lng": 106.33887692313597
+  },
+  {
+    "name_zh": "茶荣",
+    "name_en": "Trà Vinh",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 9.858376472948542,
+    "lng": 106.29940394269961
+  },
+  {
+    "name_zh": "宣光",
+    "name_en": "Tuyên Quang",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 22.117690852438354,
+    "lng": 105.27881199463775
+  },
+  {
+    "name_zh": "永隆",
+    "name_en": "Vĩnh Long",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 10.132793409687368,
+    "lng": 105.95204464235975
+  },
+  {
+    "name_zh": "永福",
+    "name_en": "Vĩnh Phúc",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.35991716215194,
+    "lng": 105.6405086932533
+  },
+  {
+    "name_zh": "安沛",
+    "name_en": "Yên Bái",
+    "country_iso": "VNM",
+    "country_name": "越南",
+    "region": "lingnan",
+    "lat": 21.76494757961308,
+    "lng": 104.60617769842585
+  },
+  {
+    "name_zh": "黎逸府",
+    "name_en": "Roi Et Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.907465044793478,
+    "lng": 103.81707192877138
+  },
+  {
+    "name_zh": "帕尧府",
+    "name_en": "Phayao Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 19.207624617538723,
+    "lng": 100.18902646814705
+  },
+  {
+    "name_zh": "北榄坡府",
+    "name_en": "Nakhon Sawan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.693642722226743,
+    "lng": 100.14051266688355
+  },
+  {
+    "name_zh": "廊磨喃蒲府",
+    "name_en": "Nong Bua Lam Phu Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.206335502127953,
+    "lng": 102.28946737793319
+  },
+  {
+    "name_zh": "北柳府",
+    "name_en": "Chachoengsao Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.592375653976784,
+    "lng": 101.43378876321478
+  },
+  {
+    "name_zh": "素林府",
+    "name_en": "Surin Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.889401932277076,
+    "lng": 103.66806035026376
+  },
+  {
+    "name_zh": "呵叻府",
+    "name_en": "Nakhon Ratchasima Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.944788110901913,
+    "lng": 102.12202340468689
+  },
+  {
+    "name_zh": "素可泰府",
+    "name_en": "Sukhothai Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.233026751894716,
+    "lng": 99.71704664939415
+  },
+  {
+    "name_zh": "佛丕府",
+    "name_en": "Phetchaburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 12.939490290552625,
+    "lng": 99.62447943941241
+  },
+  {
+    "name_zh": "猜也蓬府",
+    "name_en": "Chaiyaphum Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.977497008808255,
+    "lng": 101.78929775764168
+  },
+  {
+    "name_zh": "碧差汶府",
+    "name_en": "Phetchabun Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.284249270533763,
+    "lng": 101.136715251688
+  },
+  {
+    "name_zh": "素叻他尼府",
+    "name_en": "Surat Thani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 9.031254876185146,
+    "lng": 99.06697667161455
+  },
+  {
+    "name_zh": "四色菊府",
+    "name_en": "Si Sa Ket Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.841968313236723,
+    "lng": 104.37047771183201
+  },
+  {
+    "name_zh": "廊开府",
+    "name_en": "Nong Khai Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.95403071176265,
+    "lng": 102.79519676826561
+  },
+  {
+    "name_zh": "曼谷",
+    "name_en": "Bangkok",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.764839922781073,
+    "lng": 100.61376549972479
+  },
+  {
+    "name_zh": "孔敬府",
+    "name_en": "Khon Kaen Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.403564156268644,
+    "lng": 102.59002357083902
+  },
+  {
+    "name_zh": "黎府",
+    "name_en": "Loei Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.41261216793105,
+    "lng": 101.64532969866053
+  },
+  {
+    "name_zh": "北标府",
+    "name_en": "Saraburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.614548177301279,
+    "lng": 101.0000455567342
+  },
+  {
+    "name_zh": "乌泰他尼府",
+    "name_en": "Uthai Thani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.32484080623611,
+    "lng": 99.47120246371124
+  },
+  {
+    "name_zh": "春蓬府",
+    "name_en": "Chumphon Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 10.34311179967099,
+    "lng": 99.08851980503792
+  },
+  {
+    "name_zh": "加拉信",
+    "name_en": "Kalasin",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.60628336956387,
+    "lng": 103.60979203044793
+  },
+  {
+    "name_zh": "彭世洛府",
+    "name_en": "Phitsanulok Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.972538502887186,
+    "lng": 100.56619058126805
+  },
+  {
+    "name_zh": "拉廊府",
+    "name_en": "Ranong Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 9.922718548236451,
+    "lng": 98.69408752690761
+  },
+  {
+    "name_zh": "乌隆他尼府",
+    "name_en": "Udon Thani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.420667558283615,
+    "lng": 102.8927325448353
+  },
+  {
+    "name_zh": "沙功那空府",
+    "name_en": "Sakon Nakhon Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.39498180420067,
+    "lng": 103.82031016043345
+  },
+  {
+    "name_zh": "清莱府",
+    "name_en": "Chiang Rai Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 19.841795120331096,
+    "lng": 99.86070286119121
+  },
+  {
+    "name_zh": "达府",
+    "name_en": "Tak Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.675488095078546,
+    "lng": 98.7935834062793
+  },
+  {
+    "name_zh": "佛统府",
+    "name_en": "Nakhon Pathom Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.931234932831918,
+    "lng": 100.10656363934662
+  },
+  {
+    "name_zh": "南奔府",
+    "name_en": "Lamphun Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.09029254306723,
+    "lng": 98.95356912689859
+  },
+  {
+    "name_zh": "达叻府",
+    "name_en": "Trat Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 12.352728842730839,
+    "lng": 102.54954581011623
+  },
+  {
+    "name_zh": "叻武里府",
+    "name_en": "Ratchaburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.554619777425518,
+    "lng": 99.60195479971667
+  },
+  {
+    "name_zh": "益梭通府",
+    "name_en": "Yasothon Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.907859737976487,
+    "lng": 104.3471077945655
+  },
+  {
+    "name_zh": "帕府",
+    "name_en": "Phrae Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.20117283484866,
+    "lng": 100.08379694500933
+  },
+  {
+    "name_zh": "也拉府",
+    "name_en": "Yala Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 6.181797788030525,
+    "lng": 101.23022319256637
+  },
+  {
+    "name_zh": "程逸府",
+    "name_en": "Uttaradit Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.711363250028274,
+    "lng": 100.46074606463667
+  },
+  {
+    "name_zh": "武里南府",
+    "name_en": "Buri Ram Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.817096510139796,
+    "lng": 102.96827707597524
+  },
+  {
+    "name_zh": "甘烹碧府",
+    "name_en": "Kamphaeng Phet Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.34041831387322,
+    "lng": 99.496448251775
+  },
+  {
+    "name_zh": "南邦府",
+    "name_en": "Lampang Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.35039713720183,
+    "lng": 99.50866111145142
+  },
+  {
+    "name_zh": "暖武里府",
+    "name_en": "Nonthaburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.96066503334496,
+    "lng": 100.39169873341446
+  },
+  {
+    "name_zh": "汶干府",
+    "name_en": "Bueng Kan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.15016226987774,
+    "lng": 103.72553964517884
+  },
+  {
+    "name_zh": "那拉提瓦府",
+    "name_en": "Narathiwat Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 6.154134023465021,
+    "lng": 101.71420807675848
+  },
+  {
+    "name_zh": "乌汶叻差他尼府",
+    "name_en": "Ubon Ratchathani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.179540884842167,
+    "lng": 105.11659093964784
+  },
+  {
+    "name_zh": "巴蜀府",
+    "name_en": "Prachuap Khiri Khan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 11.876486397603772,
+    "lng": 99.65255405732297
+  },
+  {
+    "name_zh": "宋卡府",
+    "name_en": "Songkhla Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 6.946824586342071,
+    "lng": 100.5560124976475
+  },
+  {
+    "name_zh": "普吉府",
+    "name_en": "Phuket Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 8.017120157379091,
+    "lng": 98.34192396661865
+  },
+  {
+    "name_zh": "红统府",
+    "name_en": "Ang Thong Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.61196442025516,
+    "lng": 100.36218967590118
+  },
+  {
+    "name_zh": "玛哈沙拉堪府",
+    "name_en": "Maha Sarakham Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.0166701271941,
+    "lng": 103.15824639240583
+  },
+  {
+    "name_zh": "董里府",
+    "name_en": "Trang Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 7.563465374492989,
+    "lng": 99.61303907222695
+  },
+  {
+    "name_zh": "素攀武里府",
+    "name_en": "Suphan Buri Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.624004599857614,
+    "lng": 99.91302674297037
+  },
+  {
+    "name_zh": "信武里府",
+    "name_en": "Sing Buri Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.903722100004211,
+    "lng": 100.33192953336574
+  },
+  {
+    "name_zh": "夜功府",
+    "name_en": "Samut Songkhram Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.433134999972124,
+    "lng": 99.96891279980709
+  },
+  {
+    "name_zh": "罗勇府",
+    "name_en": "Rayong Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 12.869617914445488,
+    "lng": 101.40277274617972
+  },
+  {
+    "name_zh": "巴真府",
+    "name_en": "Prachin Buri Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.05786308064754,
+    "lng": 101.69034824294964
+  },
+  {
+    "name_zh": "大城府",
+    "name_en": "Phra Nakhon Si Ayutthaya Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.363463671648464,
+    "lng": 100.54140625003292
+  },
+  {
+    "name_zh": "披集府",
+    "name_en": "Phichit Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.224234755042065,
+    "lng": 100.38312883816079
+  },
+  {
+    "name_zh": "博他仑府",
+    "name_en": "Phatthalung Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 7.489470377428712,
+    "lng": 100.07881092891942
+  },
+  {
+    "name_zh": "攀牙府",
+    "name_en": "Phangnga Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 8.663379773956372,
+    "lng": 98.43815416256372
+  },
+  {
+    "name_zh": "北大年府",
+    "name_en": "Pattani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 6.71301522372505,
+    "lng": 101.37806382531186
+  },
+  {
+    "name_zh": "巴吞他尼府",
+    "name_en": "Pathum Thani Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.099994466667782,
+    "lng": 100.73272560000585
+  },
+  {
+    "name_zh": "洛坤府",
+    "name_en": "Nakhon Si Thammarat Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 8.359897044380686,
+    "lng": 99.78952744113988
+  },
+  {
+    "name_zh": "那空那育府",
+    "name_en": "Nakhon Nayok Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.212858152961028,
+    "lng": 101.17621485098103
+  },
+  {
+    "name_zh": "穆达汉府",
+    "name_en": "Mukdahan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 16.545871179728266,
+    "lng": 104.53768924189504
+  },
+  {
+    "name_zh": "华富里府",
+    "name_en": "Lopburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.1052277462868,
+    "lng": 100.8957044655111
+  },
+  {
+    "name_zh": "甲米府",
+    "name_en": "Krabi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 8.147013663118944,
+    "lng": 98.99092425979103
+  },
+  {
+    "name_zh": "春武里府",
+    "name_en": "Chon Buri Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.182018190524698,
+    "lng": 101.17679888859767
+  },
+  {
+    "name_zh": "清迈府",
+    "name_en": "Chiang Mai Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.775145630609515,
+    "lng": 98.72750919945271
+  },
+  {
+    "name_zh": "猜纳府",
+    "name_en": "Chai Nat Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.138580109944485,
+    "lng": 100.01082270522669
+  },
+  {
+    "name_zh": "安纳乍伦府",
+    "name_en": "Amnat Charoen Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 15.898823768499874,
+    "lng": 104.73238856632125
+  },
+  {
+    "name_zh": "龙仔厝府",
+    "name_en": "Samut Sakhon Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.571463369566215,
+    "lng": 100.22715865637788
+  },
+  {
+    "name_zh": "北揽府",
+    "name_en": "Samut Prakan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.59379333854049,
+    "lng": 100.7112883370576
+  },
+  {
+    "name_zh": "难府",
+    "name_en": "Nan Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.863598287576202,
+    "lng": 100.84650492524668
+  },
+  {
+    "name_zh": "庄他武里府",
+    "name_en": "Chanthaburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 12.858330597237346,
+    "lng": 102.1313492416186
+  },
+  {
+    "name_zh": "那空拍侬府",
+    "name_en": "Nakhon Phanom Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 17.391242261553824,
+    "lng": 104.42408489332766
+  },
+  {
+    "name_zh": "北碧府",
+    "name_en": "Kanchanaburi Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 14.562478269543353,
+    "lng": 99.06339322953225
+  },
+  {
+    "name_zh": "夜丰颂府",
+    "name_en": "Mae Hong Son Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 18.736351668299907,
+    "lng": 98.01550839350851
+  },
+  {
+    "name_zh": "沙缴府",
+    "name_en": "Sa Kaeo Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 13.772423332190622,
+    "lng": 102.36951153983878
+  },
+  {
+    "name_zh": "沙敦府",
+    "name_en": "Satun Province",
+    "country_iso": "THA",
+    "country_name": "泰国",
+    "region": "lingnan",
+    "lat": 6.835223814953997,
+    "lng": 99.96755834319991
+  },
+  {
+    "name_zh": "伊洛瓦底",
+    "name_en": "Ayeyarwady",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 16.98066996094932,
+    "lng": 95.1374046532649
+  },
+  {
+    "name_zh": "钦邦",
+    "name_en": "Chin",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 22.181458289315113,
+    "lng": 93.50727587110468
+  },
+  {
+    "name_zh": "实皆省",
+    "name_en": "Saigang",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 24.167346997349956,
+    "lng": 95.3209928184424
+  },
+  {
+    "name_zh": "克钦",
+    "name_en": "Kachin",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 26.08329164546862,
+    "lng": 97.34316979091969
+  },
+  {
+    "name_zh": "克耶",
+    "name_en": "Kayah",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 19.24817340253541,
+    "lng": 97.37381161232199
+  },
+  {
+    "name_zh": "克伦",
+    "name_en": "Kayin",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 17.11458130789602,
+    "lng": 97.80661376156996
+  },
+  {
+    "name_zh": "马圭",
+    "name_en": "Magway",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 20.473802809708783,
+    "lng": 94.80247706389811
+  },
+  {
+    "name_zh": "曼德勒",
+    "name_en": "Mandalay",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 21.23967830342794,
+    "lng": 95.98394250146482
+  },
+  {
+    "name_zh": "孟邦",
+    "name_en": "Mon",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 15.811435457038021,
+    "lng": 97.8436650530499
+  },
+  {
+    "name_zh": "若开",
+    "name_en": "Rakhine",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 19.722127931207336,
+    "lng": 93.77200602017099
+  },
+  {
+    "name_zh": "德林达依省",
+    "name_en": "Tanitharyi",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 12.810767285274308,
+    "lng": 98.81010253776638
+  },
+  {
+    "name_zh": "勃固",
+    "name_en": "Bago",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 18.27643558092525,
+    "lng": 96.14760878631147
+  },
+  {
+    "name_zh": "仰光",
+    "name_en": "Yangon",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 16.98588263555342,
+    "lng": 96.13055265116252
+  },
+  {
+    "name_zh": "掸邦",
+    "name_en": "Shan",
+    "country_iso": "MMR",
+    "country_name": "缅甸",
+    "region": "lingnan",
+    "lat": 21.734537611140926,
+    "lng": 98.1254594462153
+  },
+  {
+    "name_zh": "沙耶武里省",
+    "name_en": "Xaignabouli",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 18.965509293637062,
+    "lng": 101.35806499456417
+  },
+  {
+    "name_zh": "阿速坡",
+    "name_en": "Attapeu",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 14.81802915083509,
+    "lng": 106.91916716698186
+  },
+  {
+    "name_zh": "博胶",
+    "name_en": "Bokeo",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 20.342527347273244,
+    "lng": 100.65870859512664
+  },
+  {
+    "name_zh": "博利坎赛省",
+    "name_en": "Bolikhamsai",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 18.503851446050117,
+    "lng": 104.30478065076916
+  },
+  {
+    "name_zh": "占巴塞",
+    "name_en": "Champasak",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 14.752510762306217,
+    "lng": 105.94698122068145
+  },
+  {
+    "name_zh": "华潘",
+    "name_en": "Houaphan",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 20.28435833352493,
+    "lng": 104.00703572482601
+  },
+  {
+    "name_zh": "甘蒙",
+    "name_en": "Khammouane",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 17.565584661617454,
+    "lng": 105.28372280016985
+  },
+  {
+    "name_zh": "琅南塔",
+    "name_en": "Luang Namtha",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 20.9222970708422,
+    "lng": 101.12346003555069
+  },
+  {
+    "name_zh": "琅勃拉邦",
+    "name_en": "Luang Prabang",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 20.150502410623112,
+    "lng": 102.56464167747616
+  },
+  {
+    "name_zh": "乌多姆赛",
+    "name_en": "Oudomxay",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 20.44196015889587,
+    "lng": 101.72243808691366
+  },
+  {
+    "name_zh": "丰沙里",
+    "name_en": "Phongsaly",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 21.664940144063188,
+    "lng": 102.24248175390916
+  },
+  {
+    "name_zh": "沙拉湾省",
+    "name_en": "Salavan",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 15.84740988890832,
+    "lng": 106.2891218114923
+  },
+  {
+    "name_zh": "沙湾拿吉",
+    "name_en": "Savannakhet",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 16.5454909090647,
+    "lng": 105.7014733734221
+  },
+  {
+    "name_zh": "万象首都特区",
+    "name_en": "Vientiane Capital",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 18.11626081291572,
+    "lng": 102.55922229549223
+  },
+  {
+    "name_zh": "万象",
+    "name_en": "Vientiane",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 18.646968325468848,
+    "lng": 102.13782695058082
+  },
+  {
+    "name_zh": "赛宋本",
+    "name_en": "Xaisomboun",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 18.86966973794765,
+    "lng": 103.09808804468769
+  },
+  {
+    "name_zh": "色贡省",
+    "name_en": "Xekong",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 15.594721930456563,
+    "lng": 107.01821021996894
+  },
+  {
+    "name_zh": "川圹",
+    "name_en": "Xiangkhouang",
+    "country_iso": "LAO",
+    "country_name": "老挝",
+    "region": "lingnan",
+    "lat": 19.472490497495922,
+    "lng": 103.51437154307416
+  },
+  {
+    "name_zh": "上丁",
+    "name_en": "Stung Treng",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 13.819848612838378,
+    "lng": 106.18442238422274
+  },
+  {
+    "name_zh": "柏威夏",
+    "name_en": "Preah Vihear",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 13.81081596071318,
+    "lng": 104.99382178353792
+  },
+  {
+    "name_zh": "磅同",
+    "name_en": "Kampong Thom",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.819491434434372,
+    "lng": 105.02733329486033
+  },
+  {
+    "name_zh": "金边",
+    "name_en": "Phnom Penh",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.558208421396332,
+    "lng": 104.88093043056651
+  },
+  {
+    "name_zh": "戈公",
+    "name_en": "Koh Kong",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.512065904573873,
+    "lng": 103.44529598536965
+  },
+  {
+    "name_zh": "白马",
+    "name_en": "Kep",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 10.5035922,
+    "lng": 104.3460571
+  },
+  {
+    "name_zh": "贡布",
+    "name_en": "Kampot",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 10.814833043554586,
+    "lng": 104.32888509920292
+  },
+  {
+    "name_zh": "茶胶",
+    "name_en": "Takeo",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 10.950039216620638,
+    "lng": 104.82025827117866
+  },
+  {
+    "name_zh": "干丹",
+    "name_en": "Kandal",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.445020075298059,
+    "lng": 105.0040254444538
+  },
+  {
+    "name_zh": "菩萨",
+    "name_en": "Pursat",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.369049653452269,
+    "lng": 103.66079257645035
+  },
+  {
+    "name_zh": "腊塔纳基里省",
+    "name_en": "Ratanakiri Province",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 13.812420134014216,
+    "lng": 107.06044329166754
+  },
+  {
+    "name_zh": "磅清扬",
+    "name_en": "Kampong Chhnang",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.180856367884456,
+    "lng": 104.55543371646539
+  },
+  {
+    "name_zh": "拜林",
+    "name_en": "Pailin",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.873615375863434,
+    "lng": 102.62718387981833
+  },
+  {
+    "name_zh": "班迭棉吉省",
+    "name_en": "Bantey Meanchey",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 13.697945749817663,
+    "lng": 103.03510011558019
+  },
+  {
+    "name_zh": "暹粒",
+    "name_en": "Siem Reap",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 13.453014779878009,
+    "lng": 104.03528841603814
+  },
+  {
+    "name_zh": "奥多棉吉",
+    "name_en": "Oddar Meanchey",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 14.154067172904576,
+    "lng": 103.79493190148452
+  },
+  {
+    "name_zh": "磅湛",
+    "name_en": "Kampong Cham",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.116573371881177,
+    "lng": 105.25775180773209
+  },
+  {
+    "name_zh": "蒙多基里省",
+    "name_en": "Mondulkiri",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.771248847939612,
+    "lng": 107.00525368234811
+  },
+  {
+    "name_zh": "桔井",
+    "name_en": "Kratie",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.598329693092591,
+    "lng": 106.14710431710489
+  },
+  {
+    "name_zh": "波罗勉",
+    "name_en": "Prey Veng",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.416306016600972,
+    "lng": 105.43559826931386
+  },
+  {
+    "name_zh": "磅士卑",
+    "name_en": "Kampong Speu",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.549362108211099,
+    "lng": 104.30968259428074
+  },
+  {
+    "name_zh": "柴桢",
+    "name_en": "Svay Rieng",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.12801158589818,
+    "lng": 105.87888650104992
+  },
+  {
+    "name_zh": "西哈努克",
+    "name_en": "Preah Sihanouk",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 10.842261908848048,
+    "lng": 103.8117052078028
+  },
+  {
+    "name_zh": "特本克蒙省",
+    "name_en": "Tbong Khmum",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 11.914936655741561,
+    "lng": 105.88615633558463
+  },
+  {
+    "name_zh": "马德望",
+    "name_en": "Battambang",
+    "country_iso": "KHM",
+    "country_name": "柬埔寨",
+    "region": "lingnan",
+    "lat": 12.95759105041392,
+    "lng": 103.10267669317643
+  },
+  {
+    "name_zh": "雪兰莪",
+    "name_en": "Selangor",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 3.301414473940676,
+    "lng": 101.46556154277212
+  },
+  {
+    "name_zh": "柔佛",
+    "name_en": "Johor",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 2.0518237394351635,
+    "lng": 103.36888110971225
+  },
+  {
+    "name_zh": "吉隆坡",
+    "name_en": "Kuala Lumpur",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 3.1358817999972604,
+    "lng": 101.69976016657488
+  },
+  {
+    "name_zh": "马六甲",
+    "name_en": "Malacca",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 2.3323241471762133,
+    "lng": 102.32480417613525
+  },
+  {
+    "name_zh": "森美兰",
+    "name_en": "Negeri Sembilan",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 2.7481309381029826,
+    "lng": 102.19025287272342
+  },
+  {
+    "name_zh": "沙巴",
+    "name_en": "Sabah",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 5.342088913504067,
+    "lng": 117.1108182907059
+  },
+  {
+    "name_zh": "砂拉越",
+    "name_en": "Sarawak",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 2.586081659154826,
+    "lng": 113.31684417809966
+  },
+  {
+    "name_zh": "吉兰丹",
+    "name_en": "Kelantan",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 5.291391596924655,
+    "lng": 102.03816798804277
+  },
+  {
+    "name_zh": "布城",
+    "name_en": "Putrajaya",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 2.9314408,
+    "lng": 101.69437905
+  },
+  {
+    "name_zh": "登嘉楼",
+    "name_en": "Terengganu",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 4.915992251489298,
+    "lng": 102.96385911511757
+  },
+  {
+    "name_zh": "彭亨",
+    "name_en": "Pahang",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 3.7457470071443875,
+    "lng": 102.53485593553414
+  },
+  {
+    "name_zh": "吉打",
+    "name_en": "Kedah",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 5.9309970172285205,
+    "lng": 100.62989552361395
+  },
+  {
+    "name_zh": "玻璃市",
+    "name_en": "Perlis",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 6.503510466668408,
+    "lng": 100.24953756669446
+  },
+  {
+    "name_zh": "霹雳",
+    "name_en": "Perak",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 4.759622587126561,
+    "lng": 101.10530212353731
+  },
+  {
+    "name_zh": "槟城",
+    "name_en": "Penang",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 5.356441206307024,
+    "lng": 100.4486767743166
+  },
+  {
+    "name_zh": "纳闽",
+    "name_en": "Labuan",
+    "country_iso": "MYS",
+    "country_name": "马来西亚",
+    "region": "nanyang",
+    "lat": 5.2863485,
+    "lng": 115.21623265
+  },
+  {
+    "name_zh": "巴厘",
+    "name_en": "Bali",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -8.391089773115437,
+    "lng": 115.11293944960913
+  },
+  {
+    "name_zh": "西努沙登加拉",
+    "name_en": "West Nusa Tenggara",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -8.649940684902564,
+    "lng": 117.83701303442305
+  },
+  {
+    "name_zh": "万丹",
+    "name_en": "Banten",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -6.478788606672195,
+    "lng": 106.13354047779748
+  },
+  {
+    "name_zh": "中爪哇",
+    "name_en": "Central Java",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -7.281382531212541,
+    "lng": 110.20855976058266
+  },
+  {
+    "name_zh": "西爪哇",
+    "name_en": "West Java",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -6.912969000158775,
+    "lng": 107.63468338204251
+  },
+  {
+    "name_zh": "中加里曼丹",
+    "name_en": "Central Kalimantan",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -1.6017754225804657,
+    "lng": 113.41744344428885
+  },
+  {
+    "name_zh": "南加里曼丹",
+    "name_en": "South Kalimantan",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -2.9899143031409054,
+    "lng": 115.38206242569646
+  },
+  {
+    "name_zh": "西加里曼丹",
+    "name_en": "West Kalimantan",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -0.08644231217927241,
+    "lng": 111.11523984501501
+  },
+  {
+    "name_zh": "中苏拉威西",
+    "name_en": "Central Sulawesi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -0.9394820288847591,
+    "lng": 121.04088881437966
+  },
+  {
+    "name_zh": "哥伦打洛",
+    "name_en": "Gorontalo",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 0.694508627903441,
+    "lng": 122.36462234463389
+  },
+  {
+    "name_zh": "北苏拉威西",
+    "name_en": "North Sulawesi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 0.8940336357654882,
+    "lng": 124.31325819753764
+  },
+  {
+    "name_zh": "南苏拉威西",
+    "name_en": "South Sulawesi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -3.643018612771587,
+    "lng": 120.145415521107
+  },
+  {
+    "name_zh": "东南苏拉威西",
+    "name_en": "Southeast Sulawesi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -3.7717991961145385,
+    "lng": 121.82390214191702
+  },
+  {
+    "name_zh": "西苏拉威西",
+    "name_en": "West Sulawesi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -2.4900288744579893,
+    "lng": 119.33791510504295
+  },
+  {
+    "name_zh": "亚齐",
+    "name_en": "Aceh",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 4.292933218530502,
+    "lng": 96.93981119906364
+  },
+  {
+    "name_zh": "明古鲁",
+    "name_en": "Bengkulu",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -3.5610871771608243,
+    "lng": 102.40491251208061
+  },
+  {
+    "name_zh": "占碑",
+    "name_en": "Jambi",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -1.7003171385257105,
+    "lng": 102.71444048232941
+  },
+  {
+    "name_zh": "楠榜",
+    "name_en": "Lampung",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -4.923024918452182,
+    "lng": 105.0147822736466
+  },
+  {
+    "name_zh": "廖内",
+    "name_en": "Riau",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 0.4575957739367304,
+    "lng": 101.78468223179375
+  },
+  {
+    "name_zh": "西苏门答腊",
+    "name_en": "West Sumatra",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -0.6609562150732655,
+    "lng": 100.64773329547506
+  },
+  {
+    "name_zh": "南苏门答腊",
+    "name_en": "South Sumatra",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -3.2074116279114584,
+    "lng": 104.17613376857446
+  },
+  {
+    "name_zh": "北苏门答腊",
+    "name_en": "North Sumatra",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 2.26838792820167,
+    "lng": 99.1522025662287
+  },
+  {
+    "name_zh": "东努沙登加拉",
+    "name_en": "East Nusa Tenggara",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -8.61280472349292,
+    "lng": 121.07246702206048
+  },
+  {
+    "name_zh": "马鲁古",
+    "name_en": "Maluku",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -3.1851694698990474,
+    "lng": 129.44722128639066
+  },
+  {
+    "name_zh": "北马鲁古",
+    "name_en": "North Maluku",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 0.8346232699896657,
+    "lng": 128.02148018604098
+  },
+  {
+    "name_zh": "东爪哇",
+    "name_en": "East Java",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -7.825885423885538,
+    "lng": 112.63843188354188
+  },
+  {
+    "name_zh": "邦加勿里洞群岛",
+    "name_en": "Bangka-Belitung Islands",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -2.2539617076646024,
+    "lng": 105.98758611213553
+  },
+  {
+    "name_zh": "廖内群岛",
+    "name_en": "Riau Islands",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 1.0591028581224093,
+    "lng": 104.4615203153705
+  },
+  {
+    "name_zh": "巴布亚",
+    "name_en": "Papua",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -4.570194657859004,
+    "lng": 138.72456086209698
+  },
+  {
+    "name_zh": "西巴布亚",
+    "name_en": "West Papua",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -2.127186026208101,
+    "lng": 133.16237822431037
+  },
+  {
+    "name_zh": "东加里曼丹",
+    "name_en": "East Kalimantan",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 0.4315014979615255,
+    "lng": 116.46364005287697
+  },
+  {
+    "name_zh": "北加里曼丹",
+    "name_en": "North Kalimantan",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": 2.882452540407232,
+    "lng": 116.19507324508422
+  },
+  {
+    "name_zh": "日惹",
+    "name_en": "Special Region of Yogyakarta",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -7.887204975180017,
+    "lng": 110.45175821568385
+  },
+  {
+    "name_zh": "雅加达首都特区",
+    "name_en": "Jakarta Special Capital Region",
+    "country_iso": "IDN",
+    "country_name": "印度尼西亚",
+    "region": "nanyang",
+    "lat": -6.202985525833549,
+    "lng": 106.84159163617792
+  },
+  {
+    "name_zh": "棉兰老穆斯林自治区",
+    "name_en": "ARMM",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 7.388845834333307,
+    "lng": 124.36288571392117
+  },
+  {
+    "name_zh": "科迪勒拉行政区",
+    "name_en": "CAR",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 17.371679537294312,
+    "lng": 121.06028791628059
+  },
+  {
+    "name_zh": "马尼拉大都会",
+    "name_en": "NCR",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 14.607284613013798,
+    "lng": 121.00713384778534
+  },
+  {
+    "name_zh": "伊罗戈斯区",
+    "name_en": "Ilocos Region",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 16.974722753130965,
+    "lng": 120.48576588729438
+  },
+  {
+    "name_zh": "卡加延河谷",
+    "name_en": "Cagayan Valley",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 17.152322653710364,
+    "lng": 121.72815456454369
+  },
+  {
+    "name_zh": "中央吕宋",
+    "name_en": "Central Luzon",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 15.397592301698097,
+    "lng": 120.82509692677702
+  },
+  {
+    "name_zh": "卡拉巴松",
+    "name_en": "Calabarzon",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 14.121501580064136,
+    "lng": 121.50275422569
+  },
+  {
+    "name_zh": "民马罗巴",
+    "name_en": "Mimaropa",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 9.758427900472013,
+    "lng": 118.59526261159345
+  },
+  {
+    "name_zh": "三宝颜半岛",
+    "name_en": "Zamboanga Peninsula",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 7.875253450918565,
+    "lng": 122.90463625745078
+  },
+  {
+    "name_zh": "比科尔区",
+    "name_en": "Bicol Region",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 13.534444591349523,
+    "lng": 123.32224541480497
+  },
+  {
+    "name_zh": "西米沙鄢",
+    "name_en": "Western Visayas",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 11.215853294815513,
+    "lng": 122.45177840266517
+  },
+  {
+    "name_zh": "中米沙鄢",
+    "name_en": "Central Visayas",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 9.619147808693391,
+    "lng": 123.02611070218009
+  },
+  {
+    "name_zh": "东米沙鄢",
+    "name_en": "Eastern Visayas",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 11.941201456417351,
+    "lng": 125.05106411916242
+  },
+  {
+    "name_zh": "北棉兰老",
+    "name_en": "Northern Mindanao",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 8.134785831930115,
+    "lng": 124.8166487334374
+  },
+  {
+    "name_zh": "达沃区",
+    "name_en": "Davao Region",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 7.253520632384408,
+    "lng": 125.83166357013054
+  },
+  {
+    "name_zh": "索科斯克萨尔根",
+    "name_en": "Soccsksargen",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 6.6058689298903515,
+    "lng": 124.83259182800735
+  },
+  {
+    "name_zh": "卡拉加",
+    "name_en": "Caraga",
+    "country_iso": "PHL",
+    "country_name": "菲律宾",
+    "region": "nanyang",
+    "lat": 8.69235157324756,
+    "lng": 125.77633646069226
+  }
+]

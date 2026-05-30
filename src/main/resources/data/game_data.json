@@ -1,0 +1,4663 @@
+{
+  "game": {
+    "title": "七域逐鹿",
+    "subtitle": "架空1910年代中华大地 · 文字策略游戏",
+    "version": "1.0",
+    "era": "架空1910年代，中央华夏帝国崩溃后的乱世"
+  },
+  "regions": {
+    "northeast": {
+      "name": "东北大区",
+      "hostile_forces": [
+        "黑河道尹公署",
+        "呼伦贝尔蒙旗军",
+        "南满铁道守备队",
+        "吉东山林匪帮"
+      ],
+      "ai_personality": "强硬激进",
+      "ai_typical_op": "玩家打华北，偷袭热河+联日",
+      "expansion_paths": [
+        "满蒙帝国",
+        "远东扩张",
+        "反帝革命",
+        "入关统一"
+      ],
+      "core_loss_days": 90,
+      "terrain": [
+        "平原",
+        "雪原",
+        "铁路网"
+      ],
+      "strategic_value": "重工业基地 + 铁路枢纽 + 列强直接接壤"
+    },
+    "huabei": {
+      "name": "华北·中原大区",
+      "hostile_forces": [
+        "晋绥镇守使署",
+        "鲁省民团联军",
+        "豫西镇嵩军",
+        "直鲁联军残部"
+      ],
+      "ai_personality": "正统执念",
+      "ai_typical_op": "借道打东北，事后翻脸",
+      "expansion_paths": [
+        "北伐统一",
+        "西域征服",
+        "反日战争",
+        "东亚霸权"
+      ],
+      "core_loss_days": 60,
+      "terrain": [
+        "平原",
+        "山地",
+        "黄河防线"
+      ],
+      "strategic_value": "政治合法性 + 人口大省 + 铁路十字路口"
+    },
+    "southwest": {
+      "name": "西南大区",
+      "hostile_forces": [
+        "黔军省防军",
+        "西康边防总队",
+        "藏北噶伦武装",
+        "川南哥老会"
+      ],
+      "ai_personality": "投机保守",
+      "ai_typical_op": "玩家北伐必偷袭长江中游",
+      "expansion_paths": [
+        "吐蕃帝国",
+        "南下印度",
+        "中南联邦",
+        "东出统一"
+      ],
+      "core_loss_days": 60,
+      "terrain": [
+        "山地",
+        "高原",
+        "盆地"
+      ],
+      "strategic_value": "天然屏障 + 多民族 + 英国渗透"
+    },
+    "southeast": {
+      "name": "东南大区",
+      "hostile_forces": [
+        "浙江督军公署",
+        "福建靖国军",
+        "皖南镇守使",
+        "江西保安团"
+      ],
+      "ai_personality": "精明利己",
+      "ai_typical_op": "切断玩家海上贸易索要赔款",
+      "expansion_paths": [
+        "北伐统一",
+        "海权帝国",
+        "长江帝国",
+        "工团革命"
+      ],
+      "core_loss_days": 60,
+      "terrain": [
+        "长江水网",
+        "沿海港口",
+        "丘陵"
+      ],
+      "strategic_value": "经济中心 + 出海口 + 列强租界集中"
+    },
+    "lingnan": {
+      "name": "岭南·中南大区",
+      "hostile_forces": [
+        "法国印度支那驻军",
+        "越南保皇党军",
+        "桂系自治军",
+        "海南琼崖守备队"
+      ],
+      "ai_personality": "全民动员",
+      "ai_typical_op": "玩家打法国，偷袭海南建前哨",
+      "expansion_paths": [
+        "大中南联邦",
+        "反法解放",
+        "北上统一",
+        "输出革命"
+      ],
+      "core_loss_days": 90,
+      "terrain": [
+        "雨林",
+        "山地",
+        "海岸线"
+      ],
+      "strategic_value": "法国殖民地接壤 + 热带资源 + 两广门户"
+    },
+    "nanyang": {
+      "name": "南洋大区",
+      "hostile_forces": [
+        "英国海峡殖民地驻军",
+        "荷兰东印度公司警备队",
+        "吕宋土匪联军",
+        "南海海盗联盟"
+      ],
+      "ai_personality": "海权投机",
+      "ai_typical_op": "玩家北伐，登陆温州抢出海口",
+      "expansion_paths": [
+        "南洋霸权",
+        "反殖解放",
+        "北伐光复",
+        "太平洋海权"
+      ],
+      "core_loss_days": 90,
+      "terrain": [
+        "群岛",
+        "海峡",
+        "港口"
+      ],
+      "strategic_value": "海上贸易生命线 + 华侨资本 + 英荷直接统治"
+    },
+    "xibei": {
+      "name": "西北大区",
+      "hostile_forces": [
+        "新疆省军阀残部",
+        "青海回部联军",
+        "西藏噶厦政府",
+        "外蒙古自治军"
+      ],
+      "ai_personality": "游牧灵活",
+      "ai_typical_op": "玩家西征，袭扰后勤后撤退",
+      "expansion_paths": [
+        "突厥斯坦",
+        "泛伊斯兰",
+        "丝绸之路",
+        "东进统一"
+      ],
+      "core_loss_days": 90,
+      "terrain": [
+        "沙漠",
+        "戈壁",
+        "绿洲",
+        "高原"
+      ],
+      "strategic_value": "丝绸之路 + 地缘纵深 + 沙俄/苏联渗透"
+    }
+  },
+  "hostile_npcs": {
+    "heihe_daoyin": {
+      "name": "黑河道尹公署",
+      "region": "northeast",
+      "stats": {
+        "industry": 25,
+        "agriculture": 35,
+        "military": 40,
+        "economy": 30,
+        "ideology": 45,
+        "diplomacy": 35
+      },
+      "forces": "边防营+地方民团800人",
+      "ai": "依附奉天，墙头草",
+      "territories": [
+        "营口"
+      ]
+    },
+    "hulunbeier_mengqi": {
+      "name": "呼伦贝尔蒙旗军",
+      "region": "northeast",
+      "stats": {
+        "industry": 15,
+        "agriculture": 55,
+        "military": 45,
+        "economy": 25,
+        "ideology": 50,
+        "diplomacy": 20
+      },
+      "forces": "蒙旗骑兵2个团",
+      "ai": "保草原领地，亲满蒙恢复会",
+      "territories": [
+        "呼伦贝尔"
+      ]
+    },
+    "nanman_railway": {
+      "name": "南满铁道守备队",
+      "region": "northeast",
+      "stats": {
+        "industry": 45,
+        "agriculture": 20,
+        "military": 55,
+        "economy": 50,
+        "ideology": 35,
+        "diplomacy": 60
+      },
+      "forces": "铁路警备大队+日式装备",
+      "ai": "日本代理人，控制铁路线",
+      "territories": [
+        "通化"
+      ]
+    },
+    "jidong_bandits": {
+      "name": "吉东山林匪帮",
+      "region": "northeast",
+      "stats": {
+        "industry": 10,
+        "agriculture": 30,
+        "military": 35,
+        "economy": 15,
+        "ideology": 20,
+        "diplomacy": 5
+      },
+      "forces": "山林土匪千人",
+      "ai": "劫掠为主，遇强则散",
+      "territories": [
+        "黑河"
+      ]
+    },
+    "jinsui_zhenshou": {
+      "name": "晋绥镇守使署",
+      "region": "huabei",
+      "stats": {
+        "industry": 35,
+        "agriculture": 40,
+        "military": 50,
+        "economy": 35,
+        "ideology": 40,
+        "diplomacy": 30
+      },
+      "forces": "晋绥军2个旅",
+      "ai": "保山西地盘，不轻易出省",
+      "territories": [
+        "承德"
+      ]
+    },
+    "lusheng_mintuan": {
+      "name": "鲁省民团联军",
+      "region": "huabei",
+      "stats": {
+        "industry": 30,
+        "agriculture": 55,
+        "military": 40,
+        "economy": 30,
+        "ideology": 45,
+        "diplomacy": 25
+      },
+      "forces": "民团联军3个团",
+      "ai": "保境安民，敌视任何入鲁势力",
+      "territories": [
+        "延安"
+      ]
+    },
+    "yuxi_zhensong": {
+      "name": "豫西镇嵩军",
+      "region": "huabei",
+      "stats": {
+        "industry": 20,
+        "agriculture": 45,
+        "military": 45,
+        "economy": 25,
+        "ideology": 30,
+        "diplomacy": 15
+      },
+      "forces": "镇嵩军2个旅+土匪附庸",
+      "ai": "据守豫西山地，伺机扩张",
+      "territories": [
+        "聊城"
+      ]
+    },
+    "zhilu_remnant": {
+      "name": "直鲁联军残部",
+      "region": "huabei",
+      "stats": {
+        "industry": 25,
+        "agriculture": 35,
+        "military": 50,
+        "economy": 20,
+        "ideology": 25,
+        "diplomacy": 20
+      },
+      "forces": "残存北洋军3个团",
+      "ai": "试图恢复北洋荣光，仇视革命军",
+      "territories": [
+        "滨州"
+      ]
+    },
+    "qianjun_shengfang": {
+      "name": "黔军省防军",
+      "region": "southwest",
+      "stats": {
+        "industry": 20,
+        "agriculture": 45,
+        "military": 35,
+        "economy": 30,
+        "ideology": 35,
+        "diplomacy": 25
+      },
+      "forces": "黔军2个师(装备差)",
+      "ai": "保贵州自治，山地防守优先",
+      "territories": [
+        "昌都"
+      ]
+    },
+    "xikang_bianfang": {
+      "name": "西康边防总队",
+      "region": "southwest",
+      "stats": {
+        "industry": 15,
+        "agriculture": 30,
+        "military": 30,
+        "economy": 20,
+        "ideology": 40,
+        "diplomacy": 30
+      },
+      "forces": "边防总队+土司附庸",
+      "ai": "守川藏通道，两面讨好",
+      "territories": [
+        "昭通"
+      ]
+    },
+    "zangbei_gelun": {
+      "name": "藏北噶伦武装",
+      "region": "southwest",
+      "stats": {
+        "industry": 5,
+        "agriculture": 35,
+        "military": 40,
+        "economy": 20,
+        "ideology": 70,
+        "diplomacy": 35
+      },
+      "forces": "噶伦亲兵+寺院武装",
+      "ai": "亲英求独立，高原游击",
+      "territories": [
+        "日喀则",
+        "海西"
+      ]
+    },
+    "chuannan_gelaohui": {
+      "name": "川南哥老会",
+      "region": "southwest",
+      "stats": {
+        "industry": 15,
+        "agriculture": 40,
+        "military": 30,
+        "economy": 25,
+        "ideology": 50,
+        "diplomacy": 10
+      },
+      "forces": "袍哥武装+秘密社团",
+      "ai": "控制基层社会，排外",
+      "territories": [
+        "自贡"
+      ]
+    },
+    "zhejiang_dujun": {
+      "name": "浙江督军公署",
+      "region": "southeast",
+      "stats": {
+        "industry": 40,
+        "agriculture": 45,
+        "military": 45,
+        "economy": 55,
+        "ideology": 35,
+        "diplomacy": 45
+      },
+      "forces": "浙军2个师+水警队",
+      "ai": "亲沪上商团，保浙自肥",
+      "territories": [
+        "常德"
+      ]
+    },
+    "fujian_jingguo": {
+      "name": "福建靖国军",
+      "region": "southeast",
+      "stats": {
+        "industry": 30,
+        "agriculture": 40,
+        "military": 40,
+        "economy": 35,
+        "ideology": 55,
+        "diplomacy": 30
+      },
+      "forces": "靖国军1个旅+民军",
+      "ai": "理想主义武装，敌视旧军阀",
+      "territories": [
+        "池州"
+      ]
+    },
+    "wannan_zhenshou": {
+      "name": "皖南镇守使",
+      "region": "southeast",
+      "stats": {
+        "industry": 25,
+        "agriculture": 50,
+        "military": 35,
+        "economy": 30,
+        "ideology": 30,
+        "diplomacy": 20
+      },
+      "forces": "皖南守备团+地方保安",
+      "ai": "依附强势方，生存优先",
+      "territories": [
+        "宁德"
+      ]
+    },
+    "jiangxi_baoan": {
+      "name": "江西保安团",
+      "region": "southeast",
+      "stats": {
+        "industry": 30,
+        "agriculture": 55,
+        "military": 30,
+        "economy": 40,
+        "ideology": 35,
+        "diplomacy": 25
+      },
+      "forces": "保安团3个团+民兵",
+      "ai": "保赣中立，不主动惹事",
+      "territories": [
+        "宿迁"
+      ]
+    },
+    "france_indochina": {
+      "name": "法国印度支那驻军",
+      "region": "lingnan",
+      "stats": {
+        "industry": 50,
+        "agriculture": 35,
+        "military": 70,
+        "economy": 60,
+        "ideology": 40,
+        "diplomacy": 70
+      },
+      "forces": "法国殖民军1个旅+外籍兵团",
+      "ai": "维护殖民利益，武力镇压独立",
+      "territories": [
+        "北海"
+      ]
+    },
+    "yuenan_royalist": {
+      "name": "越南保皇党军",
+      "region": "lingnan",
+      "stats": {
+        "industry": 20,
+        "agriculture": 50,
+        "military": 40,
+        "economy": 25,
+        "ideology": 65,
+        "diplomacy": 35
+      },
+      "forces": "保皇党武装+乡村民兵",
+      "ai": "借法抗中，复辟阮朝",
+      "territories": [
+        "永州"
+      ]
+    },
+    "guixi_zizhi": {
+      "name": "桂系自治军",
+      "region": "lingnan",
+      "stats": {
+        "industry": 25,
+        "agriculture": 45,
+        "military": 50,
+        "economy": 35,
+        "ideology": 40,
+        "diplomacy": 30
+      },
+      "forces": "桂军2个师+山地特种兵",
+      "ai": "保广西老家，善山地战",
+      "territories": [
+        "柳州"
+      ]
+    },
+    "hainan_qiongya": {
+      "name": "海南琼崖守备队",
+      "region": "lingnan",
+      "stats": {
+        "industry": 15,
+        "agriculture": 40,
+        "military": 35,
+        "economy": 30,
+        "ideology": 50,
+        "diplomacy": 20
+      },
+      "forces": "琼崖守备团+渔民武装",
+      "ai": "孤岛自保，不介入大陆混战",
+      "territories": [
+        "云浮"
+      ]
+    },
+    "britain_straits": {
+      "name": "英国海峡殖民地驻军",
+      "region": "nanyang",
+      "stats": {
+        "industry": 55,
+        "agriculture": 25,
+        "military": 65,
+        "economy": 80,
+        "ideology": 30,
+        "diplomacy": 80
+      },
+      "forces": "英军远东舰队+殖民步兵旅",
+      "ai": "控制马六甲，压制任何海权挑战",
+      "territories": [
+        "南沙"
+      ]
+    },
+    "dutch_east_indies": {
+      "name": "荷兰东印度公司警备队",
+      "region": "nanyang",
+      "stats": {
+        "industry": 40,
+        "agriculture": 30,
+        "military": 50,
+        "economy": 65,
+        "ideology": 25,
+        "diplomacy": 55
+      },
+      "forces": "荷属东印度警备舰队+雇佣兵",
+      "ai": "保香料航线，排挤华人势力",
+      "territories": [
+        "吉隆坡"
+      ]
+    },
+    "lvsong_bandits": {
+      "name": "吕宋土匪联军",
+      "region": "nanyang",
+      "stats": {
+        "industry": 10,
+        "agriculture": 35,
+        "military": 35,
+        "economy": 20,
+        "ideology": 30,
+        "diplomacy": 10
+      },
+      "forces": "各路土匪武装混杂",
+      "ai": "趁乱劫掠，无政治目标",
+      "territories": [
+        "顺化"
+      ]
+    },
+    "nanhai_pirates": {
+      "name": "南海海盗联盟",
+      "region": "nanyang",
+      "stats": {
+        "industry": 15,
+        "agriculture": 10,
+        "military": 40,
+        "economy": 35,
+        "ideology": 20,
+        "diplomacy": 5
+      },
+      "forces": "海盗船队+隐秘基地网络",
+      "ai": "控制航道收保护费，避免正面作战",
+      "territories": [
+        "金边"
+      ]
+    },
+    "xinjiang_warlord": {
+      "name": "新疆省军阀残部",
+      "region": "xibei",
+      "stats": {
+        "industry": 15,
+        "agriculture": 35,
+        "military": 45,
+        "economy": 30,
+        "ideology": 30,
+        "diplomacy": 25
+      },
+      "forces": "新军残部+各族雇佣兵",
+      "ai": "保省自治，族际平衡",
+      "territories": [
+        "固原"
+      ]
+    },
+    "qinghai_muslim": {
+      "name": "青海回部联军",
+      "region": "xibei",
+      "stats": {
+        "industry": 10,
+        "agriculture": 40,
+        "military": 50,
+        "economy": 25,
+        "ideology": 55,
+        "diplomacy": 20
+      },
+      "forces": "回部骑兵+清真寺武装",
+      "ai": "宗教凝聚力强，敌视外来者",
+      "territories": [
+        "临夏"
+      ]
+    },
+    "xizang_gaxia": {
+      "name": "西藏噶厦政府",
+      "region": "xibei",
+      "stats": {
+        "industry": 5,
+        "agriculture": 35,
+        "military": 40,
+        "economy": 25,
+        "ideology": 80,
+        "diplomacy": 40
+      },
+      "forces": "藏军主力+寺院僧兵",
+      "ai": "目标永久独立，亲英求保护",
+      "territories": [
+        "阿克苏"
+      ]
+    },
+    "waimeng_autonomy": {
+      "name": "外蒙古自治军",
+      "region": "xibei",
+      "stats": {
+        "industry": 10,
+        "agriculture": 45,
+        "military": 45,
+        "economy": 30,
+        "ideology": 65,
+        "diplomacy": 35
+      },
+      "forces": "蒙古骑兵2个师+苏式顾问",
+      "ai": "亲苏独立，驱逐汉人势力",
+      "territories": [
+        "酒泉"
+      ]
+    }
+  },
+  "factions": {
+    "fengtian_border": {
+      "id": "fengtian_border",
+      "name": "奉天边防军",
+      "region": "northeast",
+      "ideology": "军阀独裁",
+      "evolution": [
+        "奉天边防军",
+        "满洲军政院",
+        "中华联邦帝国"
+      ],
+      "initial_territory": [
+        "奉天",
+        "丹东",
+        "抚顺",
+        "旅顺",
+        "本溪",
+        "辽阳",
+        "通化",
+        "铁岭",
+        "鞍山"
+      ],
+      "initial_forces": [
+        "奉天陆军第1师",
+        "巡防营2个团",
+        "奉天警察大队"
+      ],
+      "stats": {
+        "industry": 62,
+        "agriculture": 55,
+        "military": 60,
+        "economy": 56,
+        "ideology": 40,
+        "diplomacy": 30
+      },
+      "special_units": [
+        "奉系精锐步兵",
+        "装甲列车",
+        "骑兵旅"
+      ],
+      "warfare": [
+        "平原大兵团",
+        "城市攻坚",
+        "雪原作战"
+      ],
+      "domestic_policy": [
+        "强人集权",
+        "军管经济",
+        "铁路国有化"
+      ],
+      "social_system": "奉系军事官僚体制——大帅说了算，军队就是政府。师长为县长，团长为乡长，层层军管。税收靠大豆贸易和铁路过路费，外加对日俄的特殊关卡。",
+      "diplomacy": "以日本关东军为最大靠山，同时暗中与沙俄余部保持联系。两头下注，既要日资修铁路，又怕被吞并。对关内军阀表面敷衍，实则视华北为禁脔。",
+      "ai": "视东北全境为核心地盘，不容他人染指。缺粮时南下华北就食；对满洲任何赤化倾向零容忍。最怕张学良自立门户和日本翻脸。",
+      "leader": {
+        "name": "张作霖",
+        "title": "东北巡阅使 · 奉系大帅",
+        "birth_death": "1875–1928",
+        "background": "马匪出身，绿林起家，以枪杆子和江湖手段横扫东北全境。重义气也重手腕，日本人和沙俄都想拉拢他，却无人能真正驾驭这头\"东北虎\"。",
+        "trait": "江湖枭雄，精于计算，对日俄虚与委蛇。口头禅：\"枪杆子里出天下。\"",
+        "style": "大帅府里摆着关公像和日式军刀，早餐大渣子粥配日本清酒。"
+      },
+      "lore": "甲午战后，清廷在东北组建新式边防军。俄国人来了又走，日本人步步紧逼，奉军在夹缝中成长为东北第一强兵。帝国崩溃的消息传来时，大帅只说了一句：\"该我们了。\"",
+      "color": "#a4561d"
+    },
+    "manmeng_restoration": {
+      "id": "manmeng_restoration",
+      "name": "满蒙恢复会",
+      "region": "northeast",
+      "ideology": "满蒙民族主义",
+      "evolution": [
+        "满蒙恢复会",
+        "漠南漠北联合政权",
+        "大清再兴朝廷"
+      ],
+      "initial_territory": [
+        "吉林",
+        "四平",
+        "延吉",
+        "白山",
+        "蛟河",
+        "辽源",
+        "长春"
+      ],
+      "initial_forces": [
+        "满蒙旗兵1个旅",
+        "地方自卫团"
+      ],
+      "stats": {
+        "industry": 36,
+        "agriculture": 25,
+        "military": 45,
+        "economy": 40,
+        "ideology": 55,
+        "diplomacy": 25
+      },
+      "special_units": [
+        "满蒙旗兵",
+        "草原骑兵",
+        "边防骑兵"
+      ],
+      "warfare": [
+        "草原机动作战",
+        "边境防御"
+      ],
+      "domestic_policy": [
+        "贵族分封",
+        "民族隔离",
+        "复辟礼制"
+      ],
+      "social_system": "复辟朝廷的遗老体制——六部名义尚存，实际上靠几位满蒙王公的私兵和日本顾问支撑。在热河和察哈尔保留着古老的八旗编制，但早已名存实亡。",
+      "diplomacy": "以日本为后盾，试图利用列强矛盾重建满清。对蒙古王公有号召力，对汉人地区则缺乏基础。极端依赖外国承认，外交即是生存。",
+      "ai": "以恢复大清为正统诉求，不断尝试拉拢蒙古王公和东北旧部。容易成为日本的傀儡，但内心深处渴望真正的独立。对共和势力和共产主义势力极端仇视。",
+      "leader": {
+        "name": "溥仪",
+        "title": "宣统皇帝 · 满洲国执政",
+        "birth_death": "1906–1967",
+        "background": "三岁登基，六岁退位，一生三次称帝。紫禁城的红墙困不住他的复辟梦，在遗老遗少的簇拥下，他试图以满蒙为根基重建祖宗基业。",
+        "trait": "忧郁的理想主义者，渴望恢复祖业却处处受制于人。",
+        "style": "龙袍补了又补，御书房里堆满西洋钟表和日本画报。"
+      },
+      "lore": "紫禁城的小朝廷在逊位诏书上签字后，遗老遗少们并没有散去。他们在热河的避暑山庄另立朝廷，发誓要让龙旗再次飘扬在长白山上。",
+      "color": "#b3990e"
+    },
+    "north_manchuria_red": {
+      "id": "north_manchuria_red",
+      "name": "北满工人赤卫队",
+      "region": "northeast",
+      "ideology": "共产主义",
+      "evolution": [
+        "北满工人赤卫队",
+        "满蒙工农苏维埃共和国",
+        "中华苏维埃社会主义共和国"
+      ],
+      "initial_territory": [
+        "哈尔滨",
+        "大庆",
+        "松原",
+        "齐齐哈尔"
+      ],
+      "initial_forces": [
+        "铁路工人武装大队",
+        "矿工赤卫队",
+        "松花江航运护卫队"
+      ],
+      "stats": {
+        "industry": 30,
+        "agriculture": 20,
+        "military": 35,
+        "economy": 28,
+        "ideology": 70,
+        "diplomacy": 10
+      },
+      "special_units": [
+        "工人赤卫队",
+        "矿工武装",
+        "铁路纵队",
+        "草原赤卫骑兵"
+      ],
+      "warfare": [
+        "城市起义",
+        "森林游击战",
+        "工人运动"
+      ],
+      "domestic_policy": [
+        "土地革命",
+        "废除外债",
+        "工厂国有"
+      ],
+      "social_system": "工农兵苏维埃雏形——在解放区实行土地平分和工厂委员会管理。基层组织是党支部和工人纠察队，供应靠征粮和没收敌产。",
+      "diplomacy": "与苏联远东保持秘密联系，接受少量武器和资金援助。对外宣称是世界革命的一部分，实际以东北生存为第一优先。视日本关东军为最大敌人。",
+      "ai": "在敌强我弱的东北密林中打游击，以小博大。擅长发动农民和工人，在敌军后方建立根据地。对一切帝国主义势力宣战，同时也警惕国内白军势力的反扑。",
+      "leader": {
+        "name": "杨靖宇",
+        "title": "东北人民革命军总司令",
+        "birth_death": "1905–1940",
+        "background": "河南汉子，却把热血洒在了长白山的冰天雪地里。在哈尔滨机车厂组织过罢工，在密林深处拉起队伍，坚信饥寒交迫的工农才是中国真正的主人。",
+        "trait": "钢铁意志，以身许国，冰天雪地里只吃草根棉絮也能战斗到最后一息。",
+        "style": "指挥部是白桦林中的窝棚，地图用炭条画在桦树皮上。"
+      },
+      "lore": "哈尔滨的机车厂里、抚顺的煤矿井下、长白山的密林深处——被压迫的工人们秘密串联。他们学会了俄语课本上的那句话：\"全世界无产者，联合起来。\"",
+      "color": "#96d826"
+    },
+    "northeast_reform": {
+      "id": "northeast_reform",
+      "name": "东北革新义勇军",
+      "region": "northeast",
+      "ideology": "国家主义",
+      "evolution": [
+        "东北革新义勇军",
+        "东三省革新政府",
+        "中华复兴帝国"
+      ],
+      "initial_territory": [
+        "大连",
+        "南关岭",
+        "金州",
+        "营口"
+      ],
+      "initial_forces": [
+        "青年军官教导团",
+        "陆军新编第1旅"
+      ],
+      "stats": {
+        "industry": 16,
+        "agriculture": 15,
+        "military": 55,
+        "economy": 22,
+        "ideology": 65,
+        "diplomacy": 20
+      },
+      "special_units": [
+        "青年军官团",
+        "机械化步兵",
+        "工兵部队"
+      ],
+      "warfare": [
+        "铁路突击",
+        "防线作战",
+        "国家总动员"
+      ],
+      "domestic_policy": [
+        "教育强国",
+        "工业救国",
+        "反帝废约"
+      ],
+      "social_system": "国家革新体制——效法日本明治维新，以军官团为决策核心，推行动员型经济。大连港是与外界联系的窗口，旅顺是要塞，山海关是屏障。",
+      "diplomacy": "试图摆脱对日本的依赖，秘密接触英美资本以对抗日本控制。向德国派留学生学工业技术，向美国买机器设备。最怕被日本全面吞并，也怕被苏联赤化。",
+      "ai": "以工业化和军事现代化为首要目标。不惜以东北资源换取西方技术和资金。对关内事务有野心，但深知先自强才能逐鹿中原。",
+      "leader": {
+        "name": "张学良",
+        "title": "东北革新军总司令 · 少帅",
+        "birth_death": "1901–2001",
+        "background": "张作霖的长子，却不愿只做少帅。留日归来，目睹了工业化的力量，立志把这片黑土地建成东方的鲁尔区。在父亲被炸死的废墟上，他选择了另一条路。",
+        "trait": "热血青年，敢于赌国运。爱飞机、爱汽车、爱一切新式机械。",
+        "style": "办公室里挂着世界地图和东北铁路网规划图，烟灰缸里永远是英国香烟。"
+      },
+      "lore": "一群留学日本的青年军官在大连登陆，带来了一整套国家改造方案。他们控制旅顺军港和山海关，扼守东北与华北的咽喉。革新的理想与铁血的手段在他们身上并存。",
+      "color": "#65b30e"
+    },
+    "capital_garrison": {
+      "id": "capital_garrison",
+      "name": "京师拱卫军",
+      "region": "huabei",
+      "ideology": "军事独裁",
+      "evolution": [
+        "京师拱卫军",
+        "中华统一军政府",
+        "中华共和帝国"
+      ],
+      "initial_territory": [
+        "北京",
+        "唐山",
+        "塘沽",
+        "天津",
+        "廊坊",
+        "承德",
+        "沧州",
+        "通州",
+        "威海"
+      ],
+      "initial_forces": [
+        "北洋第3师",
+        "京师警察总队",
+        "京畿军校教导队"
+      ],
+      "stats": {
+        "industry": 46,
+        "agriculture": 25,
+        "military": 70,
+        "economy": 62,
+        "ideology": 50,
+        "diplomacy": 55
+      },
+      "special_units": [
+        "北洋正规师",
+        "炮兵旅",
+        "城防军"
+      ],
+      "warfare": [
+        "中原大兵团",
+        "铁路枢纽决战"
+      ],
+      "domestic_policy": [
+        "维持法统",
+        "关税自主",
+        "列强承认"
+      ],
+      "social_system": "北洋式军事官僚体系——以保定军校毕业生为核心骨干，各级行政长官由现役军官兼任。财税靠华北铁路收益和京畿税收，辅以对外借款。",
+      "diplomacy": "继承晚清外交遗产，与英法德日俄五国保持微妙平衡。擅长以夷制夷，在列强夹缝中维持京畿表面上的\"中央政府\"地位。",
+      "ai": "以维持京师表面的\"中央正统\"为核心战略。在各军阀之间扮演仲裁者角色，实则自身武力有限。最怕南方革命势力北上，也怕日本借机吞并华北。",
+      "leader": {
+        "name": "袁世凯",
+        "title": "北洋军大元帅 · 京师卫戍总督",
+        "birth_death": "1859–1916",
+        "background": "在小站练出中国第一支现代化陆军，在天津竖起北洋的大旗。他以为帝制可以救中国，却只留下一地鸡毛。如今他的继承者试图在京师重现那个北洋黄金时代。",
+        "trait": "老谋深算，精通驭人之术。信任只给嫡系，权力不容分享。",
+        "style": "办公桌上永远摆着两样东西：北洋军的花名册和一杯浓茶。"
+      },
+      "lore": "北洋军六镇是大清最后的现代化遗产。小站练兵场上走出来的军官们至今仍然控制着京师周围的每一座军营，他们相信只有枪杆子才能拯救中国。",
+      "color": "#962b2b"
+    },
+    "imperial_guard": {
+      "id": "imperial_guard",
+      "name": "皇室近卫军",
+      "region": "huabei",
+      "ideology": "君主立宪",
+      "evolution": [
+        "皇室近卫军",
+        "中华立宪朝廷",
+        "大清复辟帝国"
+      ],
+      "initial_territory": [
+        "西安",
+        "咸阳",
+        "商洛",
+        "宝鸡",
+        "延安",
+        "潼关",
+        "铜川"
+      ],
+      "initial_forces": [
+        "禁卫旅",
+        "保皇党义勇队"
+      ],
+      "stats": {
+        "industry": 28,
+        "agriculture": 39,
+        "military": 45,
+        "economy": 34,
+        "ideology": 60,
+        "diplomacy": 35
+      },
+      "special_units": [
+        "禁卫军",
+        "忠勇义勇军",
+        "旧式巡防营"
+      ],
+      "warfare": [
+        "守城防御",
+        "京畿保卫战"
+      ],
+      "domestic_policy": [
+        "恢复帝制",
+        "尊孔读经",
+        "士绅共治"
+      ],
+      "social_system": "流亡朝廷体制——皇帝仍在，六部尚存，只是皇宫从紫禁城搬进了西安旧督府。军队即是朝廷，朝廷即是军队。关中土地肥沃，但兵员补给的唯一生命线是潼关。",
+      "diplomacy": "以日本皇室为样板，试图获得列强对\"大清正统\"的持续承认。与英国王室保持礼节性联系，向德国学习军事，向日本学习宪政。",
+      "ai": "以潼关为门户固守关中，向西联络西北诸势力，等待中原大乱。一旦时机成熟，效法秦灭六国。最大的恐惧是革命势力渗透入关和潼关失守。",
+      "leader": {
+        "name": "载沣",
+        "title": "监国摄政王 · 皇室近卫军统帅",
+        "birth_death": "1883–1951",
+        "background": "末代摄政王，帝国覆灭时率近卫军残部突围西迁，以西安为行在重建朝廷。他的手上没有实权却握着正统，他的军队不多却是唯一仍然效忠皇室的武装。",
+        "trait": "沉默隐忍，深知皇权的重量，以潼关为盾等待天下再乱。",
+        "style": "每日在西安行宫中按旧礼升朝，虽然殿堂简陋，仪式却分毫不差。"
+      },
+      "lore": "帝国崩溃时，皇室近卫军残部未随京陷落，而是护驾西迁，在古都西安重整旗鼓。他们据守潼关天险，以关中平原为根基，誓要匡复皇室威严。西迁之路损兵折将，却也淬炼了最忠心的核心。",
+      "color": "#eb8513"
+    },
+    "central_plains_nationalist": {
+      "id": "central_plains_nationalist",
+      "name": "中原国民义勇军",
+      "region": "huabei",
+      "ideology": "国家主义",
+      "evolution": [
+        "中原国民义勇军",
+        "华北国民革新政府",
+        "中华社会复兴国"
+      ],
+      "initial_territory": [
+        "郑州",
+        "周口",
+        "商丘",
+        "开封",
+        "新乡",
+        "漯河",
+        "菏泽",
+        "许昌",
+        "青岛",
+        "烟台"
+      ],
+      "initial_forces": [
+        "中原新编第1旅",
+        "学生义勇队"
+      ],
+      "stats": {
+        "industry": 60,
+        "agriculture": 61,
+        "military": 55,
+        "economy": 70,
+        "ideology": 70,
+        "diplomacy": 25
+      },
+      "special_units": [
+        "国民义勇兵",
+        "学生军",
+        "突击步兵"
+      ],
+      "warfare": [
+        "全民动员",
+        "运动战",
+        "中原会战"
+      ],
+      "domestic_policy": [
+        "教育普及",
+        "工业救国",
+        "反帝废约"
+      ],
+      "social_system": "军政合一的国家主义体制——以山西省为模板，在全省范围内推行\"保甲连坐\"制度和民兵训练。自办兵工厂、银行、铁路，形成闭环经济体系。",
+      "diplomacy": "奉行\"两面下注\"策略，对南京政府和日本人都保持暧昧关系。在华北诸势力间充当调停人，从各方收取\"保护费\"。",
+      "ai": "核心竞争力是\"存在\"。绝不与任何一方彻底翻脸，永远给自己留后路。但一旦认定时机成熟，会毫不犹豫地吞并弱邻。",
+      "leader": {
+        "name": "阎锡山",
+        "title": "中原军政委员会主席",
+        "birth_death": "1883–1960",
+        "background": "山西王，留学日本士官学校，精于在列强和军阀间走钢丝。他搞过保境安民，办过兵工厂，修过窄轨铁路。他的理想是把整个华北变成一座巨大的堡垒和工厂。",
+        "trait": "精于计算，凡事留后路。名言：\"存在就是一切，一切为了存在。\"",
+        "style": "办公室里同时挂着孙中山和日本天皇的画像，谁也不得罪。"
+      },
+      "lore": "太行山间的兵工厂里，机器日夜轰鸣。山西的窄轨铁路上，运煤的火车和运兵的军列交替而行。这个被群山环绕的独立王国已经经营了二十年。",
+      "color": "#d83926"
+    },
+    "northern_peasant": {
+      "id": "northern_peasant",
+      "name": "北方农民自卫军",
+      "region": "huabei",
+      "ideology": "左翼土地革命",
+      "evolution": [
+        "北方农民自卫军",
+        "中原工农共和国",
+        "中华工农苏维埃"
+      ],
+      "initial_territory": [
+        "太原",
+        "吕梁",
+        "忻州",
+        "晋中"
+      ],
+      "initial_forces": [
+        "农民自卫大队",
+        "地方红枪会"
+      ],
+      "stats": {
+        "industry": 18,
+        "agriculture": 18,
+        "military": 30,
+        "economy": 15,
+        "ideology": 75,
+        "diplomacy": 10
+      },
+      "special_units": [
+        "农民自卫军",
+        "红枪会",
+        "游击步兵"
+      ],
+      "warfare": [
+        "农村根据地",
+        "包围城市",
+        "人民战争"
+      ],
+      "domestic_policy": [
+        "平分土地",
+        "废除苛捐",
+        "打倒土豪"
+      ],
+      "social_system": "农村苏维埃——以贫农团和雇农工会为基层政权，废除地主土地所有制，实行耕者有其田。武装力量以农民赤卫队为主，辅以少量正规红军。",
+      "diplomacy": "与共产国际保持联系，接受苏联的理论指导和少量援助。对一切\"帝国主义走狗\"政权采取不承认主义，但愿意与任何真心抗日的力量合作。",
+      "ai": "以土地革命为根本，以农村包围城市为战略。在华北平原上建立连片根据地，用分田地争取农民，用游击战消耗敌人。视日本和国内军阀为同等敌人。",
+      "leader": {
+        "name": "李大钊",
+        "title": "北方工农联合委员会主席",
+        "birth_death": "1889–1927",
+        "background": "河北乐亭人，北大图书馆主任，却把目光投向了田野和工厂。他翻译《共产党宣言》，在长辛店组织铁路工人，在直隶农村发动农民。他是中国最早的马克思主义播种者。",
+        "trait": "学者型革命家，文质彬彬却意志如铁。相信理论必须武装群众。",
+        "style": "书架上同时有《新青年》合订本和俄文版《资本论》，布鞋上沾着河北乡间的泥土。"
+      },
+      "lore": "在北大的红砖楼里，一位图书管理员翻译着从日本辗转传来的马克思主义文献。他把这些文字油印成小册子，交给长辛店的铁路工人，中国农村的革命火种自此点燃。",
+      "color": "#74c539"
+    },
+    "chuanyu_border": {
+      "id": "chuanyu_border",
+      "name": "川渝边防军",
+      "region": "southwest",
+      "ideology": "军阀联邦",
+      "evolution": [
+        "川渝边防军",
+        "西南联防政府",
+        "中华西南联邦"
+      ],
+      "initial_territory": [
+        "成都",
+        "万县",
+        "乐山",
+        "内江",
+        "剑门关",
+        "南充",
+        "双流",
+        "巴中",
+        "广安",
+        "德阳",
+        "涪陵",
+        "眉山",
+        "绵阳",
+        "自贡",
+        "资阳",
+        "达州",
+        "遂宁",
+        "重庆",
+        "阿坝"
+      ],
+      "initial_forces": [
+        "川军第2师",
+        "重庆城防营"
+      ],
+      "stats": {
+        "industry": 74,
+        "agriculture": 80,
+        "military": 40,
+        "economy": 76,
+        "ideology": 35,
+        "diplomacy": 20
+      },
+      "special_units": [
+        "川军步兵",
+        "山地步兵",
+        "城防营"
+      ],
+      "warfare": [
+        "山地防御",
+        "隘口守卫",
+        "山城巷战"
+      ],
+      "domestic_policy": [
+        "川人治川",
+        "防区自治",
+        "鸦片专卖"
+      ],
+      "social_system": "川式军阀体制——以四川盆地为独立王国，自成一体。防区制下各师长分片包干，税收以盐税和鸦片税为主，农民负担沉重但秩序相对稳定。",
+      "diplomacy": "以\"闭关自守\"为核心策略，尽量避免卷入外省冲突。偶尔向邻省出兵以扩大缓冲区，但核心目标是守住天府之国的独立地位。",
+      "ai": "深知川军出川即被消耗，因此尽量在盆地内解决问题。擅长利用地形优势消耗入侵之敌，对任何外来势力都保持高度警惕。",
+      "leader": {
+        "name": "刘湘",
+        "title": "川渝联军总司令",
+        "birth_death": "1890–1938",
+        "background": "四川大邑人，从陆军小学堂一路爬到川军之首。坐拥天府之国，手握数十万川军，却深知蜀道之难——守住容易，出去也难。",
+        "trait": "务实的地方强人，对川内事务精打细算，对外来势力保持警惕。",
+        "style": "督军府设在成都老皇城，会议桌上总放着一碗担担面。"
+      },
+      "lore": "四川盆地是天然的独立王国。四面环山，中间沃野千里，足够养活五千万人口和五十万大军。川军的将领们说：\"天下未乱蜀先乱，天下已治蜀后治。\"",
+      "color": "#b3310e"
+    },
+    "weizang_dharma": {
+      "id": "weizang_dharma",
+      "name": "卫藏护教法军",
+      "region": "southwest",
+      "ideology": "神权自治",
+      "evolution": [
+        "卫藏护教法军",
+        "雪域吐蕃联合政权",
+        "吐蕃自治国"
+      ],
+      "initial_territory": [
+        "拉萨"
+      ],
+      "initial_forces": [
+        "藏军主力团",
+        "寺院护卫队"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 35,
+        "economy": 15,
+        "ideology": 80,
+        "diplomacy": 30
+      },
+      "special_units": [
+        "藏军",
+        "寺院护卫",
+        "高原骑兵"
+      ],
+      "warfare": [
+        "高原防御",
+        "宗教圣战",
+        "山地游击战"
+      ],
+      "domestic_policy": [
+        "政教合一",
+        "寺院自治",
+        "驱逐汉人"
+      ],
+      "social_system": "政教合一体制——以拉萨三大寺为权力核心，贵族和寺院共同管理土地和属民。经济以农业、畜牧业和寺院经济为主，贸易依赖茶马古道。",
+      "diplomacy": "在英印政府、汉地军阀和俄国之间巧妙周旋。利用英印政府对西藏的野心来制衡汉地势力，同时也警惕英国的文化渗透。",
+      "ai": "以维护藏传佛教的纯净性和雪域文明的独立性为首要目标。对现代化持谨慎接受态度，但绝不允许外来意识形态侵蚀寺院和农区。",
+      "leader": {
+        "name": "第十三世达赖喇嘛 · 土登嘉措",
+        "title": "卫藏政教合一法王",
+        "birth_death": "1876–1933",
+        "background": "在英军入侵西藏的炮火中流亡，在蒙古和汉地周游，归来后致力于以佛法凝聚雪域。他试图在英帝国、汉地军阀和现代化浪潮之间为藏族文明找到生存之道。",
+        "trait": "睿智的宗教领袖，对现代化持谨慎开放态度，但不允许信仰被侵蚀。",
+        "style": "布达拉宫里同时设着佛堂和英式电报房，酥油灯旁摆着地球仪。"
+      },
+      "lore": "雪域高原上的信仰已经传承了一千年。当汉地的皇帝退位、民国成立、军阀混战此起彼伏，拉萨的寺院依然在诵经。法王说：\"佛法的边界比国家的边界更真实。\"",
+      "color": "#a41d64"
+    },
+    "dianxi_jingguo": {
+      "id": "dianxi_jingguo",
+      "name": "滇西靖国军",
+      "region": "southwest",
+      "ideology": "亲英自强",
+      "evolution": [
+        "滇西靖国军",
+        "西南自强政府",
+        "中华西南自治共和国"
+      ],
+      "initial_territory": [
+        "昆明",
+        "凉山",
+        "文山",
+        "曲靖",
+        "楚雄",
+        "玉溪",
+        "红河",
+        "西康",
+        "迪庆",
+        "雅安",
+        "丽江",
+        "大理",
+        "普洱",
+        "临沧",
+        "保山"
+      ],
+      "initial_forces": [
+        "滇军独立旅",
+        "土司联军一部"
+      ],
+      "stats": {
+        "industry": 26,
+        "agriculture": 49,
+        "military": 45,
+        "economy": 38,
+        "ideology": 45,
+        "diplomacy": 45
+      },
+      "special_units": [
+        "滇军精锐",
+        "土司联军",
+        "山地侦察兵"
+      ],
+      "warfare": [
+        "西南边境作战",
+        "丛林伏击"
+      ],
+      "domestic_policy": [
+        "英式改革",
+        "实业救滇",
+        "土司共治"
+      ],
+      "social_system": "护国军政体制——以护国战争的精神遗产为凝聚力，推行军国民教育。利用云南的铜矿和茶叶贸易维持财政，与英国缅甸保持贸易关系。",
+      "diplomacy": "亲英而不媚英，利用英国势力制衡汉地军阀。与东南亚的华人社区保持紧密联系，在英法之间寻求生存空间。",
+      "ai": "以共和理想为旗帜，对抗一切专制势力。虽地瘠民贫，但士气高昂。愿意为捍卫共和制度付出巨大牺牲。",
+      "leader": {
+        "name": "蔡锷",
+        "title": "滇西靖国军总司令 · 护国大将军",
+        "birth_death": "1882–1916",
+        "background": "湖南人，却在云南成就了不朽英名。日本士官学校毕业，回国后领导了护国战争，以三千滇军起兵讨袁，全国响应。他是军人，更是理想主义者，相信共和必将照亮中国。",
+        "trait": "儒将风范，文武双全。视死如归，以国为重。临终遗言：\"锷以短命，未能尽力民国。\"",
+        "style": "军营帐篷里摆着线装《资治通鉴》和英文军事手册，身边永远带着云南白药。"
+      },
+      "lore": "云南的讲武堂是中国最好的军校之一。从这里走出的军官们有着一个共同的信念：用共和的刀剑斩断专制的锁链。",
+      "color": "#c56539"
+    },
+    "southwest_tusi": {
+      "id": "southwest_tusi",
+      "name": "西南土司联军",
+      "region": "southwest",
+      "ideology": "多民族联邦",
+      "evolution": [
+        "西南土司联军",
+        "西南多民族邦联",
+        "西南合众国"
+      ],
+      "initial_territory": [
+        "贵阳",
+        "六盘水",
+        "安顺",
+        "昭通",
+        "毕节",
+        "泸州",
+        "遵义",
+        "铜仁",
+        "黔东南",
+        "黔南",
+        "黔西南"
+      ],
+      "initial_forces": [
+        "各族土司武装",
+        "山地民团"
+      ],
+      "stats": {
+        "industry": 22,
+        "agriculture": 61,
+        "military": 30,
+        "economy": 28,
+        "ideology": 65,
+        "diplomacy": 15
+      },
+      "special_units": [
+        "各族土司兵",
+        "山地民兵",
+        "部落武装"
+      ],
+      "warfare": [
+        "部落联防",
+        "山区袭扰",
+        "古道守卫"
+      ],
+      "domestic_policy": [
+        "各族平等",
+        "土司共治",
+        "自由贸易"
+      ],
+      "social_system": "土司革新体制——保留传统的土司自治架构，但注入现代行政管理的元素。各民族在联合政府中按比例分配职位，语言和文化权利受到宪法保障。",
+      "diplomacy": "以\"民族共治\"为旗帜，在国际上争取少数族群权利话语的同情。与英国印度保持边界贸易，向瑞士联邦模式靠拢。",
+      "ai": "构建多民族国家的试验场。需要不断平衡主体民族和少数民族的关系，避免其中任何一方倒向外部势力。强调\"我们不一样，但我们在一起\"。",
+      "leader": {
+        "name": "龙云",
+        "title": "西南联合自治政府主席",
+        "birth_death": "1884–1962",
+        "background": "彝族人，从凉山的土司少爷成长为云南的实际掌控者。他懂汉话也懂彝语，知道土司的规矩也明白现代政治的规则。在群山环绕中，他试图建立一个多民族共治的新秩序。",
+        "trait": "民族主义者，倡导彝族、白族、傣族、汉族平等共处。手腕灵活，深谙边疆政治的微妙。",
+        "style": "官邸里同时挂着彝族图腾和中式匾额，客厅招待过英国领事也招待过土司头人。"
+      },
+      "lore": "在横断山脉的褶皱里，土司制度已经延续了六百年。当现代民族国家的浪潮拍打着这片大山，土司们的后代选择了一条前所未有的道路：在各民族共治的旗帜下联合起来。",
+      "color": "#b30e87"
+    },
+    "jiangnan_patrol": {
+      "id": "jiangnan_patrol",
+      "name": "江南巡防军",
+      "region": "southeast",
+      "ideology": "旧官僚独裁",
+      "evolution": [
+        "江南巡防军",
+        "东南自治政府",
+        "中华东南联合帝国"
+      ],
+      "initial_territory": [
+        "南京",
+        "六安",
+        "合肥",
+        "巢湖",
+        "常州",
+        "扬州",
+        "浦口",
+        "淮南",
+        "滁州",
+        "芜湖",
+        "蚌埠",
+        "铜陵",
+        "镇江",
+        "马鞍山",
+        "无锡",
+        "盐城",
+        "泰州",
+        "淮安",
+        "阜阳",
+        "亳州"
+      ],
+      "initial_forces": [
+        "江苏陆军第1师",
+        "江宁巡防营"
+      ],
+      "stats": {
+        "industry": 80,
+        "agriculture": 80,
+        "military": 40,
+        "economy": 80,
+        "ideology": 35,
+        "diplomacy": 50
+      },
+      "special_units": [
+        "沿江陆军",
+        "巡防水师",
+        "警察部队"
+      ],
+      "naval_power": 35,
+      "warfare": [
+        "城市防守",
+        "长江防御"
+      ],
+      "domestic_policy": [
+        "维持旧制",
+        "官商勾结",
+        "镇压工运"
+      ],
+      "social_system": "旧官僚军事管制——以北洋时期的旧部为框架，补充江南本地士绅进入行政系统。财政依赖长江下游的漕运和盐税，以及上海的关税分成。",
+      "diplomacy": "自视为北洋正统的继承者，试图以\"中央政府\"的名义号令各方。实际上列强只认其为\"上海的实际控制者\"，在外交上没有真正的发言权。",
+      "ai": "以维护江南的稳定和繁荣为第一要务。只要不威胁到自己的地盘，默许一切政治活动。最怕工人运动和南方革命势力动摇其统治基础。",
+      "leader": {
+        "name": "段祺瑞",
+        "title": "江南督军 · 北洋元老院首席",
+        "birth_death": "1865–1936",
+        "background": "北洋三杰之虎，袁世凯的嫡系大将。留学德国，崇拜普鲁士军制。在帝国崩塌后，他试图用北洋旧部的忠诚和德国的军事纪律守卫江南的秩序。",
+        "trait": "刚愎自用，信奉武力就是政治。不近人情却重诺守信，一生不置私产。",
+        "style": "办公室简朴如兵营，唯一的装饰是一幅普鲁士总参谋部的照片。"
+      },
+      "lore": "长江下游是帝国最富庶的土地。苏州的园林、扬州的盐商、上海的洋行——这一切都在北洋旧部的枪口保护之下，或者说，控制之下。",
+      "color": "#d8a926"
+    },
+    "shanghai_merchant": {
+      "id": "shanghai_merchant",
+      "name": "沪上商团保安队",
+      "region": "southeast",
+      "ideology": "财阀民主",
+      "evolution": [
+        "沪上商团保安队",
+        "东南商业共和国",
+        "中华海商联邦"
+      ],
+      "initial_territory": [
+        "上海",
+        "松江",
+        "苏州",
+        "南通"
+      ],
+      "initial_forces": [
+        "商团保安大队",
+        "租界华人志愿队"
+      ],
+      "stats": {
+        "industry": 30,
+        "agriculture": 15,
+        "military": 30,
+        "economy": 36,
+        "ideology": 40,
+        "diplomacy": 65
+      },
+      "special_units": [
+        "商团保安",
+        "租界志愿兵",
+        "护卫队"
+      ],
+      "naval_power": 40,
+      "warfare": [
+        "城市保卫",
+        "经济封锁",
+        "港口防御"
+      ],
+      "domestic_policy": [
+        "资本至上",
+        "自由贸易",
+        "议会民主(形式)"
+      ],
+      "social_system": "财阀寡头体制——公共租界和法租界是权力核心，工部局实为商人俱乐部。以商会为企业政府，以银行和船运公司为财政基础。",
+      "diplomacy": "与英美法日各国领事保持极好的私人关系。信奉\"有钱能使鬼推磨\"，用贷款和商业合同维系外交关系。",
+      "ai": "上海的繁荣就是一切。绝不希望战争波及租界，愿意与任何能够保障商贸的势力合作。最大的恐惧是工人革命和排外运动。",
+      "leader": {
+        "name": "虞洽卿",
+        "title": "上海总商会会长 · 沪上商团总董",
+        "birth_death": "1867–1945",
+        "background": "宁波帮巨商，从颜料行学徒做到上海滩首富。他的船队航行于长江和南洋之间，他的银行与汇丰花旗平起平坐。他相信金钱是最好的武器，商贸是最坚固的城墙。",
+        "trait": "精明务实的商人政治家，能用算盘解决的问题绝不用枪炮。",
+        "style": "办公室里摆着最新的道琼斯股票机和一尊关公像，保险柜里锁着各国公使的名片。"
+      },
+      "lore": "外滩的银行大厦一栋接一栋拔地而起。在黄浦江的汽笛声中，宁波帮、广东帮、苏北帮的商人们在一个咖啡馆里达成了一个共识：这片土地的未来应该由算盘而不是枪炮来决定。",
+      "color": "#8f1da4"
+    },
+    "national_revolutionary": {
+      "id": "national_revolutionary",
+      "name": "国民革命军",
+      "region": "southeast",
+      "ideology": "三民主义共和",
+      "evolution": [
+        "国民革命军",
+        "中华国民政府",
+        "中华民国"
+      ],
+      "initial_territory": [
+        "武汉",
+        "仙桃",
+        "咸宁",
+        "天门",
+        "安陆",
+        "岳阳",
+        "常德",
+        "湘潭",
+        "潜江",
+        "益阳",
+        "荆州",
+        "萍乡",
+        "鄂州",
+        "长沙",
+        "黄冈",
+        "黄石",
+        "南昌"
+      ],
+      "initial_forces": [
+        "教导团",
+        "学生军大队"
+      ],
+      "stats": {
+        "industry": 80,
+        "agriculture": 80,
+        "military": 55,
+        "economy": 80,
+        "ideology": 75,
+        "diplomacy": 40
+      },
+      "special_units": [
+        "党军",
+        "教导团",
+        "北伐步兵"
+      ],
+      "naval_power": 25,
+      "warfare": [
+        "东征北伐",
+        "运动战",
+        "宣传战"
+      ],
+      "domestic_policy": [
+        "联俄容共(初期)",
+        "平均地权",
+        "节制资本"
+      ],
+      "social_system": "革命军政体制——以武昌为军事中心、长沙为训练基地、南昌为政治学校。实行\"以党建军、以军护党\"，知识分子与职业军官共同领导。",
+      "diplomacy": "打着\"废除不平等条约\"的旗号争取民心，同时灵活运用列强之间的矛盾。亲德（军事合作）和亲美（经济援助），对苏联保持合作但警惕。",
+      "ai": "以武汉为中心经营两湖，沿长江东进还是南下的抉择决定命运。最在意革命正统性的维护，不能容忍任何打着革命旗号的投机者。",
+      "leader": {
+        "name": "孙中山",
+        "title": "中华民国非常大总统 · 国民革命军大元帅",
+        "birth_death": "1866–1925",
+        "background": "革命先行者，从海外归来，在武汉建立革命首都。他的三民主义是革命军的灵魂，他的演说能让整个广场热血沸腾。虽然身体渐衰，但他的精神是军队最强大的武器。",
+        "trait": "理想主义革命家，百折不挠。",
+        "style": "武昌阅马场的阅兵台上，中山先生的声音穿过长江的晨雾，唤醒沉睡的中国。"
+      },
+      "lore": "武汉首义的枪声震动天下。革命的火种从武昌蔓延到长沙、南昌，国民革命军在两湖和赣鄱大地集结力量。长江中游是大革命的摇篮，从这里出发，将席卷整个旧帝国。",
+      "color": "#7a962b"
+    },
+    "shanghai_workers": {
+      "id": "shanghai_workers",
+      "name": "沪滨工人义勇军",
+      "region": "southeast",
+      "ideology": "城市工团主义",
+      "evolution": [
+        "沪滨工人义勇军",
+        "长江沿岸工团苏维埃",
+        "中华社会主义共和国"
+      ],
+      "initial_territory": [
+        "杭州",
+        "丽水",
+        "台州",
+        "嘉兴",
+        "宣城",
+        "温州",
+        "湖州",
+        "萧山",
+        "衢州",
+        "金华",
+        "绍兴"
+      ],
+      "initial_forces": [
+        "纱厂工人赤卫队",
+        "码头工人武装"
+      ],
+      "stats": {
+        "industry": 48,
+        "agriculture": 45,
+        "military": 35,
+        "economy": 60,
+        "ideology": 80,
+        "diplomacy": 20
+      },
+      "special_units": [
+        "工人赤卫队",
+        "码头武装",
+        "工厂卫队"
+      ],
+      "naval_power": 15,
+      "warfare": [
+        "城市起义",
+        "总罢工",
+        "巷战"
+      ],
+      "domestic_policy": [
+        "工会掌权",
+        "工厂归工人",
+        "废除私有制"
+      ],
+      "social_system": "工人委员会体制——每个工厂是一个战斗单元，工会即是政府。杭州、温州、九江三城的工团代表组成中央执行委员会。",
+      "diplomacy": "通过共产国际与各国工人运动保持联系。视苏联为革命灯塔，但也警惕苏联对中国革命的干涉。反对一切帝国主义，支持殖民地民族解放。",
+      "ai": "以浙南赣北为根据地，沿长江和铁路线扩展工团影响。最警惕上海财阀势力的反扑。",
+      "leader": {
+        "name": "陈独秀",
+        "title": "工团中央执行委员会总书记",
+        "birth_death": "1879–1942",
+        "background": "新文化运动的旗手，在上海工人起义受挫后率部转进浙江。他相信工人自己能够管理社会，杭州的工厂委员会就是他的试验田。",
+        "trait": "激进的思想家，相信工人自治比任何政府都更先进。",
+        "style": "在杭州拱宸桥的旧纱厂办公室里，墙上挂着\"劳工神圣\"四个大字，桌上堆满了各地工团寄来的报告。"
+      },
+      "lore": "上海工人起义失败后，工团武装沿江南运河与浙赣线南撤，在杭州重组，扎根浙南和赣北的工业城镇。温州港成为他们与外界联系的生命线，九江则连接长江上下游的革命力量。",
+      "color": "#e013eb"
+    },
+    "yuegui_border": {
+      "id": "yuegui_border",
+      "name": "粤桂边防军",
+      "region": "lingnan",
+      "ideology": "地方军阀",
+      "evolution": [
+        "粤桂边防军",
+        "岭南自治政府",
+        "中华岭南共和国"
+      ],
+      "initial_territory": [
+        "广州",
+        "东莞",
+        "佛山",
+        "惠州",
+        "揭阳",
+        "汕头",
+        "江门",
+        "深圳",
+        "清远",
+        "潮州",
+        "珠海",
+        "花县",
+        "顺德",
+        "香港",
+        "阳江",
+        "湛江"
+      ],
+      "initial_forces": [
+        "粤军第1师",
+        "桂系联防营"
+      ],
+      "stats": {
+        "industry": 80,
+        "agriculture": 77,
+        "military": 45,
+        "economy": 80,
+        "ideology": 30,
+        "diplomacy": 25
+      },
+      "special_units": [
+        "粤军",
+        "桂军",
+        "地方巡防队"
+      ],
+      "naval_power": 20,
+      "warfare": [
+        "岭南攻防",
+        "城镇作战"
+      ],
+      "domestic_policy": [
+        "两广自治",
+        "军阀共治",
+        "防蒋防共"
+      ],
+      "social_system": "联省自治体制——以广东为模板推行地方自治，县以下由民选议会管理，省一级保留军事和外交权力。经济以对外贸易和轻工业为主，与香港和东南亚联系紧密。",
+      "diplomacy": "与英国保持务实合作，以香港为窗口连接世界。试图说服其他南方军阀接受\"联省自治\"框架，但应者寥寥。",
+      "ai": "坚信统一的中国应当是各省的联邦而非一人的帝国。在民主理想和军阀现实之间苦苦平衡。最怕被北方军阀和革命势力两面夹击。",
+      "leader": {
+        "name": "陈炯明",
+        "title": "粤桂边防军总司令",
+        "birth_death": "1878–1933",
+        "background": "广东海丰人，早年加入同盟会，后来却成为孙中山最强劲的对手。他信奉\"联省自治\"，认为各省自主联合才是中国真正的出路。在岭南的丘陵和海岸线之间，他建立了一个务实的地方政权。",
+        "trait": "理想主义与现实主义参半，崇拜瑞士联邦制，试图在岭南打造中国的苏黎世。",
+        "style": "会议室里挂着广东各县地图和瑞士联邦宪法全文，办公桌下压着\"粤人治粤\"的横幅。"
+      },
+      "lore": "广州是革命之城，也是商业之城。珠江水道上，满载丝绸和茶叶的木船与英国的蒸汽轮船擦肩而过。在这片土地上，有人想要民主，有人想要独立，有人仅仅想要活下去。",
+      "color": "#962b4d"
+    },
+    "zhongnan_liberation": {
+      "id": "zhongnan_liberation",
+      "name": "中南民族解放义勇军",
+      "region": "lingnan",
+      "ideology": "泛中南民族主义",
+      "evolution": [
+        "中南民族解放义勇军",
+        "中南民族联合政府",
+        "中南联邦共和国"
+      ],
+      "initial_territory": [
+        "西贡",
+        "金边"
+      ],
+      "initial_forces": [
+        "安南独立义勇队",
+        "雨林民兵"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 40,
+        "economy": 15,
+        "ideology": 85,
+        "diplomacy": 35
+      },
+      "special_units": [
+        "雨林民兵",
+        "民族解放军",
+        "丛林游击队"
+      ],
+      "warfare": [
+        "雨林游击战",
+        "地道战",
+        "全民抗战"
+      ],
+      "domestic_policy": [
+        "中南一体",
+        "民族平等",
+        "驱逐殖民者"
+      ],
+      "social_system": "民族解放阵线体制——以多个民族主义政党联盟为基础，军队由各民族志愿者组成。经济上以农村为根据地，实行自给自足的战时经济。",
+      "diplomacy": "与亚洲各国的独立运动有广泛联系。试图将越南、老挝、柬埔寨的民族主义整合到一个\"中南解放\"的旗帜下。警惕法国殖民者的反扑。",
+      "ai": "以驱逐法国殖民势力为短期目标，以建立中南联邦为长期愿景。需要在各族民族主义之间寻找最大公约数，同时防止中国军阀趁机吞并。",
+      "leader": {
+        "name": "胡志明",
+        "title": "中南解放阵线主席",
+        "birth_death": "1890–1969",
+        "background": "原名阮必成，足迹遍及法、英、美、苏。在巴黎和会上递交过越南独立的请愿书，在莫斯科学习过革命理论，在广州组织过越侨革命者。他的目光穿越了国界，看到了整个法属印度支那的解放。",
+        "trait": "坚韧不拔的国际主义者，简朴到近乎苦行。能用六种语言演讲，却只穿一双橡胶凉鞋。",
+        "style": "指挥部是河内老城区的一间竹楼，墙上挂着法属印度支那地图和列宁像。"
+      },
+      "lore": "从河内到西贡，从金边到万象，法国三色旗已经飘扬了三十年。但在丛林深处和稻田之间的村庄里，另一种语言正在流传：独立。这个词语在越南语、高棉语、老挝语中有着不同的发音，却有着相同的含义。",
+      "color": "#b30e1f"
+    },
+    "southern_peasant_red": {
+      "id": "southern_peasant_red",
+      "name": "南方农民赤卫队",
+      "region": "lingnan",
+      "ideology": "共产党革命",
+      "evolution": [
+        "南方农民赤卫队",
+        "中南苏维埃共和国",
+        "中华人民社会主义共和国"
+      ],
+      "initial_territory": [
+        "南宁",
+        "来宾",
+        "柳州",
+        "桂林",
+        "河池",
+        "百色"
+      ],
+      "initial_forces": [
+        "农民自卫军",
+        "山区游击队"
+      ],
+      "stats": {
+        "industry": 28,
+        "agriculture": 43,
+        "military": 35,
+        "economy": 42,
+        "ideology": 85,
+        "diplomacy": 15
+      },
+      "special_units": [
+        "农民红军",
+        "山区游击队",
+        "赤卫队"
+      ],
+      "warfare": [
+        "根据地建设",
+        "人民战争",
+        "农村包围城市"
+      ],
+      "domestic_policy": [
+        "土地革命",
+        "民族平等",
+        "反帝反封建"
+      ],
+      "social_system": "农村苏维埃——以乡农会为基层政权组织，全部土地收归公有、按人口分配。建立了中国最早的农村合作经济和农民银行。",
+      "diplomacy": "与共产国际有联系但保持独立自主。视一切地主阶级和资产阶级政权为敌人，不承认任何不平等条约，向全世界宣告中国农民的革命权利。",
+      "ai": "以土地革命为核心，是中国最激进的农民运动力量。在广东沿海农村建立红色根据地，试图唤起初衷是革命但后来变得保守的国民革命军的基层士兵。",
+      "leader": {
+        "name": "彭湃",
+        "title": "海陆丰苏维埃政府主席",
+        "birth_death": "1896–1929",
+        "background": "广东海丰的地主少爷，留学日本时接触马克思主义。归国后，他做了一件惊世骇俗的事：当众烧毁自家田契，把土地分给佃农。他是中国第一个红色政权的创建者。",
+        "trait": "脱胎换骨的革命者，从剥削阶级变为最彻底的农民领袖。热情如火，不惜以身殉道。",
+        "style": "办公室里没有一件奢侈品，桌上放着一把锄头和一本翻烂的《共产党宣言》。"
+      },
+      "lore": "海丰的地主少爷站在自家的田埂上，当众点燃了地契。围观的农民先是沉默，然后爆发出山呼海啸般的欢呼。中国第一个县级苏维埃政权就这样在一把火中诞生了。",
+      "color": "#d826bc"
+    },
+    "zhongnan_democratic": {
+      "id": "zhongnan_democratic",
+      "name": "中南民主联军",
+      "region": "lingnan",
+      "ideology": "民主联邦",
+      "evolution": [
+        "中南民主联军",
+        "中南民主联邦",
+        "中南合众国"
+      ],
+      "initial_territory": [
+        "河内"
+      ],
+      "initial_forces": [
+        "民主自卫旅",
+        "反法游击队"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 35,
+        "economy": 15,
+        "ideology": 70,
+        "diplomacy": 45
+      },
+      "special_units": [
+        "民主自卫军",
+        "志愿兵",
+        "民兵"
+      ],
+      "warfare": [
+        "现代游击战",
+        "民主阵线作战"
+      ],
+      "domestic_policy": [
+        "多党议会",
+        "民族自治",
+        "自由选举"
+      ],
+      "social_system": "军政训政混合体制——以\"革命尚未成功\"为由维持军事管制，同时承诺战后实行宪政。地方事务由军政联席会议决定，中央保留最终决策权。",
+      "diplomacy": "对美友好，试图以民主形象争取美国援助。警惕法国在印度支那的扩张，同时也在观望日本在东南亚的动向。",
+      "ai": "以民主为最终目标但以军事为当前手段。需要在桂系内部的派系之间维持平衡，同时面对来自北方和殖民势力的双重压力。",
+      "leader": {
+        "name": "李宗仁",
+        "title": "中南民主联军总司令",
+        "birth_death": "1890–1969",
+        "background": "广西桂林人，桂系首领之一。与白崇禧并称\"李白\"，从统一广西到北伐中原，他用兵如神。但他也是民主的信仰者，相信军人应当服从文官政府。",
+        "trait": "军人政治家，在铁腕与民主之间寻找平衡。崇尚效率和秩序，但也尊重程序。",
+        "style": "指挥部墙上同时挂着广西地形沙盘和美国国会大厦的照片，抽屉里锁着一部手抄的《联邦党人文集》。"
+      },
+      "lore": "桂系的将领们有一个奇怪的信条：军人要打仗，但打完了要让文人来治理。这种\"军人不干政\"的理念在遍地军阀的中国显得格格不入，却让他们赢得了不少知识分子的拥护。",
+      "color": "#d8264b"
+    },
+    "imperial_navy": {
+      "id": "imperial_navy",
+      "name": "帝国海军镇守府",
+      "region": "nanyang",
+      "ideology": "海权军国",
+      "evolution": [
+        "帝国海军镇守府",
+        "南洋海权政府",
+        "中华海洋帝国"
+      ],
+      "initial_territory": [
+        "马尼拉"
+      ],
+      "initial_forces": [
+        "海军陆战队1个团",
+        "巡洋舰2艘",
+        "炮舰3艘"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 60,
+        "economy": 15,
+        "ideology": 45,
+        "diplomacy": 55
+      },
+      "special_units": [
+        "海军陆战队",
+        "舰队炮兵",
+        "岸防部队"
+      ],
+      "naval_power": 85,
+      "warfare": [
+        "海战",
+        "登陆战",
+        "岛屿争夺",
+        "破交战"
+      ],
+      "domestic_policy": [
+        "海权至上",
+        "港口垄断",
+        "舰队优先"
+      ],
+      "social_system": "海权军国体制——海军司令部即最高行政机构，商船队和渔业受海军部直接管辖。以港口城市为据点，税收主要来自海运贸易和渔业。",
+      "diplomacy": "以英日海军为师，与皇家海军保持礼节性交往，向日本海军学习战术。试图让列强承认南洋为\"特殊海权区\"，但也清楚这种承认随时可能被撤销。",
+      "ai": "以建立一支能够控制南海的现代化海军为终极梦想。深知陆权强国对海权势力的威胁，因此积极发展两栖作战能力。最大的敌人不是某个具体国家，而是\"忽视海洋的思维\"。",
+      "leader": {
+        "name": "萨镇冰",
+        "title": "帝国海军总司令 · 南洋镇守使",
+        "birth_death": "1859–1952",
+        "background": "福州人，大清海军最后的名将。甲午海战时他是北洋水师的管带，亲眼目睹了舰队沉没。此后毕生致力于重建中国海军，深信没有海权的国家终究只是砧板上的鱼肉。",
+        "trait": "老派海军军人，严谨而执拗。把每一艘军舰都当成自己的孩子。",
+        "style": "办公室里挂着北洋水师旧照和世界海权图，案头常备《海权对历史的影响》中译本。"
+      },
+      "lore": "北洋水师覆灭的那一天，镇远号管带萨镇冰被渔民从海里救起。从那一刻起，他心中只有一个执念：中国必须拥有一支能够守卫万里海疆的舰队。",
+      "color": "#966e2b"
+    },
+    "overseas_chinese": {
+      "id": "overseas_chinese",
+      "name": "南洋华侨保安军",
+      "region": "nanyang",
+      "ideology": "华人民族主义",
+      "evolution": [
+        "南洋华侨保安军",
+        "南洋华人自治政府",
+        "南洋中华共和国"
+      ],
+      "initial_territory": [
+        "新加坡"
+      ],
+      "initial_forces": [
+        "华侨义勇大队",
+        "商团护卫队"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 40,
+        "economy": 18,
+        "ideology": 65,
+        "diplomacy": 50
+      },
+      "special_units": [
+        "华侨义勇军",
+        "商团护卫",
+        "港口守卫"
+      ],
+      "naval_power": 50,
+      "warfare": [
+        "华人聚居区保卫",
+        "侨民武装",
+        "海上自卫"
+      ],
+      "domestic_policy": [
+        "护侨优先",
+        "华文教育",
+        "经济自治"
+      ],
+      "social_system": "华侨自治体制——以各地中华会馆为基层行政单位，侨领会议为最高权力机构。经济依赖华侨汇款和南洋贸易，拥有自己的银行体系和船队。",
+      "diplomacy": "通过海外华人网络在全球建立影响力。与英国殖民政府保持合作，同时暗中支持东南亚各地的华人民族运动。",
+      "ai": "以保护全球华人为己任。善于利用经济力量影响政治，但不轻易动用武力。最大的财富是散布在东南亚各地的华人商业网络，最大的弱点是缺乏稳固的领土基础。",
+      "leader": {
+        "name": "陈嘉庚",
+        "title": "南洋华侨联合总会会长",
+        "birth_death": "1874–1961",
+        "background": "福建集美人，南洋橡胶大王。他在马来亚和新加坡建立了庞大的商业帝国，却把大部分财富捐给了教育事业。他的动员能力让任何一个中国政权都不敢小觑南洋华人的力量。",
+        "trait": "华侨领袖，爱国实业家。一生节俭，却为教育慷慨解囊。坚信教育是民族复兴的根本。",
+        "style": "办公室里墙上挂着一幅\"诚毅\"二字，桌上摆着集美学校和厦门大学的规划图。"
+      },
+      "lore": "南洋的橡胶园里、锡矿深处、海峡殖民地的商行中——遍布着一个看不见的帝国。它是用方言、乡谊和侨批织成的，比任何殖民政府的档案都更精确。",
+      "color": "#a039c5"
+    },
+    "nanyang_indigenous": {
+      "id": "nanyang_indigenous",
+      "name": "南洋土著民军",
+      "region": "nanyang",
+      "ideology": "本土民族主义",
+      "evolution": [
+        "南洋土著民军",
+        "南洋群岛联合政权",
+        "南洋原住民合众国"
+      ],
+      "initial_territory": [
+        "南沙",
+        "吉隆坡",
+        "槟城"
+      ],
+      "initial_forces": [
+        "部落武装",
+        "丛林民兵"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 30,
+        "economy": 22,
+        "ideology": 75,
+        "diplomacy": 20
+      },
+      "special_units": [
+        "部落战士",
+        "丛林民兵",
+        "海岛防卫队"
+      ],
+      "naval_power": 25,
+      "warfare": [
+        "海岛游击战",
+        "雨林抵抗"
+      ],
+      "domestic_policy": [
+        "原住民优先",
+        "驱逐外来者",
+        "土地归部落"
+      ],
+      "social_system": "原住民联合体制——以各地苏丹和部落首领为基础，整合荷兰殖民时期的行政架构。各岛屿享有高度自治权，中央负责外交和国防。",
+      "diplomacy": "以反殖民为旗帜，号召马来群岛所有原住民团结起来。与日本暗中接触以制衡西方列强，但不愿成为任何大国的附庸。",
+      "ai": "以驱逐荷兰殖民者为当前目标，以建立独立的马来群岛国家为终极理想。需要在伊斯兰势力、世俗民族主义者和传统部落之间建立统一战线。",
+      "leader": {
+        "name": "苏加诺",
+        "title": "南洋原住民联合阵线主席",
+        "birth_death": "1901–1970",
+        "background": "爪哇贵族与巴厘平民的混血，在荷兰人的学校里学会了民族主义。他的口才如火山喷发，他的理想是让马来群岛上的每一个原住民都不再是殖民者的奴隶。",
+        "trait": "天才演说家，能用爪哇语、马来语、荷兰语和英语鼓动人心。民族主义与社会主义的混合体。",
+        "style": "讲台上永远摆着一杯爪哇咖啡和一本荷兰语政治学著作，身上穿的是蜡染布衣而非西服。"
+      },
+      "lore": "荷兰人统治东印度群岛已经三百年。但在每一个村庄的榕树下，老人们仍然讲述着满者伯夷和室利佛逝的黄金时代。现在，这些古老的记忆正在变成政治口号。",
+      "color": "#c9eb13"
+    },
+    "nanyang_guerrilla": {
+      "id": "nanyang_guerrilla",
+      "name": "南洋民族解放游击队",
+      "region": "nanyang",
+      "ideology": "第三世界反殖民",
+      "evolution": [
+        "南洋民族解放游击队",
+        "南洋独立共和国",
+        "大南洋联邦"
+      ],
+      "initial_territory": [
+        "曼谷",
+        "暹罗湾"
+      ],
+      "initial_forces": [
+        "反殖民游击大队"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 35,
+        "economy": 22,
+        "ideology": 80,
+        "diplomacy": 30
+      },
+      "special_units": [
+        "反殖民游击队",
+        "海岛突击兵"
+      ],
+      "naval_power": 30,
+      "warfare": [
+        "海上游击战",
+        "破袭战",
+        "民族解放"
+      ],
+      "domestic_policy": [
+        "不分种族",
+        "联合反殖",
+        "土地改革"
+      ],
+      "social_system": "游击区人民政权——以解放区农民协会和渔民工会为基础，实行战时共产主义配给制度。武装力量以游击队和民兵为主，依托丛林和岛屿进行持久战。",
+      "diplomacy": "与共产国际和亚洲各国的左翼运动保持网络联系。视一切殖民主义、帝国主义为敌人，但愿意与反殖民的民族主义者结成统一战线。",
+      "ai": "以游击战消耗殖民者的统治成本，同时在被解放的村庄建立基层政权。最大的挑战是不同岛屿之间通信困难，需要建立高效的地下交通网络。",
+      "leader": {
+        "name": "陈马六甲",
+        "title": "大南洋解放阵线总书记",
+        "birth_death": "1897–1949",
+        "background": "本名Ibrahim Datuk Tan Malaka，苏门答腊的米南加保人。在荷兰念过师范，在莫斯科见过列宁，在广州和蒋介石握过手。他相信被压迫的东方民族联合起来，才能彻底终结殖民主义。",
+        "trait": "漂泊的革命者，足迹横跨亚欧三大洲。思想庞杂，吸收列宁主义、伊斯兰平等思想和东方传统。",
+        "style": "行李只有一个藤箱，里面装着打字机、列宁著作和一把匕首。"
+      },
+      "lore": "从马尼拉到曼谷，从新加坡到香港，南洋各地的本土革命者联合起来。他们利用曼谷的复杂水域和香港的国际贸易网络，以游击战对抗殖民主义。香港虽然是英占，却是南洋革命的情报中枢和资金枢纽。",
+      "color": "#9da41d"
+    },
+    "xibei_border": {
+      "id": "xibei_border",
+      "name": "西北边防军",
+      "region": "xibei",
+      "ideology": "马家军阀",
+      "evolution": [
+        "西北边防军",
+        "西北军政委员会",
+        "中华西北联邦"
+      ],
+      "initial_territory": [
+        "兰州",
+        "临夏",
+        "定西",
+        "果洛",
+        "海东",
+        "海北",
+        "海南",
+        "白银",
+        "西宁"
+      ],
+      "initial_forces": [
+        "青海马家骑兵旅",
+        "宁夏镇守使卫队",
+        "甘肃巡防营"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 24,
+        "military": 65,
+        "economy": 15,
+        "ideology": 30,
+        "diplomacy": 25
+      },
+      "special_units": [
+        "马家骑兵",
+        "沙漠轻骑",
+        "回民步兵"
+      ],
+      "warfare": [
+        "高原突袭",
+        "打了就跑",
+        "宗教动员"
+      ],
+      "domestic_policy": [
+        "军阀割据",
+        "鸦片专卖",
+        "打压新思想"
+      ],
+      "social_system": "马家军阀体制——以家族血缘和伊斯兰教信仰为双重纽带，军队各级指挥官均由马氏宗族成员担任。财税以羊毛贸易和青海盐税为主，辅以对来往商队的收费。",
+      "diplomacy": "对苏联保持警惕，对南京政府表面服从实则独立。利用穆斯林身份与中东伊斯兰世界保持联系，偶尔接受来自麦加的朝圣外交。",
+      "ai": "以家族利益为最高准则。在西北广袤的戈壁和草原上维持着近乎独立的王国，利用骑兵的机动性控制着丝绸之路的关键节点。",
+      "leader": {
+        "name": "马步芳",
+        "title": "西北边防军总司令 · 青海省主席",
+        "birth_death": "1903–1975",
+        "background": "甘肃河州回族世家出身，马家军的第三代传人。从黄河之滨到天山脚下，马家骑兵的蹄声是这片土地上最令人生畏的声音。他既是虔诚的穆斯林，也是冷酷的军阀。",
+        "trait": "家族军阀，将血缘、信仰和武力融为一体。对家族绝对忠诚，对敌人毫不留情。",
+        "style": "指挥部设在西宁的清真寺旁，军令和古兰经文在同一张桌子上签署。"
+      },
+      "lore": "河西走廊的风沙中，马家军的骑兵像幽灵一样出没。他们的先祖曾随成吉思汗西征，如今他们的后代控制着丝绸之路上最关键的关隘：兰州、西宁、嘉峪关。",
+      "color": "#eb136e"
+    },
+    "muslim_self_defense": {
+      "id": "muslim_self_defense",
+      "name": "西北穆斯林自卫军",
+      "region": "xibei",
+      "ideology": "温和伊斯兰自治",
+      "evolution": [
+        "西北穆斯林自卫军",
+        "河湟伊斯兰自治政府",
+        "中华伊斯兰自治区"
+      ],
+      "initial_territory": [
+        "银川",
+        "中卫",
+        "吴忠",
+        "武威",
+        "永昌",
+        "石嘴山",
+        "鄂尔多斯",
+        "阿拉善盟"
+      ],
+      "initial_forces": [
+        "清真寺自卫团",
+        "地方民团",
+        "回民义勇队"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 27,
+        "military": 40,
+        "economy": 24,
+        "ideology": 60,
+        "diplomacy": 30
+      },
+      "special_units": [
+        "清真寺护卫",
+        "民团步兵",
+        "山地侦察兵"
+      ],
+      "warfare": [
+        "城市防御",
+        "宗教社区保卫战"
+      ],
+      "domestic_policy": [
+        "伊斯兰自治",
+        "宗教教育",
+        "民族和解"
+      ],
+      "social_system": "伊斯兰自治体制——以清真寺为中心建立社区管理体系，由伊玛目和乡绅组成的委员会管理日常事务。税收以天课（宗教税）为基础，补充商业和农业收入。",
+      "diplomacy": "在汉族军阀和伊斯兰教胞之间扮演和平使者的角色。与中东的伊斯兰学者保持书信往来，试图获得伊斯兰世界的道义支持。",
+      "ai": "以保护中国穆斯林的信仰自由和自治权利为首要目标。面对来自汉族军阀和极端势力的双重压力，需要在坚持信仰和维持和平之间走钢丝。",
+      "leader": {
+        "name": "马福祥",
+        "title": "西北穆斯林自治委员会主席",
+        "birth_death": "1876–1932",
+        "background": "甘肃河州人，马家军阀中少见的温和派。他精通汉回双语，在西北各族之间扮演着调停者的角色。比起征服，他更希望所有穆斯林能在一个和平的框架下守护自己的信仰。",
+        "trait": "温和的穆斯林领袖，信奉\"教内团结、教外和睦\"。善于用谈判代替枪炮。",
+        "style": "会客厅里同时接待阿訇和汉人商人，茶几上摆着盖碗茶和波斯蜜枣。"
+      },
+      "lore": "清真寺的宣礼声在黄土高原上回荡了几百年。回族穆斯林用汉语念诵古兰经，用筷子吃手抓羊肉。他们是中国最古老的本土穆斯林社群，在汉文化和伊斯兰文明之间架起了一座独特的桥梁。",
+      "color": "#c5be39"
+    },
+    "tianshan_jingan": {
+      "id": "tianshan_jingan",
+      "name": "天山靖安军",
+      "region": "xibei",
+      "ideology": "泛突厥民族主义",
+      "evolution": [
+        "天山靖安军",
+        "东突厥斯坦共和国",
+        "突厥斯坦合众国"
+      ],
+      "initial_territory": [
+        "迪化",
+        "五家渠",
+        "伊犁",
+        "吐鲁番",
+        "巴音郭楞蒙古",
+        "昌吉"
+      ],
+      "initial_forces": [
+        "突厥义勇军",
+        "绿洲民兵",
+        "哥萨克雇佣兵"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 35,
+        "economy": 15,
+        "ideology": 75,
+        "diplomacy": 20
+      },
+      "special_units": [
+        "突厥骑兵",
+        "绿洲游击兵",
+        "山地突击队"
+      ],
+      "warfare": [
+        "绿洲游击战",
+        "跨境袭扰",
+        "民族圣战"
+      ],
+      "domestic_policy": [
+        "泛突厥统一",
+        "驱逐汉人",
+        "恢复传统"
+      ],
+      "social_system": "个人独裁体制——一切权力集中于督办一人之手。表面上维持省政府架构，实则所有决策出自督办公署。利用苏式秘密警察控制社会，同时鼓励各族文化表面上的繁荣。",
+      "diplomacy": "在苏联和中国中央政府之间反复横跳。时而宣称是\"中国的忠实边疆守卫者\"，时而又暗示愿意接受苏联的\"保护\"。",
+      "ai": "核心竞争力是投机和背叛。永远选择当前最强的一方靠拢，但随时准备转向。精通利用信息不对称在各方之间谋取最大利益。",
+      "leader": {
+        "name": "盛世才",
+        "title": "天山靖安军总司令 · 新疆督办",
+        "birth_death": "1895–1975",
+        "background": "辽宁人，却在新疆称王。在莫斯科受过教育，在南京做过官，最后选择在广袤的西域建立自己的独立王国。他时而亲苏、时而亲蒋，永远只忠于自己的权力。",
+        "trait": "变色龙式的政治投机者，能在各方势力之间左右逢源。精通俄语和维吾尔语。",
+        "style": "办公室里同时挂着斯大林画像和三民主义标语，保险柜里有苏式手枪和中式古玩。"
+      },
+      "lore": "天山的雪水灌溉着绿洲，绿洲连接着丝路。在乌鲁木齐的巴扎上，维吾尔语、汉语、俄语、哈萨克语、蒙古语、乌兹别克语同时响起。这是一个交汇点，也是一个火药桶。",
+      "color": "#c53991"
+    },
+    "silk_road_guard": {
+      "id": "silk_road_guard",
+      "name": "丝路商队保安军",
+      "region": "xibei",
+      "ideology": "商业邦联",
+      "evolution": [
+        "丝路商队保安军",
+        "丝绸之路城邦联盟",
+        "西域商业合众国"
+      ],
+      "initial_territory": [
+        "张掖",
+        "嘉峪关",
+        "酒泉",
+        "高台"
+      ],
+      "initial_forces": [
+        "商队护卫队",
+        "骆驼骑兵",
+        "绿洲民团"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 15,
+        "military": 25,
+        "economy": 16,
+        "ideology": 45,
+        "diplomacy": 40
+      },
+      "special_units": [
+        "商队护卫",
+        "骆驼骑兵",
+        "驿站守卫"
+      ],
+      "warfare": [
+        "商路保卫",
+        "小规模冲突",
+        "中立自保"
+      ],
+      "domestic_policy": [
+        "贸易自由",
+        "城邦自治",
+        "多宗教共存"
+      ],
+      "social_system": "商业共和体制——以商会为最高权力机构，会长由各大商号轮流推举。实行自由港政策，关税极低甚至为零，吸引整个中亚的商队在此交易。",
+      "diplomacy": "以\"中立商业共和国\"自居，与所有邻国保持贸易关系。不愿参与任何军事同盟，但愿意向各方提供贷款和物资。",
+      "ai": "以商业利益为一切政策的出发点。只要能让丝绸之路畅通，愿意与魔鬼做交易。最大的恐惧是战乱中断商路，因此积极在各大势力之间调停。",
+      "leader": {
+        "name": "张謇",
+        "title": "丝路商团联合总会会长",
+        "birth_death": "1853–1926",
+        "background": "江苏南通人，状元出身，却弃官从商。他办纱厂、修铁路、建学堂，是中国近代实业第一人。帝国崩塌后，他将目光投向广袤的西域，相信重启丝绸之路才是中国强大的经济命脉。",
+        "trait": "儒商典范，以实业救国为毕生理想。相信教育和工业才是立国之本，看不起只懂枪杆子的军阀。",
+        "style": "书房里有四书五经也有亚当·斯密的《国富论》，名片印着\"状元及第·大生纱厂·西北铁路筹办处\"。"
+      },
+      "lore": "当帝国崩溃，所有官方机构撤出西域后，商人们接管了秩序。他们组织了武装商队，恢复了驿站系统，甚至发行了自己的商业票据。在广袤的中亚腹地，一个以利润为信仰的微型共和国悄然成型。",
+      "color": "#962b90"
+    }
+  },
+  "phases": {
+    "1": {
+      "name": "帝国余晖",
+      "subtitle": "统一准备期",
+      "description": "帝国表面统一。玩家操控中央政府，执行4项国策决策。国策影响直接决定分裂后各区域的工业、军队、外交环境。",
+      "policies": [
+        {
+          "id": "navy",
+          "name": "海军建设",
+          "affects": "南洋大区",
+          "effect_desc": "南洋势力初始海军+15，工业+5"
+        },
+        {
+          "id": "northeast_ind",
+          "name": "东北工业化",
+          "affects": "东北大区",
+          "effect_desc": "东北势力初始工业+10，军事+5"
+        },
+        {
+          "id": "southwest_reform",
+          "name": "西南改土归流",
+          "affects": "西南大区",
+          "effect_desc": "西南势力初始思想-10，外交+10，经济+5"
+        },
+        {
+          "id": "south_suppress",
+          "name": "南方革命镇压",
+          "affects": "东南/岭南大区",
+          "effect_desc": "东南+岭南势力初始军事+8，思想-10，工业+3"
+        }
+      ],
+      "collapse_conditions": [
+        "财政破产",
+        "军阀抗命",
+        "南方革命",
+        "边疆叛乱",
+        "海军哗变",
+        "列强干涉"
+      ],
+      "collapse_threshold": 2
+    },
+    "2": {
+      "name": "帝国大崩溃",
+      "subtitle": "分裂触发期",
+      "description": "帝国解体，全国分裂为28支可选初始小势力。玩家选择加入一支，政治路线永久锁定。"
+    },
+    "3": {
+      "name": "区域统一战",
+      "subtitle": "核心养成期",
+      "description": "消灭本区域所有敌对小势力，完全控制大区。胜利后政权升级为正式割据政权。",
+      "milestones": [
+        "军事改革完成：建立正规化陆军/海军/民兵体系",
+        "区域工业化/经济基础完成：粮食自给、税收稳定、资源可控",
+        "思想统一完成：本区域支持率 ≥ 80%，无大规模叛乱"
+      ]
+    },
+    "4": {
+      "name": "七强并立",
+      "subtitle": "大国博弈期",
+      "description": "七大区域各诞生一位霸主。外交结盟、科技研发、经济建设、局部战争、应对列强干涉。",
+      "milestones": [
+        "全国级工业化：重工业/轻工业/贸易达强国水平",
+        "总体战体制完成：全民动员、军工自给、后勤稳定",
+        "意识形态霸权完成：外交影响力进入全国前三"
+      ]
+    },
+    "5": {
+      "name": "天下归一",
+      "subtitle": "终局决胜期",
+      "description": "达成终极胜利条件，政权升级为终极国号，触发史诗超事件。",
+      "victory_types": [
+        {
+          "type": "unification",
+          "name": "全国统一型",
+          "condition": "控制北京、南京、武汉三大核心城市"
+        },
+        {
+          "type": "independence",
+          "name": "区域独立型",
+          "condition": "稳固控制本大区，获列强/周边承认"
+        },
+        {
+          "type": "revolution",
+          "name": "革命胜利型",
+          "condition": "完成土地/工人/民族解放目标，输出意识形态"
+        }
+      ]
+    }
+  },
+  "stats_system": {
+    "attributes": [
+      {
+        "id": "industry",
+        "name": "工业实力",
+        "desc": "武器、装备、基建生产",
+        "improve": "建工厂、修铁路、开矿、引进技术"
+      },
+      {
+        "id": "agriculture",
+        "name": "农业水平",
+        "desc": "粮食、人口增长、稳定度",
+        "improve": "土改、水利、化肥、垦荒"
+      },
+      {
+        "id": "military",
+        "name": "军事组织",
+        "desc": "动员速度、训练度、指挥效率",
+        "improve": "建军校、整编部队、建要塞、练新兵"
+      },
+      {
+        "id": "economy",
+        "name": "经济财政",
+        "desc": "税收、贸易、外债、通胀",
+        "improve": "统一货币、改革税制、发展贸易、废除租界"
+      },
+      {
+        "id": "ideology",
+        "name": "思想统一",
+        "desc": "支持率、叛乱率、宣传效率",
+        "improve": "办教育、宣传、肃反、文化统一"
+      },
+      {
+        "id": "diplomacy",
+        "name": "外交声望",
+        "desc": "列强态度、结盟能力、国际地位",
+        "improve": "遣使、结盟、援助、宣战、争取承认"
+      }
+    ],
+    "max_value": 100
+  },
+  "tech_tree": {
+    "description": "五线三级科技树。每线T1→T2→T3逐级解锁，前置科技必须完成。跨线科技需多线前置。",
+    "branches": {
+      "military": {
+        "name": "军事",
+        "icon": "⚔",
+        "desc": "陆军装备与战术"
+      },
+      "industry": {
+        "name": "工业",
+        "icon": "🏭",
+        "desc": "生产能力与基建"
+      },
+      "agriculture": {
+        "name": "农业",
+        "icon": "🌾",
+        "desc": "粮食供给与人口"
+      },
+      "naval": {
+        "name": "海军",
+        "icon": "⚓",
+        "desc": "制海权与两栖能力"
+      },
+      "ideology": {
+        "name": "思想",
+        "icon": "📖",
+        "desc": "意识形态与文化"
+      }
+    },
+    "tiers": {
+      "1": {
+        "name": "初步现代化",
+        "require_phase": 3,
+        "cost_economy": 20,
+        "turns": 4,
+        "techs": {
+          "t1_infantry": {
+            "name": "步兵现代化",
+            "branch": "military",
+            "desc": "统一制式步枪，建立军校体系，废除旧式勇营",
+            "effect": {
+              "military": 8,
+              "ideology": 3
+            }
+          },
+          "t1_industry": {
+            "name": "基础重工业",
+            "branch": "industry",
+            "desc": "炼钢厂、机床厂、煤矿机械化开采",
+            "effect": {
+              "industry": 8,
+              "economy": 5
+            }
+          },
+          "t1_agriculture": {
+            "name": "科学农业",
+            "branch": "agriculture",
+            "desc": "化肥推广、良种选育、水利渠网",
+            "effect": {
+              "agriculture": 8,
+              "economy": 3
+            }
+          },
+          "t1_naval": {
+            "name": "近代海军",
+            "branch": "naval",
+            "desc": "铁甲舰建造、船政学堂、港口要塞化",
+            "effect": {
+              "naval_power": 12,
+              "industry": 3
+            }
+          },
+          "t1_ideology": {
+            "name": "全民教育",
+            "branch": "ideology",
+            "desc": "扫盲运动、报刊发行网、师范学堂",
+            "effect": {
+              "ideology": 8,
+              "diplomacy": 3
+            }
+          }
+        }
+      },
+      "2": {
+        "name": "工业体系",
+        "require_phase": 4,
+        "cost_economy": 40,
+        "turns": 6,
+        "techs": {
+          "t2_armor": {
+            "name": "装甲先锋",
+            "branch": "military",
+            "requires": [
+              "t1_infantry"
+            ],
+            "desc": "坦克研制、摩托化步兵、无线电指挥",
+            "effect": {
+              "military": 12,
+              "industry": 5
+            }
+          },
+          "t2_industry": {
+            "name": "军工复合体",
+            "branch": "industry",
+            "requires": [
+              "t1_industry"
+            ],
+            "desc": "武器流水线、飞机制造、合成橡胶",
+            "effect": {
+              "industry": 12,
+              "military": 8
+            }
+          },
+          "t2_agriculture": {
+            "name": "机械耕作",
+            "branch": "agriculture",
+            "requires": [
+              "t1_agriculture"
+            ],
+            "desc": "拖拉机厂、灌溉电网、仓储冷链",
+            "effect": {
+              "agriculture": 12,
+              "industry": 5
+            }
+          },
+          "t2_naval": {
+            "name": "航母雏形",
+            "branch": "naval",
+            "requires": [
+              "t1_naval"
+            ],
+            "desc": "水上飞机母舰、潜艇部队、鱼雷快艇",
+            "effect": {
+              "naval_power": 14,
+              "industry": 8
+            }
+          },
+          "t2_ideology": {
+            "name": "广播动员",
+            "branch": "ideology",
+            "requires": [
+              "t1_ideology"
+            ],
+            "desc": "无线电广播网、群众组织、宣传队",
+            "effect": {
+              "ideology": 12,
+              "military": 5
+            }
+          }
+        }
+      },
+      "3": {
+        "name": "巅峰突破",
+        "require_phase": 5,
+        "cost_economy": 60,
+        "turns": 8,
+        "techs": {
+          "t3_combined": {
+            "name": "联合作战体系",
+            "branch": "military",
+            "requires": [
+              "t2_armor"
+            ],
+            "desc": "空地协同、特种作战、火箭炮集群",
+            "effect": {
+              "military": 20,
+              "ideology": 5
+            }
+          },
+          "t3_industry": {
+            "name": "精密制造",
+            "branch": "industry",
+            "requires": [
+              "t2_industry"
+            ],
+            "desc": "电子工业、精密机床、合成材料",
+            "effect": {
+              "industry": 20,
+              "economy": 10
+            }
+          },
+          "t3_agriculture": {
+            "name": "绿色革命",
+            "branch": "agriculture",
+            "requires": [
+              "t2_agriculture"
+            ],
+            "desc": "杂交育种、农药化工、机械化全流程",
+            "effect": {
+              "agriculture": 20,
+              "economy": 5
+            }
+          },
+          "t3_naval": {
+            "name": "蓝水海军",
+            "branch": "naval",
+            "requires": [
+              "t2_naval"
+            ],
+            "desc": "舰队航母、巡洋舰编队、海外基地",
+            "effect": {
+              "naval_power": 20,
+              "diplomacy": 8
+            }
+          },
+          "t3_ideology": {
+            "name": "文明话语权",
+            "branch": "ideology",
+            "requires": [
+              "t2_ideology"
+            ],
+            "desc": "全球文化输出、学术中心、国际组织主导权",
+            "effect": {
+              "ideology": 20,
+              "diplomacy": 10
+            }
+          },
+          "t3_aerospace": {
+            "name": "全球投送体系",
+            "branch": "military",
+            "requires": [
+              "t2_armor",
+              "t2_naval"
+            ],
+            "desc": "远程轰炸机、战略运输、空降兵",
+            "effect": {
+              "military": 15,
+              "naval_power": 10,
+              "industry": 8,
+              "diplomacy": 5
+            }
+          },
+          "t3_economy": {
+            "name": "超大规模经济体",
+            "branch": "industry",
+            "requires": [
+              "t2_industry",
+              "t2_agriculture"
+            ],
+            "desc": "全球贸易网络、金融中心、产业帝国",
+            "effect": {
+              "economy": 20,
+              "industry": 10,
+              "diplomacy": 5
+            }
+          }
+        }
+      }
+    }
+  },
+  "small_events": [
+    {
+      "id": "drought",
+      "name": "旱灾",
+      "desc": "持续干旱导致粮食减产",
+      "effect": {
+        "agriculture": -5,
+        "economy": -3
+      },
+      "msg": "赤地千里，粮仓见底。"
+    },
+    {
+      "id": "flood",
+      "name": "洪涝",
+      "desc": "江河决堤，农田被淹",
+      "effect": {
+        "agriculture": -5,
+        "military": -2
+      },
+      "msg": "洪水滔天，军民抢修堤坝。"
+    },
+    {
+      "id": "earthquake",
+      "name": "地震",
+      "desc": "地龙翻身，城墙民宅倒塌无数",
+      "effect": {
+        "industry": -5,
+        "economy": -4,
+        "agriculture": -2
+      },
+      "msg": "大地震颤，屋舍倾颓，死伤枕藉。"
+    },
+    {
+      "id": "locust_plague",
+      "name": "蝗灾",
+      "desc": "遮天蔽日的蝗群过境，庄稼片甲不留",
+      "effect": {
+        "agriculture": -8,
+        "economy": -3
+      },
+      "msg": "飞蝗蔽日，禾苗尽矣。"
+    },
+    {
+      "id": "blizzard",
+      "name": "暴雪",
+      "desc": "百年不遇的暴雪封冻北境，交通断绝",
+      "effect": {
+        "agriculture": -4,
+        "military": -3,
+        "economy": -2
+      },
+      "msg": "大雪封山，千里冰封。"
+    },
+    {
+      "id": "typhoon",
+      "name": "台风",
+      "desc": "飓风登陆，沿海一片狼藉",
+      "effect": {
+        "economy": -5,
+        "industry": -3,
+        "agriculture": -3
+      },
+      "msg": "飓风过境，樯倾楫摧。"
+    },
+    {
+      "id": "epidemic",
+      "name": "瘟疫",
+      "desc": "传染病在城市蔓延",
+      "effect": {
+        "agriculture": -3,
+        "military": -5,
+        "economy": -4
+      },
+      "msg": "疫云笼罩，十室九空。"
+    },
+    {
+      "id": "bumper_harvest",
+      "name": "丰年",
+      "desc": "风调雨顺，五谷丰登",
+      "effect": {
+        "agriculture": 6,
+        "economy": 4
+      },
+      "msg": "天公作美，仓廪盈实。"
+    },
+    {
+      "id": "mine_collapse",
+      "name": "矿难",
+      "desc": "矿井坍塌，数十人被困深井",
+      "effect": {
+        "industry": -4,
+        "economy": -2,
+        "ideology": -2
+      },
+      "msg": "矿洞轰然塌陷，哭声震天。"
+    },
+    {
+      "id": "river_breach",
+      "name": "决堤",
+      "desc": "河堤溃决，洪水淹没大片农田村庄",
+      "effect": {
+        "agriculture": -6,
+        "economy": -4,
+        "military": -2
+      },
+      "msg": "堤溃百里，泽国一片。"
+    },
+    {
+      "id": "trade_boom",
+      "name": "贸易繁荣",
+      "desc": "国际市场需求激增",
+      "effect": {
+        "economy": 6,
+        "industry": 3
+      },
+      "msg": "口岸货如轮转，税收大增。"
+    },
+    {
+      "id": "market_crash",
+      "name": "股灾",
+      "desc": "股市暴跌，银根紧缩，商号接连倒闭",
+      "effect": {
+        "economy": -8,
+        "ideology": -3
+      },
+      "msg": "交易所钟声如丧，纸钞成废纸。"
+    },
+    {
+      "id": "gold_discovery",
+      "name": "发现矿脉",
+      "desc": "境内发现大型矿脉",
+      "effect": {
+        "economy": 8,
+        "industry": 4
+      },
+      "msg": "勘矿队带回惊人喜讯。"
+    },
+    {
+      "id": "foreign_capital",
+      "name": "外资涌入",
+      "desc": "列强资本大举进入，设厂开采",
+      "effect": {
+        "economy": 6,
+        "industry": 5,
+        "diplomacy": 3,
+        "ideology": -2
+      },
+      "msg": "洋行如雨后春笋，口岸新厂林立。"
+    },
+    {
+      "id": "currency_crash",
+      "name": "货币贬值",
+      "desc": "纸币信用崩盘，市面拒收纸钞",
+      "effect": {
+        "economy": -6,
+        "ideology": -3,
+        "military": -2
+      },
+      "msg": "一捆钞票换不来一斗米。"
+    },
+    {
+      "id": "trade_route",
+      "name": "商路贯通",
+      "desc": "新的贸易通道被打通，货物流通加速",
+      "effect": {
+        "economy": 5,
+        "diplomacy": 3
+      },
+      "msg": "古道重开，商旅络绎。"
+    },
+    {
+      "id": "grain_shortage",
+      "name": "粮荒",
+      "desc": "粮价一日三涨，贫民无米下锅",
+      "effect": {
+        "agriculture": -4,
+        "economy": -5,
+        "ideology": -3
+      },
+      "msg": "米珠薪桂，饥民塞途。"
+    },
+    {
+      "id": "tax_reform",
+      "name": "税改见效",
+      "desc": "税制改革初见成效，国库渐充",
+      "effect": {
+        "economy": 8,
+        "ideology": 3
+      },
+      "msg": "税源大开，府库日盈。"
+    },
+    {
+      "id": "industrial_boom",
+      "name": "工业景气",
+      "desc": "工厂订单爆满，烟囱日夜不熄",
+      "effect": {
+        "industry": 6,
+        "economy": 5
+      },
+      "msg": "机器轰鸣昼夜不息。"
+    },
+    {
+      "id": "defection",
+      "name": "将领投诚",
+      "desc": "敌对方将领率部来投",
+      "effect": {
+        "military": 5,
+        "ideology": 3
+      },
+      "msg": "良将择主，携兵来归。"
+    },
+    {
+      "id": "arms_smuggling",
+      "name": "军火走私",
+      "desc": "边境军火走私猖獗，民间武装泛滥",
+      "effect": {
+        "military": 3,
+        "economy": -3,
+        "ideology": -2
+      },
+      "msg": "枪械黑市暗流涌动。"
+    },
+    {
+      "id": "training_incident",
+      "name": "训练惨剧",
+      "desc": "实弹演习发生重大伤亡事故",
+      "effect": {
+        "military": -5,
+        "ideology": -3
+      },
+      "msg": "演习场上血肉横飞，全军缟素。"
+    },
+    {
+      "id": "weapons_rnd",
+      "name": "兵器改良",
+      "desc": "兵工厂研发改良关键武器取得成功",
+      "effect": {
+        "military": 6,
+        "industry": 3
+      },
+      "msg": "新式兵器试射成功，举厂欢腾。"
+    },
+    {
+      "id": "fort_complete",
+      "name": "要塞竣工",
+      "desc": "边防要塞群建设完成",
+      "effect": {
+        "military": 5,
+        "industry": 2
+      },
+      "msg": "雄关如铁，从此边防有恃。"
+    },
+    {
+      "id": "mutiny",
+      "name": "兵变",
+      "desc": "粮饷长期拖欠，一支部队哗变",
+      "effect": {
+        "military": -8,
+        "economy": -5,
+        "ideology": -3
+      },
+      "msg": "大营夜变，火光冲天。"
+    },
+    {
+      "id": "veteran_corps",
+      "name": "老兵归队",
+      "desc": "一批身经百战的老兵响应号召重披战袍",
+      "effect": {
+        "military": 5,
+        "ideology": 2
+      },
+      "msg": "百战余生的老兵列队报到。"
+    },
+    {
+      "id": "intel_leak",
+      "name": "情报泄露",
+      "desc": "军事部署被敌方间谍窃取并公之于众",
+      "effect": {
+        "military": -3,
+        "diplomacy": -3
+      },
+      "msg": "密报外泄，计划尽为敌知。"
+    },
+    {
+      "id": "military_academy",
+      "name": "军校英才",
+      "desc": "军事学院首批毕业生分赴各部任职",
+      "effect": {
+        "military": 4,
+        "ideology": 3
+      },
+      "msg": "青年军官意气风发，誓死报国。"
+    },
+    {
+      "id": "strike",
+      "name": "工人罢工",
+      "desc": "工厂工人要求加薪示威",
+      "effect": {
+        "industry": -5,
+        "economy": -4,
+        "ideology": -3
+      },
+      "msg": "机器停转，工人上街。"
+    },
+    {
+      "id": "student_mvmt",
+      "name": "学生运动",
+      "desc": "学生上街游行，呼吁改革",
+      "effect": {
+        "ideology": -6,
+        "diplomacy": -3
+      },
+      "msg": "青年呐喊，震动朝野。"
+    },
+    {
+      "id": "refugee_wave",
+      "name": "难民潮",
+      "desc": "邻区战乱导致大量难民涌入",
+      "effect": {
+        "agriculture": -3,
+        "ideology": -2,
+        "military": 2
+      },
+      "msg": "逃难人潮涌向边境。"
+    },
+    {
+      "id": "bandit_uprise",
+      "name": "匪患",
+      "desc": "匪帮趁乱做大，劫掠乡里",
+      "effect": {
+        "agriculture": -4,
+        "economy": -3,
+        "military": -2
+      },
+      "msg": "盗匪蜂起，民不聊生。"
+    },
+    {
+      "id": "assassination",
+      "name": "刺杀未遂",
+      "desc": "刺客行刺高层被当场擒获，幕后主使不明",
+      "effect": {
+        "ideology": 5,
+        "diplomacy": -2
+      },
+      "msg": "枪响于咫尺，幸未中的。"
+    },
+    {
+      "id": "corruption_case",
+      "name": "贪腐大案",
+      "desc": "一桩惊天贪腐案被揭发，牵涉甚广",
+      "effect": {
+        "ideology": -8,
+        "economy": -5
+      },
+      "msg": "抄家所得，可抵一省全年税赋。"
+    },
+    {
+      "id": "succession_crisis",
+      "name": "继承危机",
+      "desc": "接班人之争引发派系公开分裂",
+      "effect": {
+        "ideology": -6,
+        "military": -3,
+        "diplomacy": -2
+      },
+      "msg": "庙堂之上，暗流已变明争。"
+    },
+    {
+      "id": "cultural_renaissance",
+      "name": "文化复兴",
+      "desc": "一场新文化运动席卷全国，思潮澎湃",
+      "effect": {
+        "ideology": 8,
+        "diplomacy": 3
+      },
+      "msg": "报刊如雨后春笋，新说竞相争鸣。"
+    },
+    {
+      "id": "secret_society",
+      "name": "秘密结社",
+      "desc": "民间秘密组织迅速壮大，暗流涌动",
+      "effect": {
+        "ideology": -5,
+        "military": 2
+      },
+      "msg": "暗香疏影，不知多少人已入彀中。"
+    },
+    {
+      "id": "population_boom",
+      "name": "人丁兴旺",
+      "desc": "人口普查显示十年间人口大幅增长",
+      "effect": {
+        "agriculture": 4,
+        "military": 3,
+        "economy": 2
+      },
+      "msg": "户口倍增，人声鼎沸。"
+    },
+    {
+      "id": "local_hero",
+      "name": "民间英雄",
+      "desc": "一位平民英雄的事迹传遍全国",
+      "effect": {
+        "ideology": 6,
+        "military": 2
+      },
+      "msg": "一介布衣，万众敬仰。"
+    },
+    {
+      "id": "womens_rights",
+      "name": "女权运动",
+      "desc": "女子参政运动高涨，社会风气为之一变",
+      "effect": {
+        "ideology": 5,
+        "diplomacy": -2,
+        "industry": 2
+      },
+      "msg": "巾帼不逊须眉，半边天要顶起来。"
+    },
+    {
+      "id": "foreign_protest",
+      "name": "列强抗议",
+      "desc": "列强就贸易/人权提交涉照会",
+      "effect": {
+        "diplomacy": -5,
+        "economy": -3
+      },
+      "msg": "使馆照会如雪片飞来。"
+    },
+    {
+      "id": "diplomatic_incident",
+      "name": "外交风波",
+      "desc": "使馆区内发生突发事件，外交关系骤然紧张",
+      "effect": {
+        "diplomacy": -6,
+        "military": -2
+      },
+      "msg": "大使紧急约见，措辞空前严厉。"
+    },
+    {
+      "id": "unexpected_alliance",
+      "name": "意外同盟",
+      "desc": "两个看似不和的势力突然宣布结盟，地缘格局生变",
+      "effect": {
+        "diplomacy": -3,
+        "military": -2
+      },
+      "msg": "敌友之间，只隔一纸盟约。"
+    },
+    {
+      "id": "border_treaty",
+      "name": "边界条约",
+      "desc": "与邻国成功签署边界条约，划定争议地段",
+      "effect": {
+        "diplomacy": 6,
+        "military": -2
+      },
+      "msg": "一纸条约，化干戈为玉帛。"
+    },
+    {
+      "id": "intl_conference",
+      "name": "国际和会",
+      "desc": "受邀参加国际和会，列席列强议事",
+      "effect": {
+        "diplomacy": 8,
+        "ideology": 3
+      },
+      "msg": "国使昂首步入会场，世界侧目。"
+    },
+    {
+      "id": "treaty_broken",
+      "name": "条约破裂",
+      "desc": "一方单方面宣布废除既有条约，关系急转直下",
+      "effect": {
+        "diplomacy": -4,
+        "military": 3
+      },
+      "msg": "废约声明见报，舆论哗然。"
+    },
+    {
+      "id": "mediator",
+      "name": "调停使者",
+      "desc": "第三方主动出面调停当前冲突",
+      "effect": {
+        "diplomacy": 5,
+        "military": -3
+      },
+      "msg": "调停人斡旋于两军之间。"
+    },
+    {
+      "id": "arms_embargo",
+      "name": "武器禁运",
+      "desc": "列强宣布武器禁运，军火来源中断",
+      "effect": {
+        "military": -5,
+        "industry": -3,
+        "diplomacy": -3
+      },
+      "msg": "军火船在港口外掉头返航。"
+    },
+    {
+      "id": "inventor",
+      "name": "技术突破",
+      "desc": "本土科学家取得关键技术突破",
+      "effect": {
+        "industry": 5,
+        "military": 3
+      },
+      "msg": "实验室传来捷报。"
+    },
+    {
+      "id": "archaeology",
+      "name": "考古大发现",
+      "desc": "考古队发掘出震惊世界的古代遗址",
+      "effect": {
+        "ideology": 8,
+        "diplomacy": 4
+      },
+      "msg": "千年宝藏重见天日，举国若狂。"
+    },
+    {
+      "id": "foreign_expert",
+      "name": "洋专家来华",
+      "desc": "外国一流科学家携技术前来投奔",
+      "effect": {
+        "industry": 6,
+        "ideology": -2,
+        "diplomacy": 3
+      },
+      "msg": "蓝眼睛的学者踏上了这片土地。"
+    },
+    {
+      "id": "aviation_first",
+      "name": "首飞成功",
+      "desc": "本土制造的飞机首次成功升空",
+      "effect": {
+        "military": 3,
+        "ideology": 5,
+        "industry": 3
+      },
+      "msg": "铁鸟展翅，万人仰望。"
+    },
+    {
+      "id": "radio_era",
+      "name": "无线电时代",
+      "desc": "无线电广播网覆盖全境，信息传播进入新时代",
+      "effect": {
+        "ideology": 6,
+        "diplomacy": 3
+      },
+      "msg": "电波穿越山河，一室之内可闻天下。"
+    },
+    {
+      "id": "overseas_donation",
+      "name": "海外捐助",
+      "desc": "海外华侨发起巨额捐助，支援国内建设",
+      "effect": {
+        "economy": 8,
+        "ideology": 3
+      },
+      "msg": "侨汇如潮水般涌入。"
+    },
+    {
+      "id": "smuggle_ring",
+      "name": "走私网络",
+      "desc": "边境走私猖獗，关税流失",
+      "effect": {
+        "economy": -4,
+        "industry": -2
+      },
+      "msg": "私货泛滥，国门如筛。"
+    },
+    {
+      "id": "merchant_guild",
+      "name": "商会兴盛",
+      "desc": "各地商会组织空前壮大，商人开始影响政局",
+      "effect": {
+        "economy": 6,
+        "ideology": -3,
+        "diplomacy": 2
+      },
+      "msg": "富商巨贾，渐有呼风唤雨之势。"
+    },
+    {
+      "id": "missionary_incident",
+      "name": "教案冲突",
+      "desc": "传教士与当地民众爆发严重冲突，引发国际关注",
+      "effect": {
+        "diplomacy": -5,
+        "ideology": 3
+      },
+      "msg": "教堂被焚，列强军舰已启锚。"
+    },
+    {
+      "id": "film_craze",
+      "name": "电影热潮",
+      "desc": "电影放映席卷城市，市民趋之若鹜",
+      "effect": {
+        "ideology": 4,
+        "economy": 3
+      },
+      "msg": "银幕光影，令人如痴如醉。"
+    },
+    {
+      "id": "opium_revival",
+      "name": "鸦片复燃",
+      "desc": "鸦片吸食风潮死灰复燃，蔓延城乡",
+      "effect": {
+        "military": -3,
+        "economy": 3,
+        "ideology": -5
+      },
+      "msg": "烟馆重开，瘾者如云。"
+    },
+    {
+      "id": "dike_repair",
+      "name": "水利兴修",
+      "desc": "大型水利工程竣工，灌溉万亩良田",
+      "effect": {
+        "agriculture": 6,
+        "economy": 3
+      },
+      "msg": "渠成水到，旱涝保收有望。"
+    },
+    {
+      "id": "chain_drought_1",
+      "name": "大旱",
+      "desc": "百年大旱席卷北方，赤地千里",
+      "effect": {
+        "agriculture": -6,
+        "economy": -4,
+        "ideology": -3
+      },
+      "msg": "炎日似火，禾苗俱焦。",
+      "chain": {
+        "id": "drought_crisis",
+        "stage": 1,
+        "next": "chain_drought_2",
+        "delay": 3
+      }
+    },
+    {
+      "id": "chain_drought_2",
+      "name": "饥荒蔓延",
+      "desc": "旱灾持续未解，饥荒已在数省蔓延",
+      "effect": {
+        "agriculture": -8,
+        "economy": -6,
+        "military": -3
+      },
+      "msg": "饥民塞途，树皮草根尽矣。",
+      "chain": {
+        "id": "drought_crisis",
+        "stage": 2,
+        "next": "chain_drought_3",
+        "delay": 2
+      }
+    },
+    {
+      "id": "chain_drought_3",
+      "name": "赈灾抉择",
+      "desc": "饥荒肆虐，必须立刻做出决断",
+      "choices": [
+        {
+          "label": "开仓放粮",
+          "effect": {
+            "economy": -12,
+            "agriculture": 6,
+            "ideology": 8
+          },
+          "msg": "官仓大开，活人无数。万民跪谢。"
+        },
+        {
+          "label": "放任市场",
+          "effect": {
+            "economy": 6,
+            "agriculture": -8,
+            "ideology": -10,
+            "military": -3
+          },
+          "msg": "粮商囤积居奇，饥民易子而食。民怨沸腾。"
+        }
+      ],
+      "chain": {
+        "id": "drought_crisis",
+        "stage": 3
+      }
+    },
+    {
+      "id": "chain_spy_1",
+      "name": "间谍被捕",
+      "desc": "情报部门抓获一名列强高级间谍",
+      "effect": {
+        "ideology": 5,
+        "diplomacy": -3
+      },
+      "msg": "暗室审讯，口供牵连甚广。",
+      "chain": {
+        "id": "spy_crisis",
+        "stage": 1,
+        "next": "chain_spy_2",
+        "delay": 2
+      }
+    },
+    {
+      "id": "chain_spy_2",
+      "name": "外交施压",
+      "desc": "涉事列强联合施压要求立即放人并道歉",
+      "effect": {
+        "diplomacy": -8,
+        "economy": -4
+      },
+      "msg": "三国公使联袂而来，言辞咄咄。",
+      "chain": {
+        "id": "spy_crisis",
+        "stage": 2,
+        "next": "chain_spy_3",
+        "delay": 1
+      }
+    },
+    {
+      "id": "chain_spy_3",
+      "name": "间谍案处置",
+      "desc": "必须在列强最后通牒到期前做出决定",
+      "choices": [
+        {
+          "label": "公开审判",
+          "effect": {
+            "ideology": 10,
+            "diplomacy": -12,
+            "military": 3
+          },
+          "msg": "间谍被判枪决，举国拍手称快。列强震怒。"
+        },
+        {
+          "label": "秘密交换",
+          "effect": {
+            "ideology": -8,
+            "diplomacy": 10,
+            "economy": -5
+          },
+          "msg": "人犯秘密移交，风波渐息。但国民不知。"
+        }
+      ],
+      "chain": {
+        "id": "spy_crisis",
+        "stage": 3
+      }
+    },
+    {
+      "id": "chain_labor_1",
+      "name": "工会崛起",
+      "desc": "各地工会组织迅速发展，要求改善待遇",
+      "effect": {
+        "industry": -3,
+        "ideology": -4,
+        "economy": -2
+      },
+      "msg": "工人代表聚于广场，声震云霄。",
+      "chain": {
+        "id": "labor_wave",
+        "stage": 1,
+        "next": "chain_labor_2",
+        "delay": 3
+      }
+    },
+    {
+      "id": "chain_labor_2",
+      "name": "总罢工",
+      "desc": "工会号召全国总罢工，工厂铁路港口全面瘫痪",
+      "effect": {
+        "industry": -10,
+        "economy": -8,
+        "ideology": -5
+      },
+      "msg": "汽笛齐鸣，万机停转。全国瘫痪。",
+      "chain": {
+        "id": "labor_wave",
+        "stage": 2,
+        "next": "chain_labor_3",
+        "delay": 1
+      }
+    },
+    {
+      "id": "chain_labor_3",
+      "name": "劳资谈判",
+      "desc": "政府出面调停劳资双方，但立场选择至关重要",
+      "choices": [
+        {
+          "label": "支持工人",
+          "effect": {
+            "industry": -5,
+            "economy": -6,
+            "ideology": 12,
+            "agriculture": -2
+          },
+          "msg": "八小时工作制立法，工人欢庆。资本家开始撤资。"
+        },
+        {
+          "label": "镇压工运",
+          "effect": {
+            "military": 5,
+            "industry": 5,
+            "ideology": -12
+          },
+          "msg": "军警清场，罢工领袖被捕。机器重新运转，民心降至冰点。"
+        }
+      ],
+      "chain": {
+        "id": "labor_wave",
+        "stage": 3
+      }
+    },
+    {
+      "id": "chain_border_1",
+      "name": "边境冲突",
+      "desc": "邻国军队越境挑衅，边境哨所遭袭",
+      "effect": {
+        "military": -3,
+        "diplomacy": -5
+      },
+      "msg": "边关烽火又起，将士血染疆界。",
+      "chain": {
+        "id": "border_flashpoint",
+        "stage": 1,
+        "next": "chain_border_2",
+        "delay": 2
+      }
+    },
+    {
+      "id": "chain_border_2",
+      "name": "军备竞赛",
+      "desc": "双方在边境大规模集结军队，战争阴云密布",
+      "effect": {
+        "military": 5,
+        "economy": -8,
+        "industry": 3
+      },
+      "msg": "战车列阵，只待一声令下。",
+      "chain": {
+        "id": "border_flashpoint",
+        "stage": 2,
+        "next": "chain_border_3",
+        "delay": 2
+      }
+    },
+    {
+      "id": "chain_border_3",
+      "name": "战争与和平",
+      "desc": "边境对峙已达临界点，是打是和，一念之间",
+      "choices": [
+        {
+          "label": "先发制人",
+          "effect": {
+            "military": 8,
+            "diplomacy": -15,
+            "economy": -10
+          },
+          "msg": "炮火撕破边境的宁静。战争开始了。"
+        },
+        {
+          "label": "外交谈判",
+          "effect": {
+            "diplomacy": 10,
+            "military": -5,
+            "economy": -3
+          },
+          "msg": "双方代表终于坐到了谈判桌前。剑拔弩张，化为笔墨。"
+        }
+      ],
+      "chain": {
+        "id": "border_flashpoint",
+        "stage": 3
+      }
+    },
+    {
+      "id": "chain_culture_1",
+      "name": "新旧之争",
+      "desc": "新学与旧学两派在报刊上激烈论战，撕裂知识界",
+      "effect": {
+        "ideology": -6,
+        "diplomacy": 2
+      },
+      "msg": "两家大报隔空对骂，读者各站一边。",
+      "chain": {
+        "id": "culture_war",
+        "stage": 1,
+        "next": "chain_culture_2",
+        "delay": 3
+      }
+    },
+    {
+      "id": "chain_culture_2",
+      "name": "论战升级",
+      "desc": "新旧之争从笔墨蔓延至街头，学生与遗老爆发冲突",
+      "effect": {
+        "ideology": -8,
+        "military": -2,
+        "diplomacy": -3
+      },
+      "msg": "街头辩论变成斗殴，警察疲于奔命。",
+      "chain": {
+        "id": "culture_war",
+        "stage": 2,
+        "next": "chain_culture_3",
+        "delay": 2
+      }
+    },
+    {
+      "id": "chain_culture_3",
+      "name": "文化路线",
+      "desc": "社会裂痕日益加深，必须明确国家的文化方向",
+      "choices": [
+        {
+          "label": "全面西化",
+          "effect": {
+            "ideology": 8,
+            "industry": 5,
+            "diplomacy": 5,
+            "agriculture": -3
+          },
+          "msg": "新学堂遍地开花，西洋教习走马上任。遗老捶胸顿足。"
+        },
+        {
+          "label": "中体西用",
+          "effect": {
+            "ideology": 5,
+            "industry": 3,
+            "military": 3,
+            "diplomacy": -2
+          },
+          "msg": "中学为体西学为用，骑墙之道倒也两不得罪。"
+        }
+      ],
+      "chain": {
+        "id": "culture_war",
+        "stage": 3
+      }
+    }
+  ],
+  "ai_system": {
+    "principles": [
+      "利益优先：只看地盘、资源、生存空间",
+      "动态感知：实时监测玩家兵力分布与核心空虚度",
+      "风险评估：只做大概率获利或生死存亡的操作",
+      "记忆机制：记住背刺、援助、击败等历史"
+    ],
+    "decision_dimensions": [
+      {
+        "id": "survival_pressure",
+        "name": "生存压力",
+        "range": "0-100",
+        "rule": "≥80求和，≤20扩张"
+      },
+      {
+        "id": "core_emptiness",
+        "name": "核心空虚度",
+        "range": "0-100",
+        "rule": "玩家主力在外且核心兵力<30%时≥90"
+      },
+      {
+        "id": "profit_temptation",
+        "name": "利益诱惑值",
+        "range": "0-100",
+        "rule": "目标资源越重要，值越高"
+      },
+      {
+        "id": "alliance_trust",
+        "name": "联盟可信度",
+        "range": "0-100",
+        "rule": "<50时倾向背刺盟友"
+      },
+      {
+        "id": "foreign_support",
+        "name": "列强支持度",
+        "range": "0-100",
+        "rule": "越高越敢主动开战"
+      }
+    ],
+    "behavior_modes": [
+      {
+        "id": "opportunistic",
+        "name": "投机扩张模式",
+        "trigger": "玩家双线作战、核心空虚、刚大败",
+        "action": "趁火打劫、捡漏扩张、背刺盟友"
+      },
+      {
+        "id": "coalition",
+        "name": "合纵连横模式",
+        "trigger": "出现超级势力、自身生存压力高",
+        "action": "临时结盟、远交近攻、调停牟利"
+      },
+      {
+        "id": "turtle",
+        "name": "自保发育模式",
+        "trigger": "刚统一、主力损失大、周边强敌多",
+        "action": "闭关锁国、依附列强、趁乱发育"
+      }
+    ]
+  },
+  "foreign_powers": {
+    "japan": {
+      "trigger": "中国统一或东北赤化",
+      "action": "直接全面开战",
+      "target_regions": [
+        "northeast"
+      ]
+    },
+    "britain": {
+      "trigger": "西南、中南、南洋扩张",
+      "action": "殖民战争触发",
+      "target_regions": [
+        "southwest",
+        "lingnan",
+        "nanyang"
+      ]
+    },
+    "russia": {
+      "trigger": "西北、东北扩张",
+      "action": "中亚/远东战争触发",
+      "target_regions": [
+        "xibei",
+        "northeast"
+      ]
+    },
+    "france": {
+      "trigger": "中南独立",
+      "action": "印度支那全面战争",
+      "target_regions": [
+        "lingnan"
+      ]
+    },
+    "usa": {
+      "trigger": "海权势力崛起",
+      "action": "太平洋冲突",
+      "target_regions": [
+        "nanyang",
+        "southeast"
+      ]
+    }
+  },
+  "defeat_conditions": [
+    "核心城市失守超时（东北/中南/西北/南洋90天，其余60天）",
+    "核心资源（工业、贸易、商路、民心）彻底崩溃",
+    "主力部队被歼灭且无重建能力",
+    "被列强全面封锁且无外交破局可能"
+  ],
+  "npc_factions": {
+    "npc_黑河道尹公署": {
+      "id": "npc_黑河道尹公署",
+      "name": "黑河道尹公署",
+      "region": "northeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "伊春",
+        "佳木斯",
+        "绥化",
+        "黑河"
+      ],
+      "initial_forces": [
+        "黑河道尹公署守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#8426d8"
+    },
+    "npc_呼伦贝尔蒙旗军": {
+      "id": "npc_呼伦贝尔蒙旗军",
+      "name": "呼伦贝尔蒙旗军",
+      "region": "northeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "兴安盟",
+        "呼伦贝尔",
+        "白城",
+        "通辽",
+        "阜新"
+      ],
+      "initial_forces": [
+        "呼伦贝尔蒙旗军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#13eb6e"
+    },
+    "npc_南满铁道守备队": {
+      "id": "npc_南满铁道守备队",
+      "name": "南满铁道守备队",
+      "region": "northeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "山海关",
+        "葫芦岛",
+        "锦州",
+        "朝阳"
+      ],
+      "initial_forces": [
+        "南满铁道守备队守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#39c556"
+    },
+    "npc_吉东山林匪帮": {
+      "id": "npc_吉东山林匪帮",
+      "name": "吉东山林匪帮",
+      "region": "northeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "七台河",
+        "牡丹江"
+      ],
+      "initial_forces": [
+        "吉东山林匪帮守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#1da447"
+    },
+    "npc_晋绥镇守使署": {
+      "id": "npc_晋绥镇守使署",
+      "name": "晋绥镇守使署",
+      "region": "huabei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "大同",
+        "乌兰察布",
+        "呼和浩特",
+        "张家口",
+        "朔州"
+      ],
+      "initial_forces": [
+        "晋绥镇守使署守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#39c5af"
+    },
+    "npc_鲁省民团联军": {
+      "id": "npc_鲁省民团联军",
+      "name": "鲁省民团联军",
+      "region": "huabei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "徐州",
+        "临沂",
+        "枣庄",
+        "泰安",
+        "济南",
+        "济宁",
+        "淄博",
+        "滨州",
+        "莱芜",
+        "宿州",
+        "宿迁",
+        "淮北",
+        "连云港"
+      ],
+      "initial_forces": [
+        "鲁省民团联军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#582b96"
+    },
+    "npc_豫西镇嵩军": {
+      "id": "npc_豫西镇嵩军",
+      "name": "豫西镇嵩军",
+      "region": "huabei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "洛阳",
+        "临汾",
+        "信阳",
+        "南阳",
+        "平顶山",
+        "焦作",
+        "运城",
+        "陕州"
+      ],
+      "initial_forces": [
+        "豫西镇嵩军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#4839c5"
+    },
+    "npc_直鲁联军残部": {
+      "id": "npc_直鲁联军残部",
+      "name": "直鲁联军残部",
+      "region": "huabei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "石家庄",
+        "德州",
+        "聊城",
+        "衡水",
+        "邢台",
+        "阳泉"
+      ],
+      "initial_forces": [
+        "直鲁联军残部守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#1d56a4"
+    },
+    "npc_浙江督军公署": {
+      "id": "npc_浙江督军公署",
+      "name": "浙江督军公署",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "宁波",
+        "舟山"
+      ],
+      "initial_forces": [
+        "浙江督军公署守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#26a9d8"
+    },
+    "npc_福建靖国军": {
+      "id": "npc_福建靖国军",
+      "name": "福建靖国军",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "福州",
+        "三明",
+        "南平",
+        "厦门",
+        "宁德",
+        "泉州",
+        "漳州",
+        "离岛",
+        "莆田",
+        "集美",
+        "马尾"
+      ],
+      "initial_forces": [
+        "福建靖国军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#1357eb"
+    },
+    "npc_皖南镇守使": {
+      "id": "npc_皖南镇守使",
+      "name": "皖南镇守使",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "九江",
+        "池州",
+        "黄山",
+        "黄梅",
+        "安庆"
+      ],
+      "initial_forces": [
+        "皖南镇守使守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#3983c5"
+    },
+    "npc_江西保安团": {
+      "id": "npc_江西保安团",
+      "name": "江西保安团",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "上饶",
+        "宜春",
+        "抚州",
+        "鹰潭",
+        "景德镇"
+      ],
+      "initial_forces": [
+        "江西保安团守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#13e0eb"
+    },
+    "npc_法国印度支那驻军": {
+      "id": "npc_法国印度支那驻军",
+      "name": "法国印度支那驻军",
+      "region": "lingnan",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "清化",
+        "顺化"
+      ],
+      "initial_forces": [
+        "法国印度支那驻军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#2b8596"
+    },
+    "npc_越南保皇党军": {
+      "id": "npc_越南保皇党军",
+      "name": "越南保皇党军",
+      "region": "lingnan",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "凭祥",
+        "北海",
+        "钦州",
+        "防城港"
+      ],
+      "initial_forces": [
+        "越南保皇党军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#391da4"
+    },
+    "npc_桂系自治军": {
+      "id": "npc_桂系自治军",
+      "name": "桂系自治军",
+      "region": "lingnan",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "梧州",
+        "云浮",
+        "玉林",
+        "肇庆",
+        "茂名",
+        "贵港",
+        "贺州",
+        "韶关",
+        "怀化"
+      ],
+      "initial_forces": [
+        "桂系自治军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#1da49d"
+    },
+    "npc_海南琼崖守备队": {
+      "id": "npc_海南琼崖守备队",
+      "name": "海南琼崖守备队",
+      "region": "lingnan",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "海口",
+        "云浮",
+        "江门",
+        "茂名",
+        "雷州"
+      ],
+      "initial_forces": [
+        "海南琼崖守备队守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#0e76b3"
+    },
+    "npc_黔军省防军": {
+      "id": "npc_黔军省防军",
+      "name": "黔军省防军",
+      "region": "southwest",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "十堰",
+        "安康",
+        "恩施",
+        "湘西",
+        "神农架"
+      ],
+      "initial_forces": [
+        "黔军省防军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#760eb3"
+    },
+    "npc_西康边防总队": {
+      "id": "npc_西康边防总队",
+      "name": "西康边防总队",
+      "region": "southwest",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "林芝"
+      ],
+      "initial_forces": [
+        "西康边防总队守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#2639d8"
+    },
+    "npc_藏北噶伦武装": {
+      "id": "npc_藏北噶伦武装",
+      "name": "藏北噶伦武装",
+      "region": "southwest",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "日喀则",
+        "玉树",
+        "那曲",
+        "阿里"
+      ],
+      "initial_forces": [
+        "藏北噶伦武装守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#2b4296"
+    },
+    "npc_川南哥老会": {
+      "id": "npc_川南哥老会",
+      "name": "川南哥老会",
+      "region": "southwest",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "昌都"
+      ],
+      "initial_forces": [
+        "川南哥老会守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#26d896"
+    },
+    "npc_新疆省军阀残部": {
+      "id": "npc_新疆省军阀残部",
+      "name": "新疆省军阀残部",
+      "region": "xibei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "哈密"
+      ],
+      "initial_forces": [
+        "新疆省军阀残部守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#0eb387"
+    },
+    "npc_青海回部联军": {
+      "id": "npc_青海回部联军",
+      "name": "青海回部联军",
+      "region": "xibei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "天水",
+        "固原",
+        "平凉",
+        "庆阳",
+        "陇南",
+        "汉中",
+        "榆林",
+        "海西"
+      ],
+      "initial_forces": [
+        "青海回部联军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#5713eb"
+    },
+    "npc_西藏噶厦政府": {
+      "id": "npc_西藏噶厦政府",
+      "name": "西藏噶厦政府",
+      "region": "southwest",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "山南"
+      ],
+      "initial_forces": [
+        "西藏噶厦政府守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#0e0eb3"
+    },
+    "npc_外蒙古自治军": {
+      "id": "npc_外蒙古自治军",
+      "name": "外蒙古自治军",
+      "region": "xibei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_territory": [
+        "塔城",
+        "精河",
+        "阿勒泰"
+      ],
+      "initial_forces": [
+        "外蒙古自治军守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 30,
+        "military": 25,
+        "economy": 20,
+        "ideology": 20,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "special_units": [
+        "地方守备队"
+      ],
+      "color": "#2b9663"
+    },
+    "npc_new_察绥都统署": {
+      "id": "npc_new_察绥都统署",
+      "name": "察绥都统署",
+      "region": "huabei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_forces": [
+        "察绥都统署守备队",
+        "蒙旗骑兵营"
+      ],
+      "stats": {
+        "industry": 25,
+        "agriculture": 35,
+        "military": 30,
+        "economy": 25,
+        "ideology": 20,
+        "diplomacy": 15
+      },
+      "ai_personality": "保守自保",
+      "initial_territory": [
+        "保定"
+      ],
+      "color": "#47a41d"
+    },
+    "npc_new_鄂北镇守使": {
+      "id": "npc_new_鄂北镇守使",
+      "name": "鄂北镇守使",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_forces": [
+        "鄂北镇守使守备队",
+        "地方民团"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 40,
+        "military": 28,
+        "economy": 22,
+        "ideology": 18,
+        "diplomacy": 12
+      },
+      "ai_personality": "保守自保",
+      "initial_territory": [
+        "襄阳",
+        "荆门",
+        "随州",
+        "宜昌"
+      ],
+      "color": "#0eb31f"
+    },
+    "npc_new_赣南护民军": {
+      "id": "npc_new_赣南护民军",
+      "name": "赣南护民军",
+      "region": "southeast",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_forces": [
+        "赣南护民军守备队",
+        "客家民团"
+      ],
+      "stats": {
+        "industry": 18,
+        "agriculture": 38,
+        "military": 25,
+        "economy": 20,
+        "ideology": 22,
+        "diplomacy": 10
+      },
+      "ai_personality": "保守自保",
+      "initial_territory": [
+        "赣州",
+        "吉安",
+        "娄底",
+        "株洲",
+        "衡阳",
+        "邵阳",
+        "永州",
+        "郴州"
+      ],
+      "color": "#26d826"
+    },
+    "npc_new_新疆回部王公": {
+      "id": "npc_new_新疆回部王公",
+      "name": "新疆回部王公",
+      "region": "xibei",
+      "is_npc": true,
+      "ideology": "地方势力",
+      "initial_forces": [
+        "回部王公亲兵",
+        "喀什噶尔守备队"
+      ],
+      "stats": {
+        "industry": 15,
+        "agriculture": 30,
+        "military": 28,
+        "economy": 25,
+        "ideology": 30,
+        "diplomacy": 20
+      },
+      "ai_personality": "保守自保",
+      "initial_territory": [
+        "喀什",
+        "和田",
+        "英吉沙",
+        "阿克苏"
+      ],
+      "color": "#40eb13"
+    },
+    "npc_new_海峡殖民地驻军": {
+      "id": "npc_new_海峡殖民地驻军",
+      "name": "海峡殖民地驻军",
+      "region": "nanyang",
+      "is_npc": true,
+      "ideology": "殖民驻军",
+      "initial_forces": [
+        "海峡殖民地守备营",
+        "马来义勇连"
+      ],
+      "stats": {
+        "industry": 20,
+        "agriculture": 15,
+        "military": 32,
+        "economy": 30,
+        "ideology": 10,
+        "diplomacy": 25
+      },
+      "ai_personality": "保守自保",
+      "initial_territory": [
+        "西沙"
+      ],
+      "color": "#36962b"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "generic_epic_events": [
+    {
+      "id": "faction_eliminated",
+      "name": "势力覆灭",
+      "trigger_type": "faction_eliminated",
+      "trigger_conditions": {},
+      "cooldown_turns": 0,
+      "effects": {"military": 5, "ideology": 3, "economy": 2},
+      "quote": "一将功成万骨枯。",
+      "scene": "{date}，{region_name}战场，{player_faction}在连番血战后将{eliminated_faction}的最后旗帜踏碎。{eliminated_faction}的残部四散，其领地尽归{player_faction}所有。",
+      "climax": "{region_name}的格局因{eliminated_faction}的覆灭而彻底改写。",
+      "finale": "旧旗倒下，新帜已升。"
+    },
+    {
+      "id": "major_faction_falls",
+      "name": "强敌陨落",
+      "trigger_type": "major_faction_eliminated",
+      "trigger_conditions": {"min_enemy_military": 50},
+      "cooldown_turns": 0,
+      "effects": {"military": 8, "ideology": 5, "diplomacy": 3, "economy": 3},
+      "quote": "泰山崩于前而色不变。",
+      "scene": "{date}，{eliminated_faction}——这个曾经拥兵数万的势力——在{eliminator_faction}的持续打击下终于土崩瓦解。周边势力无不震动，信使奔走于七域之间。",
+      "climax": "{eliminator_faction}一战成名。{region_name}乃至天下的力量天平开始倾斜。",
+      "finale": "强者恒强，弱者湮灭。"
+    },
+    {
+      "id": "region_unified",
+      "name": "区域统一",
+      "trigger_type": "region_unified",
+      "trigger_conditions": {},
+      "cooldown_turns": 0,
+      "effects": {"military": 3, "economy": 5, "ideology": 8, "diplomacy": 3},
+      "quote": "合则强，分则弱。",
+      "scene": "{date}，{region_name}最后一面异旗在{player_faction}的铁蹄下坠落。{region_name}全境归于一统——这是帝国崩塌后，这片土地上第一次重新响起同一个名字。",
+      "climax": "{player_faction}成为{region_name}唯一的主人。四方目光，尽聚于此。",
+      "finale": "一域既统，天下可期。"
+    },
+    {
+      "id": "foreign_power_intervenes",
+      "name": "列强干涉",
+      "trigger_type": "foreign_intervention",
+      "trigger_conditions": {},
+      "cooldown_turns": 8,
+      "effects": {"diplomacy": -3, "military": 3, "ideology": 5},
+      "quote": "弱国无外交。",
+      "scene": "{date}，{foreign_power}以护侨为名向{region_name}增兵。使馆区内，各国公使密会不断。{player_faction}的外交官在谈判桌上面对的是整个殖民体系的重压。",
+      "climax": "列强的炮舰已至近海。{player_faction}必须在屈辱妥协与坚决抵抗之间做出抉择。",
+      "finale": "自强，方能御外侮。"
+    },
+    {
+      "id": "decisive_victory",
+      "name": "决战大胜",
+      "trigger_type": "decisive_victory",
+      "trigger_conditions": {"min_effective_diff": 30},
+      "cooldown_turns": 5,
+      "effects": {"military": 5, "ideology": 3},
+      "quote": "兵贵神速。",
+      "scene": "{date}，{battle_location}，{player_faction}以雷霆之势击溃了{defeated_enemy}的防线。敌军遗尸遍野，残部仓皇北顾。此役之胜，堪称教科书式的歼灭战。",
+      "climax": "「{player_faction}的兵锋所向披靡！」——战报传遍七域，闻者无不色变。",
+      "finale": "一战而定乾坤之势。"
+    },
+    {
+      "id": "revolutionary_wave",
+      "name": "革命浪潮",
+      "trigger_type": "revolutionary_wave",
+      "trigger_conditions": {"min_ideology": 80},
+      "cooldown_turns": 10,
+      "effects": {"ideology": 8, "agriculture": 3, "economy": -2},
+      "quote": "星星之火，可以燎原。",
+      "scene": "{date}，{player_faction}的思想旗帜在{spread_region}大地上猎猎作响。农民、工人、学生纷纷走上街头，高呼{player_faction}之名。{spread_region}的旧秩序如同一张被烈火舔舐的纸，正在从边缘开始卷曲、焦黑。",
+      "climax": "一场跨越区域的意识风暴正在席卷大地。列强使馆向{player_faction}发出措辞严厉的照会——但革命已经无法停止。",
+      "finale": "思想之炬，可焚旧世。"
+    },
+    {
+      "id": "tech_breakthrough",
+      "name": "科技突破",
+      "trigger_type": "tech_breakthrough",
+      "trigger_conditions": {"milestone_levels": [3, 5, 7, 9]},
+      "cooldown_turns": 8,
+      "effects": {"military": 3, "industry": 5, "economy": 3},
+      "quote": "工欲善其事，必先利其器。",
+      "scene": "{date}，{player_faction}的兵工厂内，首批自主研发的{tech_name}下线。工程师们相拥而泣——从此，{player_faction}不再依赖洋枪洋炮。",
+      "climax": "{player_faction}的军事技术已跻身{tech_tier}之列。邻区势力开始派遣密使，希望获得技术转让。",
+      "finale": "利器在手，胆气自生。"
+    },
+    {
+      "id": "diplomatic_coup",
+      "name": "外交突破",
+      "trigger_type": "diplomatic_coup",
+      "trigger_conditions": {"min_alliances": 3},
+      "cooldown_turns": 10,
+      "effects": {"diplomacy": 8, "economy": 3, "ideology": 2},
+      "quote": "合纵连横，纵横捭阖。",
+      "scene": "{date}，{player_faction}的外交大厅内，{alliance_count}份同盟条约一字排开。这是自帝国崩溃以来最大规模的外交联合。{alliance_partners}的代表齐聚一堂。",
+      "climax": "{player_faction}编织的外交网络已覆盖{diplo_reach}。战国的纵横术，在二十世纪再次上演。",
+      "finale": "得道多助，失道寡助。"
+    },
+    {
+      "id": "great_power_shift",
+      "name": "力量格局变化",
+      "trigger_type": "great_power_shift",
+      "trigger_conditions": {"total_stat_threshold": 300},
+      "cooldown_turns": 12,
+      "effects": {"diplomacy": 5, "ideology": 3, "economy": 3},
+      "quote": "不鸣则已，一鸣惊人。",
+      "scene": "{date}，各国驻华使馆的情报分析处灯火通明。一份关于{player_faction}综合国力的评估报告被列为最高机密——{total_power}的总实力已超越多个老牌势力。",
+      "climax": "列强开始重新审视{player_faction}。对华政策研讨会上，{player_faction}的名字第一次被单独列出。",
+      "finale": "实力，是唯一的通行证。"
+    }
+  ],
+
+  "historical_events": [
+    {
+      "id": "ryukyu_recovery",
+      "name": "琉球收复",
+      "year": 1948,
+      "route": ["海权", "统一"],
+      "trigger": "控制南海+东海，military>=80 且 naval_power>=70",
+      "effects": { "military": 10, "naval_power": 10, "ideology": 8 },
+      "scene": "1948年春，东海怒涛未息，中国海军陆战队于冲绳本岛首里城遗址东侧强行登陆。",
+      "climax": "当五星红旗在首里城残垣升起，琉球遗民手捧家谱跪地痛哭。",
+      "finale": "海波终洗旧耻，文明不靠铁舰靠归心。"
+    },
+    {
+      "id": "xuzhou_capture",
+      "name": "北伐攻克徐州",
+      "year": 1927,
+      "route": ["国家主义", "三民主义"],
+      "trigger": "控制黄河以南、徐州城，军事>=70",
+      "effects": { "military": 8, "ideology": 5, "diplomacy": 3 },
+      "scene": "1927年冬，徐州城下，国民革命军强渡冰封黄河。",
+      "climax": "此役打通津浦铁路，华北门户洞开。",
+      "finale": "雄关非铁铸，乃人心所向。"
+    }
+  ]
+}

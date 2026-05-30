@@ -1,0 +1,24 @@
+server:
+  port: 5000
+
+spring:
+  web:
+    resources:
+      static-locations: classpath:/static/
+      cache:
+        period: 3600
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+# 游戏数据文件路径（相对于 classpath）
+qiyu:
+  data:
+    game-data: data/game_data.json
+    map-data: data/map_data.json
+    events: data/events.json
+    resolutions: data/resolutions.json
+    achievements: data/achievements.json
+  save:
+    directory: saves

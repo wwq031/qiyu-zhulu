@@ -1,0 +1,8 @@
+target/
+*.class
+*.log
+.idea/
+*.iml
+saves/
+release/
+__pycache__/

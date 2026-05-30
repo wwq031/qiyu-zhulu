@@ -1,0 +1,2 @@
+Main-Class: com.qiyuzhulu.QiyuDesktopApp
+Class-Path: qiyuzhulu-2.2.0.jar
