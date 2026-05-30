@@ -1,0 +1,693 @@
+/* ══════════════════════════════════════════════════════════════
+   七域逐鹿 · Web 客户端  v1.4
+   配色：暗夜军事主题 + 金铜点缀
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #0f1923;
+  --panel: #152230;
+  --panel2: #1a2d3d;
+  --border: #2a4055;
+  --gold: #d4a853;
+  --gold-dim: #8b6f3a;
+  --text: #c8d6e5;
+  --text-dim: #6b8299;
+  --red: #e05555;
+  --green: #5cb88d;
+  --blue: #5b9bd5;
+  --purple: #a78bfa;
+  --cyan: #4db8b8;
+  --yellow: #e2c044;
+  --white: #f0f0f0;
+  --font: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --mono: 'Cascadia Code', 'Fira Code', 'Consolas', 'Microsoft YaHei', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+/* ── 顶栏 ─────────────────────────────────────────────── */
+#topbar {
+  background: linear-gradient(180deg, #1a2d3d 0%, #152230 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+#topbar h1 {
+  font-size: 1.3em;
+  color: var(--gold);
+  white-space: nowrap;
+  letter-spacing: 2px;
+}
+#topbar .subtitle { color: var(--text-dim); font-size: 0.8em; }
+#connection {
+  margin-left: auto;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+#connection.on { background: #1a3a2a; color: var(--green); }
+#connection.off { background: #3a1a1a; color: var(--red); }
+/* ── 主布局 ──────────────────────────────────────────── */
+#main {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 12px;
+  padding: 12px;
+  min-height: calc(100vh - 100px);
+}
+@media (max-width: 1100px) {
+  #main { grid-template-columns: 1fr; }
+  #game-map { height: 45vh !important; }
+}
+/* ── 面板区 ──────────────────────────────────────────── */
+#left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#game-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  min-height: 200px;
+  color: var(--text);
+}
+#game-panel .dim { color: var(--text-dim); }
+#game-panel .gold { color: var(--gold); }
+#game-panel .red { color: var(--red); }
+#game-panel .green { color: var(--green); }
+#game-panel .blue { color: var(--blue); }
+#game-panel .cyan { color: var(--cyan); }
+#game-panel .purple { color: var(--purple); }
+#game-panel .yellow { color: var(--yellow); }
+#game-panel .bold { font-weight: bold; }
+#game-panel .white { color: var(--white); }
+/* ── 行动区 ──────────────────────────────────────────── */
+#actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+#actions button {
+  font-family: var(--font);
+  font-size: 0.85em;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+#actions button:hover {
+  background: #254058;
+  border-color: var(--gold-dim);
+}
+#actions button:active { transform: scale(0.97); }
+#actions .btn-war { border-left: 3px solid var(--red); }
+#actions .btn-domestic { border-left: 3px solid var(--text-dim); }
+#actions .btn-diplo { border-left: 3px solid var(--blue); }
+#actions .btn-intel { border-left: 3px solid var(--purple); }
+#actions .btn-reso { border-left: 3px solid var(--yellow); }
+#actions .btn-tech { border-left: 3px solid var(--purple); }
+#actions .btn-map { border-left: 3px solid var(--cyan); }
+#actions .btn-end { border-left: 3px solid var(--green); font-weight: bold; }
+/* ── 自由指令 ────────────────────────────────────────── */
+#custom-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+#custom-input {
+  flex: 1;
+  font-family: var(--font);
+  font-size: 0.9em;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+#custom-input:focus { border-color: var(--gold-dim); }
+#custom-input::placeholder { color: var(--text-dim); }
+#custom-send {
+  padding: 10px 20px;
+  background: #2a3a20;
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  color: var(--green);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9em;
+  transition: all 0.15s;
+}
+#custom-send:hover { background: #3a502a; }
+#custom-mode {
+  font-size: 0.8em;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+#custom-mode select {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 0.85em;
+}
+/* ── 自然语言指令栏 ───────────────────────────────── */
+#cmd-bar {
+  display: flex; gap: 6px; align-items: center; margin-bottom: 6px;
+}
+#cmd-input {
+  flex: 1; font-family: var(--font); font-size: 0.9em;
+  padding: 10px 14px; background: var(--panel);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); outline: none; transition: border-color 0.2s;
+}
+#cmd-input:focus { border-color: var(--cyan); }
+#cmd-input::placeholder { color: var(--text-dim); }
+#cmd-parse-btn {
+  padding: 10px 18px; background: #1a2a30;
+  border: 1px solid var(--cyan); border-radius: 4px;
+  color: var(--cyan); cursor: pointer; font-weight: bold; font-size: 0.9em;
+}
+#cmd-parse-btn:hover { background: #2a3a40; }
+#cmd-execute-btn {
+  padding: 10px 18px; background: #1a3020;
+  border: 1px solid var(--green); border-radius: 4px;
+  color: var(--green); cursor: pointer; font-weight: bold; font-size: 0.9em;
+  display: none;
+}
+#cmd-execute-btn:hover { background: #2a4020; }
+.cmd-mode-btn {
+  padding: 6px 10px; background: var(--panel); border: 1px solid var(--border);
+  border-radius: 3px; color: var(--text-dim); cursor: pointer; font-size: 0.78em;
+  transition: all 0.15s;
+}
+.cmd-mode-btn.active { border-color: var(--cyan); color: var(--cyan); }
+.cmd-mode-btn:hover { border-color: var(--text-dim); }
+#cmd-preview {
+  display: none; margin-bottom: 6px; padding: 8px 12px;
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 4px; font-size: 0.82em; line-height: 1.5;
+}
+.cmd-action-card {
+  padding: 5px 8px; margin: 3px 0; background: var(--panel);
+  border-left: 3px solid var(--cyan); border-radius: 3px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cmd-action-card .idx { color: var(--text-dim); font-weight: bold; min-width: 18px; }
+.cmd-action-card .desc { color: var(--text); flex: 1; }
+.cmd-action-card .type-tag {
+  font-size: 0.75em; padding: 2px 6px; border-radius: 3px;
+  background: var(--panel2); color: var(--cyan);
+}
+/* ── 部队选择 ───────────────────────────────── */
+#sel-info {
+  display: none; align-items: center; gap: 8px;
+  padding: 6px 10px; background: var(--panel); border: 1px solid var(--cyan);
+  border-radius: 4px; font-size: 0.78em; color: var(--text-dim);
+  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+  z-index: 600; white-space: nowrap;
+}
+#sel-info.show { display: flex; }
+#sel-info .sel-count { color: var(--cyan); font-weight: bold; }
+#sel-info button {
+  background: var(--panel2); border: 1px solid var(--border);
+  color: var(--text); padding: 3px 8px; border-radius: 3px;
+  cursor: pointer; font-size: 0.85em; font-family: var(--font);
+}
+#sel-info button:hover { border-color: var(--cyan); color: var(--cyan); }
+.garrison-marker-selected > div {
+  outline: 2px solid var(--cyan); outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(0,200,200,0.5);
+}
+.box-select-rect {
+  position: absolute;
+  border: 1px dashed var(--cyan);
+  background: rgba(0,200,200,0.08);
+  pointer-events: none;
+  z-index: 999;
+}
+/* ── 事件弹窗 ───────────────────────────────── */
+.event-popup-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 2000; justify-content: center; align-items: flex-start; padding-top: 12vh;
+}
+.event-popup-overlay.show { display: flex; }
+.event-popup {
+  background: var(--panel); border: 1px solid var(--gold);
+  border-radius: 8px; padding: 20px 24px; max-width: 480px; width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6); animation: eventSlideIn 0.3s ease;
+}
+@keyframes eventSlideIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.event-popup h3 { color: var(--gold); margin: 0 0 12px; font-size: 1.05em; }
+.event-popup .event-body { color: var(--text-dim); line-height: 1.7; font-size: 0.9em; margin-bottom: 14px; }
+.event-popup .event-body b { color: var(--text); }
+.event-popup button {
+  background: var(--panel2); border: 1px solid var(--border);
+  color: var(--text); padding: 6px 20px; border-radius: 4px;
+  cursor: pointer; font-family: var(--font); font-size: 0.85em;
+}
+.event-popup button:hover { border-color: var(--gold); color: var(--gold); }
+/* ── 右侧栏 ──────────────────────────────────────────── */
+#right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.side-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px;
+}
+.side-panel h3 {
+  color: var(--gold-dim);
+  font-size: 0.85em;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+/* 属性条 */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+  font-size: 0.82em;
+}
+.stat-row .icon { width: 22px; text-align: center; }
+.stat-row .name { width: 28px; color: var(--text-dim); }
+.stat-row .val { width: 32px; text-align: right; font-weight: bold; color: var(--white); }
+.stat-bar-wrap { flex:1; height:8px; background:#0f1923; border-radius:4px; overflow:hidden; }
+.stat-bar { height:100%; border-radius:4px; transition: width 0.5s; }
+.bar-ind { background: linear-gradient(90deg, #5b9bd5, #7bbdf5); }
+.bar-agr { background: linear-gradient(90deg, #5cb88d, #7cd8ad); }
+.bar-mil { background: linear-gradient(90deg, #e05555, #f07575); }
+.bar-eco { background: linear-gradient(90deg, #e2c044, #f2d064); }
+.bar-ide { background: linear-gradient(90deg, #a78bfa, #c7abfa); }
+.bar-dip { background: linear-gradient(90deg, #4db8b8, #6dd8d8); }
+.bar-nav { background: linear-gradient(90deg, #5b9bd5, #7bbdf5); }
+/* 信息行 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+  padding: 3px 0;
+  border-bottom: 1px solid #1a2835;
+}
+.info-row .lbl { color: var(--text-dim); }
+.info-row .val { color: var(--text); font-weight: bold; }
+/* 事件日志 */
+#event-log {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 250px;
+  font-size: 0.78em;
+  line-height: 1.5;
+}
+#event-log .evt {
+  padding: 4px 0;
+  border-bottom: 1px solid #1a2835;
+  color: var(--text-dim);
+}
+#event-log .evt .turn { color: var(--gold-dim); margin-right: 6px; }
+/* 底部栏 */
+#bottombar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8em;
+  color: var(--text-dim);
+}
+#bottombar button {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dim);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+#bottombar button:hover { color: var(--text); border-color: var(--text-dim); }
+/* ── 首页视图 ──────────────────────────────────────────── */
+#home-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 20px;
+}
+.home-banner {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.home-banner .title-box {
+  display: inline-block;
+  border: 2px solid var(--gold-dim);
+  padding: 24px 40px;
+  margin-bottom: 12px;
+}
+.home-banner h1 {
+  font-size: 2.4em;
+  color: var(--gold);
+  letter-spacing: 8px;
+  margin: 0;
+}
+.home-banner .sub {
+  color: var(--text-dim);
+  font-size: 0.9em;
+  letter-spacing: 2px;
+}
+.home-banner .sub2 {
+  color: var(--text-dim);
+  font-size: 0.8em;
+  margin-top: 4px;
+}
+.home-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+.home-menu button {
+  width: 280px;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-family: var(--font);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+.home-menu button:hover { background: #254058; border-color: var(--gold-dim); }
+.home-menu button .key { color: var(--gold); font-weight: bold; margin-right: 10px; }
+.home-menu button .desc { color: var(--text-dim); font-size: 0.8em; float: right; }
+.home-menu .tagline {
+  color: var(--text-dim);
+  font-size: 0.85em;
+  margin-top: 16px;
+  font-style: italic;
+}
+#home-connection {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: var(--text-dim);
+}
+#home-connection .dot { margin-right: 4px; }
+#home-connection .dot.on { color: var(--green); }
+#home-connection .dot.off { color: var(--red); }
+
+/* ── 游戏视图容器 ──────────────────────────────────────── */
+#game-view { display: none; }
+
+/* ── 子菜单面板 ────────────────────────────────────────── */
+#submenu-panel {
+  display: none;
+  background: var(--panel);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  padding: 14px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+#submenu-panel.show { display: block; }
+#submenu-panel h3 {
+  color: var(--gold);
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.submenu-item {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 4px 0;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85em;
+}
+.submenu-item:hover { border-color: var(--gold-dim); background: #1e3548; }
+.submenu-item.locked { opacity: 0.45; cursor: not-allowed; }
+.submenu-item.locked:hover { border-color: var(--border); background: var(--panel2); }
+.submenu-item .sm-idx { color: var(--gold); font-weight: bold; min-width: 28px; }
+.submenu-item .sm-name { flex: 1; color: var(--text); }
+.submenu-item .sm-info { color: var(--text-dim); font-size: 0.85em; text-align: right; }
+.submenu-item .sm-cost { color: var(--yellow); font-size: 0.82em; }
+.submenu-item .sm-effect { color: var(--green); font-size: 0.82em; }
+.submenu-item .sm-turns { color: var(--text-dim); font-size: 0.8em; }
+.submenu-item .sm-missing { color: var(--red); font-size: 0.78em; }
+.submenu-item .sm-desc { color: var(--text-dim); font-size: 0.78em; }
+.submenu-tactics {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 0.8em;
+  color: var(--text-dim);
+}
+.submenu-tactics label {
+  cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--panel2);
+}
+.submenu-tactics label:hover { border-color: var(--text-dim); }
+.submenu-tactics input[type="radio"] { display: none; }
+.submenu-tactics input[type="radio"]:checked + span { color: var(--gold); font-weight: bold; }
+.submenu-target-count { color: var(--text-dim); font-size: 0.8em; margin-bottom: 8px; }
+.diplo-target.selected { border-color: var(--gold); background: #1e3548; }
+.diplo-actions-bar {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  padding: 6px 6px 6px 36px;
+  margin: -2px 0 6px 0;
+}
+
+/* ── 模态框 ────────────────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+  width: 90%;
+}
+.modal h2 { color: var(--gold); margin-bottom: 16px; }
+.modal .close {
+  float: right;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.5em;
+  cursor: pointer;
+}
+.modal .close:hover { color: var(--red); }
+/* 势力卡片 */
+.faction-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.faction-card {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.82em;
+}
+.faction-card:hover { border-color: var(--gold-dim); background: #1e3548; }
+.faction-card.selected { border-color: var(--gold); background: #253545; }
+.faction-card .fname { color: var(--yellow); font-weight: bold; }
+.faction-card .fideo { color: var(--text-dim); font-size: 0.9em; }
+.faction-card .fregion { color: var(--blue); font-size: 0.85em; }
+.faction-card .fstats { color: var(--text-dim); font-size: 0.8em; margin-top: 4px; }
+/* 存档列表 */
+.save-list { list-style: none; }
+.save-list li {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.save-list li:hover { background: var(--panel2); }
+/* 按钮 */
+.btn {
+  padding: 8px 20px;
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+.btn-gold { background: #2a2210; border-color: var(--gold-dim); color: var(--gold); }
+.btn-gold:hover { background: #3a3218; }
+.btn-green { background: #1a2a1a; border-color: var(--green); color: var(--green); }
+.btn-green:hover { background: #2a3a2a; }
+.btn-red { background: #2a1a1a; border-color: var(--red); color: var(--red); }
+.btn-red:hover { background: #3a1a1a; }
+.btn-sm {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.72em;
+  font-family: var(--font);
+  background: #1a1a2a;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.btn-sm:hover { background: #2a2a3a; border-color: var(--gold-dim); color: var(--gold); }
+/* 加载旋转 */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse-thinking {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+#status-text.thinking {
+  animation: pulse-thinking 1.2s ease-in-out infinite;
+  color: var(--cyan);
+}
+/* ── 嵌入地图（游戏视图右侧栏）── */
+#game-map {
+  background: var(--bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+/* ── Leaflet 暗色主题覆盖 ─────────────────────────────── */
+#map-container {
+  background: var(--bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.leaflet-container {
+  background: var(--bg) !important;
+  font-family: var(--font) !important;
+}
+.leaflet-popup-content-wrapper {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+}
+.leaflet-popup-tip { background: var(--panel) !important; }
+.leaflet-popup-close-button { color: var(--text-dim) !important; }
+.leaflet-popup-content { margin: 8px 12px !important; font-size: 0.9em !important; }
+.leaflet-control-zoom a {
+  background: var(--panel2) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-control-attribution {
+  display: none !important;
+}
+/* 地图图例 */
+.map-legend {
+  position: absolute;
+  bottom: 16px; right: 10px;
+  z-index: 1000;
+  background: rgba(21,34,48,0.92);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.75em;
+  color: var(--text-dim);
+  max-width: 240px;
+  pointer-events: none;
+}
+.map-legend .legend-line {
+  display: inline-block;
+  width: 20px; height: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.province-tooltip {
+  background: rgba(21,34,48,0.92);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 0.78em;
+  padding: 2px 6px;
+  box-shadow: none;
+}
+.capital-label-icon {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.leaflet-div-icon.capital-label-icon {
+  background: transparent !important;
+  border: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+}
+/* 战役战斗标记脉动 */
+@keyframes battle-pulse {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(255,136,0,0.5); }
+  50% { box-shadow: 0 0 10px 3px rgba(255,136,0,0.8); }
+}
