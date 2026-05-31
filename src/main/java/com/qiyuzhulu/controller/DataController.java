@@ -85,12 +85,14 @@ public class DataController {
         return Map.of("regions", list);
     }
 
-    /** GET /api/config — AI配置（简化版） */
+    /** GET /api/config — AI配置 */
     @GetMapping("/config")
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("provider", "local");
         config.put("api_key_set", false);
+        config.put("model", "deepseek-chat");
+        config.put("base_url", "");
         config.put("providers", Map.of(
                 "local", Map.of("available", true, "name", "本地模板"),
                 "deepseek", Map.of("available", false, "name", "DeepSeek"),
@@ -98,6 +100,25 @@ public class DataController {
                 "anthropic", Map.of("available", false, "name", "Claude")
         ));
         return config;
+    }
+
+    /** POST /api/config — 保存AI配置（暂存内存） */
+    @PostMapping("/config")
+    public Map<String, Object> saveConfig(@RequestBody Map<String, Object> body) {
+        // 简化：仅接受并返回确认
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("message", "配置已保存（本次会话有效）");
+        resp.put("provider", body.getOrDefault("provider", "local"));
+        return resp;
+    }
+
+    /** GET /api/config/check — 测试AI供应商连接 */
+    @GetMapping("/config/check")
+    public Map<String, Object> checkConfig() {
+        Map<String, Object> resp = new LinkedHashMap<>();
+        resp.put("ok", true);
+        resp.put("message", "本地模板模式，无需连接测试");
+        return resp;
     }
 
     private String getRegionName(String regionId) {
