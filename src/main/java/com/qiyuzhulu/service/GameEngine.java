@@ -98,6 +98,17 @@ public class GameEngine {
         return gameData.getFaction(fid);
     }
 
+    /** 获取当前玩家的势力定义 */
+    public FactionDefinition getPlayerFaction(GameState state) {
+        return getFaction(state.getPlayerFactionId()).orElse(null);
+    }
+
+    /** 获取玩家所在区域 */
+    public String getPlayerRegion(GameState state) {
+        FactionDefinition pf = getPlayerFaction(state);
+        return pf != null ? pf.getRegion() : "";
+    }
+
     /** 获取国家精神 */
     public NationalSpirit getNationalSpirit(FactionDefinition faction) {
         if (faction.getNationalSpirit() != null && faction.getNationalSpirit().getName() != null) {

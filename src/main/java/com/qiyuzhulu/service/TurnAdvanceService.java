@@ -175,7 +175,17 @@ public class TurnAdvanceService {
             state.getCampaignResultsThisTurn().add(cr);
         }
 
-        // 8. 更新回合计数和日期
+        // 8. 阶段推进
+        int phase = state.getPhase();
+        if (phase == 2 && state.getTurn() >= 2) {
+            state.setPhase(3);
+            events.add("📜 帝国正式崩溃！各地军阀进入区域统一战阶段。");
+        } else if (phase == 3 && engine.isRegionUnified(state, state.getPlayerFactionId())) {
+            state.setPhase(4);
+            events.add("👑 本区已统一！七强并立时代开启。");
+        }
+
+        // 9. 更新回合计数和日期
         state.setTurn(state.getTurn() + 1);
         int turn = state.getTurn();
         int year = 1910 + turn / 12;
@@ -183,10 +193,10 @@ public class TurnAdvanceService {
         if (month > 12) { year++; month -= 12; }
         state.setGameDate(String.format("%04d-%02d", year, month));
 
-        // 9. 重置AP
+        // 10. 重置AP
         state.setActionPoints(state.getApMax());
 
-        // 10. 统计追踪
+        // 11. 统计追踪
         @SuppressWarnings("unchecked")
         Map<String, Object> tracker = (Map<String, Object>) state.getStatsTracker();
         if (tracker != null) {

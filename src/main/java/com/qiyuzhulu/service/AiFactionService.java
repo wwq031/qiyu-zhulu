@@ -414,7 +414,7 @@ public class AiFactionService {
                 double defPower = estimateDefensePower(state, enemyFid, enemyTerrs, nb);
                 double ourPower = posEntry.getValue().stream().mapToDouble(u -> u.getAttack() + u.getDefense()).sum();
                 if (ourPower >= defPower * 0.3) {
-                    targets.add(mapOf("pid", nb, "name", nbName, "terrain", nbData.getTerrain(),
+                    targets.add(GameUtils.mapOf("pid", nb, "name", nbName, "terrain", nbData.getTerrain(),
                             "enemy_fid", enemyFid, "enemy_name", enemyName, "enemy_territories", enemyTerrs,
                             "available_units", new ArrayList<>(posEntry.getValue()), "defense_power", defPower));
                 }
@@ -591,10 +591,4 @@ public class AiFactionService {
         return "beijing";
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> mapOf(Object... kv) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
-        return m;
-    }
 }

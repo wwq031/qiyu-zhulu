@@ -23,6 +23,7 @@ public class StateController {
     private final CivilService civil;
     private final CampaignService campaign;
     private final DiplomacyService diplomacy;
+    private final TechService techService;
     private final SaveRepo saveRepo;
 
     /** 当前游戏状态（全局单例，对应Python GAME变量） */
@@ -31,7 +32,7 @@ public class StateController {
     public StateController(GameEngine engine, PanelRenderer renderer,
                            TurnAdvanceService turnAdvance, MilitaryService military,
                            CivilService civil, CampaignService campaign,
-                           DiplomacyService diplomacy, SaveRepo saveRepo) {
+                           DiplomacyService diplomacy, TechService techService, SaveRepo saveRepo) {
         this.engine = engine;
         this.renderer = renderer;
         this.turnAdvance = turnAdvance;
@@ -39,6 +40,7 @@ public class StateController {
         this.civil = civil;
         this.campaign = campaign;
         this.diplomacy = diplomacy;
+        this.techService = techService;
         this.saveRepo = saveRepo;
     }
 
@@ -274,7 +276,16 @@ public class StateController {
         if ("8".equals(action)) {
             resp = buildPanelResponse();
             resp.put("result_type", "tech_menu");
-            resp.put("data", Map.of("available", List.of()));
+            resp.put("data", techService.getAvailableTechs(game));
+            return resp;
+        }
+        // 研发科技 8.{tech_id}
+        if (action.startsWith("8.")) {
+            String techId = action.substring(2);
+            Map<String, Object> result = techService.startResearch(game, techId);
+            resp = buildPanelResponse();
+            resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
+            resp.put("output", result.get("message"));
             return resp;
         }
         // 休战提议 3.0

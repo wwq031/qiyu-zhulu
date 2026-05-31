@@ -67,7 +67,7 @@ public class CampaignService {
                                               Map<String, String> unitTactics) {
         FactionState fs = state.getFactionState();
         List<Unit> myUnits = fs.getUnits();
-        if (state.getActionPoints() < 1) return mapOf("ok", false, "message", "行动点不足");
+        if (state.getActionPoints() < 1) return GameUtils.mapOf("ok", false, "message", "行动点不足");
 
         // 查找该省敌人
         EnemyProvince enemyInfo = null;
@@ -75,7 +75,7 @@ public class CampaignService {
         for (EnemyProvince e : enemies) {
             if (provincePid.equals(e.getPid())) { enemyInfo = e; break; }
         }
-        if (enemyInfo == null) return mapOf("ok", false, "message", "该省不是有效的攻击目标");
+        if (enemyInfo == null) return GameUtils.mapOf("ok", false, "message", "该省不是有效的攻击目标");
 
         // 跨区/互不侵犯检查
         if ("faction".equals(enemyInfo.getOwnerType())) {
@@ -84,16 +84,16 @@ public class CampaignService {
             var pf = engine.getFaction(state.getPlayerFactionId()).orElse(null);
             if (ef != null && pf != null && !ef.getRegion().equals(pf.getRegion())) {
                 if (!engine.isRegionUnified(state, state.getPlayerFactionId()))
-                    return mapOf("ok", false, "message", "尚未统一本区域，无法跨区作战");
+                    return GameUtils.mapOf("ok", false, "message", "尚未统一本区域，无法跨区作战");
             }
             if (engine.hasNonAggression(state, state.getPlayerFactionId(), efid))
-                return mapOf("ok", false, "message", "与" + enemyInfo.getOwner() + "处于休战期，暂不可攻击");
+                return GameUtils.mapOf("ok", false, "message", "与" + enemyInfo.getOwner() + "处于休战期，暂不可攻击");
         }
         if (enemyInfo.isInCampaign())
-            return mapOf("ok", false, "message", "该省已有进行中的战役");
+            return GameUtils.mapOf("ok", false, "message", "该省已有进行中的战役");
 
         if (attackerUnitIndices == null || attackerUnitIndices.isEmpty())
-            return mapOf("ok", false, "message", "未选择攻击部队");
+            return GameUtils.mapOf("ok", false, "message", "未选择攻击部队");
 
         if (unitTactics == null) unitTactics = Map.of();
 
@@ -102,10 +102,10 @@ public class CampaignService {
         List<Object[]> reinforcements = new ArrayList<>(); // [Unit, dist]
         for (int idx : attackerUnitIndices) {
             if (idx < 0 || idx >= myUnits.size())
-                return mapOf("ok", false, "message", "无效部队索引：" + (idx + 1));
+                return GameUtils.mapOf("ok", false, "message", "无效部队索引：" + (idx + 1));
             Unit u = myUnits.get(idx);
             if ("routed".equals(u.getStatus()) || "annihilated".equals(u.getStatus()))
-                return mapOf("ok", false, "message", u.getName() + "无法参战（状态：" + u.getStatus() + "）");
+                return GameUtils.mapOf("ok", false, "message", u.getName() + "无法参战（状态：" + u.getStatus() + "）");
             String uPos = resolveUnitPid(u.getPosition());
             if (provincePid.equals(uPos)) {
                 immediate.add(u);
@@ -114,13 +114,13 @@ public class CampaignService {
                 Number distNum = (Number) distResult[0];
                 int dist = distNum != null ? distNum.intValue() : 999;
                 if (dist > 3)
-                    return mapOf("ok", false, "message", u.getName() + "距离目标太远（" + dist + "回合）");
+                    return GameUtils.mapOf("ok", false, "message", u.getName() + "距离目标太远（" + dist + "回合）");
                 if (dist <= 1) immediate.add(u);
                 else reinforcements.add(new Object[]{u, dist});
             }
         }
         if (immediate.isEmpty())
-            return mapOf("ok", false, "message", "需要至少一支相邻部队发起进攻");
+            return GameUtils.mapOf("ok", false, "message", "需要至少一支相邻部队发起进攻");
 
         state.setActionPoints(state.getActionPoints() - 1);
 
@@ -217,7 +217,7 @@ public class CampaignService {
                 + " | 战术：" + String.join("/", tacNames)
                 + " | 我军" + immediate.size() + "支 vs 敌军" + defending.size() + "支");
         if (!reinforcements.isEmpty()) msg.append(" | ").append(reinforcements.size()).append("支行军途中");
-        return mapOf("ok", true, "message", msg.toString());
+        return GameUtils.mapOf("ok", true, "message", msg.toString());
     }
 
     // ═══════════════════════════════════════════ 战役结算 ═══════════════════════════════════════════
@@ -525,12 +525,12 @@ public class CampaignService {
     public Map<String, Object> retreatFromCampaign(GameState state, int campaignIndex) {
         List<Campaign> campaigns = state.getActiveCampaigns();
         if (campaignIndex < 0 || campaignIndex >= campaigns.size())
-            return mapOf("ok", false, "message", "无效战役索引");
+            return GameUtils.mapOf("ok", false, "message", "无效战役索引");
         Campaign camp = campaigns.get(campaignIndex);
         if (!"ongoing".equals(camp.getStatus()))
-            return mapOf("ok", false, "message", "该战役已结束");
+            return GameUtils.mapOf("ok", false, "message", "该战役已结束");
         if (!camp.getAttackerFaction().equals(state.getPlayerFactionId()))
-            return mapOf("ok", false, "message", "只能从自己发动的战役撤退");
+            return GameUtils.mapOf("ok", false, "message", "只能从自己发动的战役撤退");
 
         camp.setStatus("attacker_retreat");
         List<String> friendly = state.getFactionState().getTerritories();
@@ -544,7 +544,7 @@ public class CampaignService {
             }
         }
         state.getActiveCampaigns().remove(camp);
-        return mapOf("ok", true, "message", "🏳 我军从" + camp.getProvinceName() + "主动撤退。实力得以保存。");
+        return GameUtils.mapOf("ok", true, "message", "🏳 我军从" + camp.getProvinceName() + "主动撤退。实力得以保存。");
     }
 
     /** 增援战役 */
@@ -552,12 +552,12 @@ public class CampaignService {
                                                   List<Integer> unitIndices, Map<String, String> unitTactics) {
         List<Campaign> campaigns = state.getActiveCampaigns();
         if (campaignIndex < 0 || campaignIndex >= campaigns.size())
-            return mapOf("ok", false, "message", "无效战役索引");
+            return GameUtils.mapOf("ok", false, "message", "无效战役索引");
         Campaign camp = campaigns.get(campaignIndex);
         if (!"ongoing".equals(camp.getStatus()))
-            return mapOf("ok", false, "message", "该战役已结束");
+            return GameUtils.mapOf("ok", false, "message", "该战役已结束");
         if (state.getActionPoints() < 1)
-            return mapOf("ok", false, "message", "行动点不足");
+            return GameUtils.mapOf("ok", false, "message", "行动点不足");
 
         List<Unit> myUnits = state.getFactionState().getUnits();
         List<Object[]> reinfs = new ArrayList<>(); // [idx, Unit]
@@ -569,7 +569,7 @@ public class CampaignService {
             reinfs.add(new Object[]{idx, u});
         }
         if (reinfs.isEmpty())
-            return mapOf("ok", false, "message", "没有可用的增援部队");
+            return GameUtils.mapOf("ok", false, "message", "没有可用的增援部队");
 
         state.setActionPoints(state.getActionPoints() - 1);
         if (unitTactics == null) unitTactics = Map.of();
@@ -593,7 +593,7 @@ public class CampaignService {
             u.setReinforceCampaign(camp.getId());
             totalArrives = Math.max(totalArrives, arrivesIn);
         }
-        return mapOf("ok", true, "message", "增援" + reinfs.size() + "支部队，预计" + totalArrives + "回合后到达" + camp.getProvinceName());
+        return GameUtils.mapOf("ok", true, "message", "增援" + reinfs.size() + "支部队，预计" + totalArrives + "回合后到达" + camp.getProvinceName());
     }
 
     /** 战中战术调整 */
@@ -603,7 +603,7 @@ public class CampaignService {
         for (Campaign c : state.getActiveCampaigns()) {
             if (c.getId().equals(campaignId) && "ongoing".equals(c.getStatus())) { camp = c; break; }
         }
-        if (camp == null) return mapOf("ok", false, "message", "战役不存在或已结束");
+        if (camp == null) return GameUtils.mapOf("ok", false, "message", "战役不存在或已结束");
 
         String pid = factionId != null ? factionId : state.getPlayerFactionId();
         boolean isAttacker = camp.getAttackerFaction().equals(pid);
@@ -622,8 +622,8 @@ public class CampaignService {
                 details.add(unitName + "→" + (ti != null ? ti.get("name") : newTac));
             }
         }
-        if (changed == 0) return mapOf("ok", false, "message", "没有战术需要变更");
-        return mapOf("ok", true, "message", "战术调整：" + String.join("，", details) + "（" + changed + "支部队）");
+        if (changed == 0) return GameUtils.mapOf("ok", false, "message", "没有战术需要变更");
+        return GameUtils.mapOf("ok", true, "message", "战术调整：" + String.join("，", details) + "（" + changed + "支部队）");
     }
 
     /** 战役胜利后授勋 */
@@ -636,15 +636,15 @@ public class CampaignService {
                 if (campaignId.equals(c.getId())) { camp = c; break; }
             }
         }
-        if (camp == null) return mapOf("ok", false, "message", "找不到该战役");
-        if (!camp.isHonorAvailable()) return mapOf("ok", false, "message", "此战役不满足授勋条件");
+        if (camp == null) return GameUtils.mapOf("ok", false, "message", "找不到该战役");
+        if (!camp.isHonorAvailable()) return GameUtils.mapOf("ok", false, "message", "此战役不满足授勋条件");
 
         Set<String> honored = state.getHonoredCampaigns();
         if (honored == null) { honored = new HashSet<>(); state.setHonoredCampaigns(honored); }
-        if (honored.contains(campaignId)) return mapOf("ok", false, "message", "已授勋过");
+        if (honored.contains(campaignId)) return GameUtils.mapOf("ok", false, "message", "已授勋过");
 
         int cost = camp.getHonorCost();
-        if (fs.getTreasury() < cost) return mapOf("ok", false, "message", "国库不足（需" + cost + "金）");
+        if (fs.getTreasury() < cost) return GameUtils.mapOf("ok", false, "message", "国库不足（需" + cost + "金）");
 
         String outcome = camp.getOutcome();
         Map<String, Integer> effects = HONOR_EFFECTS.getOrDefault(outcome, HONOR_EFFECTS.get("costly_win"));
@@ -670,7 +670,7 @@ public class CampaignService {
         if (effects.getOrDefault("experience", 0) > 0) msg.append(" 经验+").append(effects.get("experience"));
         msg.append("（消耗").append(cost).append("金）");
 
-        return mapOf("ok", true, "message", msg.toString(),
+        return GameUtils.mapOf("ok", true, "message", msg.toString(),
                 "cost", cost, "effects", effects, "affected_units", affected);
     }
 
@@ -947,7 +947,7 @@ public class CampaignService {
             }
             msgs.add(defeatMsg);
             if (state.getDefeatEvents() == null) state.setDefeatEvents(new ArrayList<>());
-            state.getDefeatEvents().add(mapOf("name", defFullName, "turn", state.getTurn(), "text", defeatMsg,
+            state.getDefeatEvents().add(GameUtils.mapOf("name", defFullName, "turn", state.getTurn(), "text", defeatMsg,
                     "eliminated_faction", defFullName, "eliminator_faction", atkFullName,
                     "eliminator_fid", atkFid, "eliminated_fid", defFid));
         }
@@ -1045,7 +1045,7 @@ public class CampaignService {
         boolean honorAvailable = isPlayerAttacker && (List.of("annihilate", "decisive_win", "costly_win").contains(outcome) || provinceFell);
         int honorCost = Map.of("annihilate", 8, "decisive_win", 5, "costly_win", 3).getOrDefault(outcome, 3);
 
-        return mapOf("id", camp.getId(), "province", camp.getProvince(), "province_name", camp.getProvinceName(),
+        return GameUtils.mapOf("id", camp.getId(), "province", camp.getProvince(), "province_name", camp.getProvinceName(),
                 "outcome", outcome, "outcome_cn", outcomeMap.getOrDefault(outcome, outcome),
                 "round", camp.getRound(), "ratio", Math.round(ratio * 10) / 10.0,
                 "atk_casualties", atkCasualties, "def_casualties", defCasualties,
@@ -1066,17 +1066,7 @@ public class CampaignService {
 
     /** 将部队位置（可能是领土名或PID）统一转为PID */
     private String resolveUnitPid(String pos) {
-        if (pos == null) return "beijing";
-        String pid = engine.getPidByName(pos);
-        return pid != null ? pid : pos; // 已经是PID则直接返回
-    }
-
-    // 便捷方法
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> mapOf(Object... kv) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
-        return m;
+        return engine.resolvePositionToPid(pos);
     }
 
     /** 战役结算结果 */

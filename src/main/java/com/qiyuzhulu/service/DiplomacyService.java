@@ -513,7 +513,6 @@ public class DiplomacyService {
         for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
         return m;
     }
-
     private static Map<String, String> mapOfS(String... kv) {
         Map<String, String> m = new LinkedHashMap<>();
         for (int i = 0; i < kv.length; i += 2) m.put(kv[i], kv[i + 1]);

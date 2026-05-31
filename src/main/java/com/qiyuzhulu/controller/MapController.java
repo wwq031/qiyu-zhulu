@@ -3,6 +3,7 @@ package com.qiyuzhulu.controller;
 import com.qiyuzhulu.model.*;
 import com.qiyuzhulu.repo.MapDataRepo;
 import com.qiyuzhulu.service.GameEngine;
+import com.qiyuzhulu.service.GameUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -175,7 +176,7 @@ public class MapController {
             for (String t : pfs.getTerritories()) {
                 String pid = nameToPid.get(t);
                 if (pid != null) {
-                    pidOwner.put(pid, mapOf("owner_name", pName, "owner_color", pColor, "is_player", true));
+                    pidOwner.put(pid, GameUtils.mapOf("owner_name", pName, "owner_color", pColor, "is_player", true));
                     pidOwnerName.put(pid, pfs.getName());
                 }
             }
@@ -207,7 +208,7 @@ public class MapController {
                     for (String t : aiTerrs) {
                         String pid = nameToPid.get(t);
                         if (pid != null && !pidOwner.containsKey(pid)) {
-                            pidOwner.put(pid, mapOf("owner_name", aName, "owner_color", aColor, "is_player", false));
+                            pidOwner.put(pid, GameUtils.mapOf("owner_name", aName, "owner_color", aColor, "is_player", false));
                             pidOwnerName.put(pid, aName);
                         }
                     }
@@ -223,7 +224,7 @@ public class MapController {
                     for (String t : ndata.getTerritories()) {
                         String pid = nameToPid.get(t);
                         if (pid != null && !pidOwner.containsKey(pid)) {
-                            pidOwner.put(pid, mapOf("owner_name", ndata.getName(), "owner_color", "#8426d8", "is_player", false));
+                            pidOwner.put(pid, GameUtils.mapOf("owner_name", ndata.getName(), "owner_color", "#8426d8", "is_player", false));
                             pidOwnerName.put(pid, ndata.getName());
                         }
                     }
@@ -381,10 +382,4 @@ public class MapController {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> mapOf(Object... kv) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
-        return m;
-    }
 }
