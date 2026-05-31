@@ -622,15 +622,27 @@ public class GameEngine {
 
     // ═══════════════════════════════════════════ 外交/区域/战术辅助 ═══════════════════════════════════════════
 
-    /** 检查势力所在区域是否已统一（该区无其他存活的AI势力） */
+    /** 检查势力所在区域是否已统一（该区无其他存活的势力） */
     public boolean isRegionUnified(GameState state, String factionId) {
         var faction = getFaction(factionId).orElse(null);
         if (faction == null) return false;
         String region = faction.getRegion();
-        for (var entry : state.getAiFactions().entrySet()) {
-            if (state.getDefeatedFactions().contains(entry.getKey())) continue;
-            var af = getFaction(entry.getKey()).orElse(null);
-            if (af != null && region.equals(af.getRegion())) return false;
+        // 检查所有势力（可玩+NPC+hostile NPC）
+        for (var fe : gameData.getFactions().entrySet()) {
+            String fid = fe.getKey();
+            if (fid.equals(factionId)) continue;
+            if (state.getDefeatedFactions().contains(fid)) continue;
+            if (region.equals(fe.getValue().getRegion())) return false;
+        }
+        for (var ne : gameData.getNpcFactions().entrySet()) {
+            String nid = ne.getKey();
+            if (state.getDefeatedFactions().contains(nid)) continue;
+            if (region.equals(ne.getValue().getRegion())) return false;
+        }
+        for (var he : gameData.getHostileNpcs().entrySet()) {
+            String hid = he.getKey();
+            if (state.getDefeatedFactions().contains(hid)) continue;
+            if (region.equals(he.getValue().getRegion())) return false;
         }
         return true;
     }
