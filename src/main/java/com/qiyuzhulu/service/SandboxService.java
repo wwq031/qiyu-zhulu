@@ -64,78 +64,207 @@ public class SandboxService {
     }
 
     /** 本地模板裁决（无AI时的fallback） */
+    @SuppressWarnings("unchecked")
     public Map<String, Object> localAdjudicate(GameState state, String order) {
         FactionState fs = state.getFactionState();
         Map<String, Object> result = new LinkedHashMap<>();
-
-        // 关键词匹配
         String lower = order.toLowerCase();
-        if (lower.contains("间谍") || lower.contains("情报") || lower.contains("侦察")) {
+        List<Map<String, Object>> actions = new ArrayList<>();
+
+        // ── 沙盒专属模板 ──
+        // 吞并/消灭势力
+        if (matches(lower, "吞并", "消灭", "灭掉", "干掉", "清除", "征服", "合并", "收编", "吃掉")) {
+            String target = extractTarget(order);
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("military", rng.nextInt(16)+10, "diplomacy", rng.nextInt(11)+5));
+            if (target != null) actions.add(Map.of("type", "annex_faction", "target", target));
+            result.put("narrative", "沙盒GM签发了灭亡令。" + (target != null ? target : "目标势力") + "的旗帜从城头缓缓降下——领土并入" + fs.getName() + "。");
+        }
+        // 空降/闪现/传送/地道 → 创意移动模式
+        else if (matches(lower, "空降", "闪现", "传送", "瞬移", "钻地", "地道", "挖洞", "潜入")) {
+            String dest = extractLocation(order);
+            if (dest == null) dest = extractLocationAfter(order, "到", "至", "在", "往");
+            String destPid = resolveLocation(dest);
+            if (destPid != null) {
+                actions.add(Map.of("type", "move", "dest", destPid, "unit_name", ""));
+                result.put("narrative", "沙盒空间扭曲启动。" + fs.getName() + "的部队如同幽灵般出现在了" + (dest != null ? dest : "目标地点") + "——物理定律对此表示严重抗议但无能为力。");
+                result.put("effects", Map.of("military", 1));
+            } else {
+                result.put("narrative", "沙盒引擎搜索了" + (dest != null ? dest : "目标地点") + "的坐标，但地理老师似乎没教过这个地方。部队在原地没动。");
+            }
+        }
+        // 兵力召唤（含空降部署到指定地点）
+        else if (matches(lower, "兵", "部队", "军团", "召唤", "部署", "生成", "十万", "百万", "大军")) {
+            String utype = lower.contains("骑兵") || lower.contains("马") ? "cavalry"
+                    : lower.contains("炮兵") || lower.contains("炮") ? "artillery"
+                    : lower.contains("海军") || lower.contains("水师") || lower.contains("舰") ? "naval"
+                    : lower.contains("工兵") || lower.contains("工程") ? "engineer" : "infantry";
+            // 提取部署地点
+            String loc = extractLocation(order);
+            if (loc == null) loc = fs.getTerritories().get(0);
+            int num = extractNum(order, 1);
+            for (int i = 0; i < num; i++) actions.add(Map.of("type", "train_unit", "unit_type", utype, "location", loc));
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("military", rng.nextInt(6)+5));
+            result.put("narrative", "沙盒引擎启动。" + num + "支" + utype + "部队凭空出现在" + loc + "。征兵官看了看名册，决定不在'来源'一栏填任何东西。");
+        }
+        // 全属性拉满
+        else if (matches(lower, "拉满", "全满", "满属性", "全属性", "无敌", "超级大国")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("military", rng.nextInt(11)+10, "industry", rng.nextInt(6)+5,
+                    "agriculture", rng.nextInt(6)+5, "economy", rng.nextInt(6)+5,
+                    "ideology", rng.nextInt(6)+5, "diplomacy", rng.nextInt(6)+5));
+            result.put("narrative", "沙盒GM调出了后台面板。" + fs.getName() + "的各项属性指针剧烈跳动，停留在了令人满意的位置。");
+        }
+        // 秒建
+        else if (matches(lower, "秒建", "瞬间", "立刻建成", "一键建造")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("industry", rng.nextInt(8)+5, "economy", rng.nextInt(5)+3));
+            result.put("narrative", "沙盒建筑队从虚空中现身。三小时后——不，三小时后——新设施已经投入使用。");
+        }
+        // 金钱/国库
+        else if (matches(lower, "钱", "金", "银", "国库", "黄金", "填满", "给钱")) {
+            int bonus = rng.nextInt(41) + 10;
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("treasury", bonus, "economy", rng.nextInt(5)+3));
+            result.put("narrative", "沙盒GM打了个响指。" + fs.getName() + "的国库里多了" + bonus + "枚银元。军需官明智地选择了沉默。");
+        }
+        // 统一/胜利
+        else if (matches(lower, "统一", "胜利", "征服", "占领全图", "一键")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of());
+            result.put("effects", Map.of("military", rng.nextInt(11)+10, "diplomacy", rng.nextInt(6)+5));
+            result.put("narrative", "沙盒GM按下了快进键。" + fs.getName() + "的旗帜插上了更多城头——虽然将军们也不太确定到底发生了什么。");
+        }
+
+        // ── 常规模板（非沙盒）──
+        else if (matches(lower, "间谍", "情报", "侦察", "侦查", "刺探")) {
             result.put("feasibility", "high");
             result.put("cost", Map.of("treasury", -5));
             result.put("effects", Map.of("military", 2));
-            result.put("risk", "low");
-            result.put("ap_cost", 1);
             result.put("narrative", fs.getName() + "的情报人员渗透入敌境，带回了宝贵情报。");
-        } else if (lower.contains("外交") || lower.contains("谈判") || lower.contains("使节")) {
+        } else if (matches(lower, "外交", "谈判", "使节", "出使", "斡旋")) {
             result.put("feasibility", "medium");
             result.put("cost", Map.of("treasury", -8));
             result.put("effects", Map.of("diplomacy", 3));
-            result.put("risk", "medium");
-            result.put("ap_cost", 1);
             result.put("narrative", fs.getName() + "派出使节，在外交战场上纵横捭阖。");
-        } else if (lower.contains("建设") || lower.contains("发展") || lower.contains("工业")) {
+        } else if (matches(lower, "建设", "发展", "工业", "工厂", "兵工厂", "基础设施")) {
             result.put("feasibility", "high");
             result.put("cost", Map.of("treasury", -12));
             result.put("effects", Map.of("industry", 3, "economy", 2));
-            result.put("risk", "low");
-            result.put("ap_cost", 2);
             result.put("narrative", fs.getName() + "启动了新一轮建设计划，工业发展势头良好。");
-        } else if (lower.contains("偷袭") || lower.contains("游击") || lower.contains("骚扰")) {
+        } else if (matches(lower, "偷袭", "游击", "骚扰", "破坏")) {
             result.put("feasibility", "medium");
             result.put("cost", Map.of("treasury", -3));
             result.put("effects", Map.of("military", 2));
-            result.put("risk", "high");
-            result.put("ap_cost", 1);
             result.put("narrative", "一支小分队对敌境发动了突袭，成果有限但震慑效果显著。");
-        } else if (lower.contains("宣传") || lower.contains("动员") || lower.contains("民心")) {
+        } else if (matches(lower, "宣传", "动员", "民心", "演讲")) {
             result.put("feasibility", "high");
             result.put("cost", Map.of("treasury", -5));
             result.put("effects", Map.of("ideology", 4));
-            result.put("risk", "low");
-            result.put("ap_cost", 1);
             result.put("narrative", "宣传机器全力运转，民众对" + fs.getName() + "的支持率稳步上升。");
         } else {
             result.put("feasibility", "medium");
             result.put("cost", Map.of("treasury", -5));
             result.put("effects", Map.of());
-            result.put("risk", "medium");
-            result.put("ap_cost", 1);
             result.put("narrative", fs.getName() + "执行了「" + order + "」行动。局势尚无大的变化，但已经埋下了种子。");
         }
+
+        // 默认值
+        result.putIfAbsent("risk", "low");
+        result.putIfAbsent("ap_cost", 0);
+        result.putIfAbsent("feasibility", "high");
+        if (!actions.isEmpty()) result.put("actions", actions);
+        result.put("provider", "local");
         return result;
+    }
+
+    private static boolean matches(String text, String... keywords) {
+        for (String kw : keywords) if (text.contains(kw)) return true;
+        return false;
+    }
+    private String extractTarget(String text) {
+        // 简单提取：吞并/消灭后的2-8字名称
+        for (String kw : new String[]{"吞并", "消灭", "灭掉", "干掉", "清除", "征服", "合并", "收编", "吃掉"}) {
+            int i = text.indexOf(kw);
+            if (i >= 0) {
+                String rest = text.substring(i + kw.length()).trim();
+                // 取第一个2-8字的中文词
+                var m = java.util.regex.Pattern.compile("([\\u4e00-\\u9fa5]{2,8})").matcher(rest);
+                if (m.find()) return m.group(1);
+            }
+        }
+        return null;
+    }
+    private int extractNum(String text, int defaultVal) {
+        var m = java.util.regex.Pattern.compile("(\\d+)\\s*(?:万|千|百|个|支|队|人|名|旅|师|团|营)").matcher(text);
+        if (m.find()) return Math.min(Integer.parseInt(m.group(1)), 20);
+        if (text.contains("十万")) return 10;
+        if (text.contains("百万")) return 20;
+        return defaultVal;
+    }
+
+    /** 从文本中提取地名（2-6字中文），匹配实际省份名 */
+    private String extractLocation(String text) {
+        // 尝试匹配已知省份名（优先）
+        for (var e : engine.getMapData().getAll().entrySet()) {
+            String name = e.getValue().getName();
+            if (name.length() >= 2 && text.contains(name)) return name;
+        }
+        // 回退：找"在/到/于/往/至"后的2-6字中文
+        return extractLocationAfter(text, "在", "到", "于", "往", "至", "空降至", "传送到", "闪现到");
+    }
+    private String extractLocationAfter(String text, String... prepositions) {
+        for (String prep : prepositions) {
+            int i = text.indexOf(prep);
+            if (i >= 0) {
+                String rest = text.substring(i + prep.length()).trim();
+                var m = java.util.regex.Pattern.compile("([\\u4e00-\\u9fa5]{2,6})").matcher(rest);
+                if (m.find()) return m.group(1);
+            }
+        }
+        return null;
+    }
+    private String resolveLocation(String name) {
+        if (name == null) return null;
+        String pid = engine.getPidByName(name);
+        if (pid != null) return pid;
+        // Fuzzy: match province name containing or contained by the target
+        for (var e : engine.getMapData().getAll().entrySet()) {
+            String pn = e.getValue().getName();
+            if (pn.contains(name) || name.contains(pn)) return e.getKey();
+        }
+        return null;
     }
 
     /** 应用裁决结果 */
     public Map<String, Object> apply(GameState state, String order, Map<String, Object> adjudication) {
         Map<String, Object> resp = new LinkedHashMap<>();
         FactionState fs = state.getFactionState();
+        boolean sandbox = Boolean.TRUE.equals(adjudication.get("sandbox"));
 
         String feasibility = (String) adjudication.getOrDefault("feasibility", "medium");
-        if ("impossible".equals(feasibility)) {
+        if ("impossible".equals(feasibility) && !sandbox) {
             resp.put("success", false);
             resp.put("narrative", adjudication.getOrDefault("feasibility_reason", "该行动在当前条件下无法执行。"));
             return resp;
         }
 
+        // 沙盒模式不消耗AP
         int ap = state.getActionPoints();
-        int apCost = ((Number) adjudication.getOrDefault("ap_cost", 1)).intValue();
+        int apCost = sandbox ? 0 : ((Number) adjudication.getOrDefault("ap_cost", 1)).intValue();
         apCost = Math.min(apCost, ap);
         state.setActionPoints(ap - apCost);
+        boolean sandboxEffective = sandbox;
 
-        // 应用cost
+        // 应用cost（沙盒模式跳过）
         @SuppressWarnings("unchecked")
-        Map<String, Object> cost = (Map<String, Object>) adjudication.get("cost");
+        Map<String, Object> cost = sandbox ? Map.of() : (Map<String, Object>) adjudication.get("cost");
         if (cost != null) {
             for (var entry : cost.entrySet()) {
                 String k = entry.getKey();
@@ -252,9 +381,25 @@ public class SandboxService {
     }
     private String exeBuild(GameState s, Map<String, Object> a) {
         String bid = (String) a.getOrDefault("build_id", "2.1");
-        String loc = (String) a.getOrDefault("location", ""); if (loc.isEmpty()) loc = s.getFactionState().getTerritories().get(0);
+        String loc = (String) a.getOrDefault("location", "");
+        if (loc.isEmpty()) loc = s.getFactionState().getTerritories().get(0);
+        String pid = engine.getPidByName(loc);
+        if (pid == null) {
+            // Fuzzy match
+            for (var e : engine.getMapData().getAll().entrySet())
+                if (e.getValue().getName().contains(loc) || loc.contains(e.getValue().getName()))
+                { pid = e.getKey(); break; }
+        }
+        if (pid != null) {
+            // Add building to province
+            s.getFactionState().addBuilding(pid, "factory", 1);
+            Province p = engine.getProvince(pid);
+            String pname = p != null ? p.getName() : loc;
+            s.getFactionState().getStats().add("industry", 3);
+            return "✅" + pname + " 建设完成 (工业+3)";
+        }
         s.getFactionState().getStats().add("industry", 3);
-        return "✅建造 " + bid + " @" + loc + " (工业+3)";
+        return "✅建造 @" + loc + " (工业+3)";
     }
     private String exeCampaign(GameState s, Map<String, Object> a) {
         String tgt = (String) a.getOrDefault("target", "");
