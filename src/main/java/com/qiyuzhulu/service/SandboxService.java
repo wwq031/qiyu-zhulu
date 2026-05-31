@@ -279,14 +279,16 @@ public class SandboxService {
 
         // 应用effects
         @SuppressWarnings("unchecked")
-        Map<String, Object> effects = (Map<String, Object>) adjudication.get("effects");
-        if (effects != null) {
-            for (var entry : effects.entrySet()) {
-                String k = entry.getKey();
-                int v = ((Number) entry.getValue()).intValue();
-                if (GameEngine.STAT_NAMES.containsKey(k))
-                    fs.getStats().set(k, GameEngine.clamp(fs.getStats().get(k) + v));
-            }
+        Map<String, Integer> effects = new LinkedHashMap<>();
+        Map<String, Object> rawEffects = (Map<String, Object>) adjudication.get("effects");
+        if (rawEffects != null) for (var e : rawEffects.entrySet()) effects.put(e.getKey(), ((Number) e.getValue()).intValue());
+        for (var entry : effects.entrySet()) {
+            String k = entry.getKey();
+            int v = entry.getValue();
+            if ("treasury".equals(k)) fs.setTreasury(fs.getTreasury() + v);
+            else if ("population_support".equals(k))
+                fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() + v, 0, 100));
+            else fs.getStats().add(k, v);
         }
 
         // 风险掷骰
@@ -320,6 +322,30 @@ public class SandboxService {
         resp.put("special", special);
         resp.put("provider", adjudication.getOrDefault("provider", "local"));
 
+        // ── [变更] 标注块解析 → 提取actions/effects ──
+        String narrative = (String) adjudication.get("narrative");
+        if (narrative != null && !narrative.isEmpty()) {
+            Map<String, Object> parsed = parseAnnotations(narrative);
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> annActions = (List<Map<String, Object>>) parsed.get("actions");
+            if (annActions != null && !annActions.isEmpty()) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> existing = (List<Map<String, Object>>) adjudication.get("actions");
+                if (existing != null) annActions.addAll(0, existing);
+                adjudication.put("actions", annActions);
+            }
+            @SuppressWarnings("unchecked")
+            Map<String, Object> annEffects = (Map<String, Object>) parsed.get("effects");
+            if (annEffects != null && !annEffects.isEmpty()) {
+                for (var e : annEffects.entrySet()) {
+                    String k = e.getKey();
+                    int v = ((Number) e.getValue()).intValue();
+                    Integer old = (Integer) effects.get(k);
+                    effects.put(k, old != null ? old + v : v);
+                }
+            }
+        }
+
         // ── actions 数组 → 原子执行器分发 ──
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> actions = (List<Map<String, Object>>) adjudication.get("actions");
@@ -330,6 +356,105 @@ public class SandboxService {
                 resp.put("action_errors", results.get("failed"));
         }
         return resp;
+    }
+
+    // ═══════════════════════════════════════════ [变更] 标注块解析 ═══════════════════════════════════════════
+
+    /** 解析AI叙事中的 [变更]...[/变更] 中文标注块 → actions + effects */
+    @SuppressWarnings("unchecked")
+    Map<String, Object> parseAnnotations(String text) {
+        List<Map<String, Object>> actions = new ArrayList<>();
+        Map<String, Integer> effects = new LinkedHashMap<>();
+        List<String> notes = new ArrayList<>();
+
+        var m = java.util.regex.Pattern.compile("\\[变更\\](.*?)\\[/变更\\]", java.util.regex.Pattern.DOTALL).matcher(text);
+        if (!m.find()) return Map.of("actions", (Object) actions, "effects", (Object) effects);
+
+        String[] lines = m.group(1).split("\n");
+        Map<String, String> resMap = Map.ofEntries(
+                Map.entry("国库", "treasury"), Map.entry("民心", "population_support"),
+                Map.entry("军事", "military"), Map.entry("工业", "industry"),
+                Map.entry("农业", "agriculture"), Map.entry("经济", "economy"),
+                Map.entry("思想", "ideology"), Map.entry("外交", "diplomacy"), Map.entry("海军", "naval_power"));
+        Map<String, String> unitMap = Map.of(
+                "步兵", "infantry", "骑兵", "cavalry", "炮兵", "artillery",
+                "工兵", "engineer", "海军", "naval", "水师", "naval", "装甲", "armored");
+        Map<String, String> attrMap = Map.of("兵力", "strength", "士气", "morale", "攻击", "attack", "防御", "defense");
+
+        for (String raw : lines) {
+            String line = raw.strip();
+            if (line.isEmpty()) continue;
+
+            // "X" 移动到 "Y"
+            var moveM = java.util.regex.Pattern.compile("\"([^\"]+)\"\\s*移动到\\s*\"([^\"]+)\"").matcher(line);
+            if (moveM.find()) { actions.add(Map.of("type", "move", "unit_name", moveM.group(1), "dest", moveM.group(2))); continue; }
+
+            // "X" 被吞并
+            var annexM = java.util.regex.Pattern.compile("\"([^\"]+)\"\\s*被吞并").matcher(line);
+            if (annexM.find()) { actions.add(Map.of("type", "annex_faction", "target", annexM.group(1))); continue; }
+
+            // 占领 "X"
+            var seizeM = java.util.regex.Pattern.compile("占领\\s*\"([^\"]+)\"").matcher(line);
+            if (seizeM.find()) { actions.add(Map.of("type", "seize_province", "province", seizeM.group(1))); continue; }
+
+            // 解散 "X"
+            var disbandM = java.util.regex.Pattern.compile("解散\\s*\"([^\"]+)\"").matcher(line);
+            if (disbandM.find()) { actions.add(Map.of("type", "disband_unit", "unit_name", disbandM.group(1))); continue; }
+
+            // 在 "X" 直接创建 N 支 兵种
+            if (line.contains("直接创建") || line.contains("创建") && (line.contains("支") || line.contains("个"))) {
+                var qs = extractQuoted(line);
+                // 找地点
+                String loc = null;
+                var locM = java.util.regex.Pattern.compile("在\\s*\"([^\"]+)\"\\s*(?:直接)?创建").matcher(line);
+                if (locM.find()) loc = locM.group(1);
+                else if (!qs.isEmpty()) loc = qs.get(qs.size() - 1);
+                // 兵种
+                String ut = "infantry";
+                for (var e : unitMap.entrySet()) if (line.contains(e.getKey())) { ut = e.getValue(); break; }
+                // 数量
+                int num = 1;
+                var numM = java.util.regex.Pattern.compile("(\\S+?)(?:支|个|队)").matcher(line);
+                if (numM.find()) { String s = numM.group(1); try { num = Integer.parseInt(s); } catch (Exception ex) {} }
+                else { var nm = java.util.regex.Pattern.compile("(\\d+)").matcher(line); if (nm.find()) num = Integer.parseInt(nm.group(1)); }
+                num = Math.min(num, 20);
+                // 部队名
+                String uname = null;
+                var nameM = java.util.regex.Pattern.compile("名\\s*\"([^\"]+)\"").matcher(line);
+                if (nameM.find()) uname = nameM.group(1);
+                for (int i = 0; i < num; i++)
+                    actions.add(Map.of("type", "train_unit", "unit_type", ut, "location", loc != null ? loc : "奉天",
+                            "unit_name", uname != null && num == 1 ? uname : (uname != null ? uname + "第" + (i+1) + "号" : null)));
+                continue;
+            }
+
+            // 效果：工业+5 军事-3 (or standalone +/-)
+            var resM = java.util.regex.Pattern.compile("(\\S+)\\s*([+-]\\d+)").matcher(line);
+            if (resM.find()) {
+                String rk = resM.group(1); int rv = Integer.parseInt(resM.group(2));
+                String key = resMap.getOrDefault(rk, rk);
+                effects.merge(key, rv, Integer::sum);
+                continue;
+            }
+
+            // 修改 "X" 的 "属性" 改为 N
+            var modM = java.util.regex.Pattern.compile("\"([^\"]+)\"\\s*的\\s*\"([^\"]+)\"\\s*改为\\s*(\\d+)").matcher(line);
+            if (modM.find()) {
+                String attr = attrMap.getOrDefault(modM.group(2), modM.group(2));
+                actions.add(Map.of("type", "modify_unit", "unit_name", modM.group(1), "field", attr, "value", Integer.parseInt(modM.group(3))));
+                continue;
+            }
+
+            notes.add("未识别: " + line);
+        }
+        return Map.of("actions", (Object) actions, "effects", (Object) effects, "special_notes", (Object) notes);
+    }
+
+    private static java.util.List<String> extractQuoted(String s) {
+        var r = new ArrayList<String>();
+        var m = java.util.regex.Pattern.compile("\"([^\"]*)\"").matcher(s);
+        while (m.find()) r.add(m.group(1));
+        return r;
     }
 
     // ═══════════════════════════════════════════ actions 执行器 ═══════════════════════════════════════════
