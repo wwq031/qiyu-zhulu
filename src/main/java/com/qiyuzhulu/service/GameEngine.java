@@ -109,6 +109,85 @@ public class GameEngine {
         return pf != null ? pf.getRegion() : "";
     }
 
+    // ═══════════════════════════════════════════ AI投降系统 ═══════════════════════════════════════════
+
+    /** 检查是否有AI势力应投降。返回 [{fid, attacker_fid}, ...] */
+    public List<Map<String, String>> checkAiSurrender(GameState state) {
+        List<Map<String, String>> surrenders = new ArrayList<>();
+        for (var entry : state.getAiFactions().entrySet()) {
+            String fid = entry.getKey();
+            if (state.getDefeatedFactions().contains(fid)) continue;
+            FactionState fs = entry.getValue().getFactionState();
+            if (fs == null) continue;
+
+            int mil = fs.getStats().getMilitary();
+            List<String> terrs = fs.getTerritories();
+            Map<String, Integer> army = fs.getArmy();
+            int totalArmy = army != null ? army.values().stream().mapToInt(Integer::intValue).sum() : 0;
+
+            // 无力抵抗条件
+            boolean weak = (mil < 20 && (terrs == null || terrs.size() <= 1))
+                    || (totalArmy < 20 && (terrs == null || terrs.size() <= 1));
+            if (!weak) continue;
+
+            // 找到正在进攻该势力的战役
+            String attacker = null;
+            for (Campaign c : state.getActiveCampaigns()) {
+                if ("ongoing".equals(c.getStatus()) && fid.equals(c.getDefenderFaction())) {
+                    attacker = c.getAttackerFaction();
+                    break;
+                }
+            }
+            if (attacker == null) continue;
+
+            surrenders.add(Map.of("fid", fid, "attacker_fid", attacker));
+        }
+        return surrenders;
+    }
+
+    /** 执行投降：领地归进攻方，标记覆灭 */
+    public Map<String, Object> executeSurrender(GameState state, String fid, String attackerFid) {
+        var aiData = state.getAiFactions().get(fid);
+        if (aiData == null) return null;
+        FactionState fs = aiData.getFactionState();
+        if (fs == null) return null;
+
+        String name = fs.getName() != null ? fs.getName() : fid;
+        List<String> territories = new ArrayList<>(fs.getTerritories() != null ? fs.getTerritories() : List.of());
+
+        String winnerFid = attackerFid != null ? attackerFid : state.getPlayerFactionId();
+        FactionState winnerFs = getFactionState(state, winnerFid);
+        String winnerName = winnerFs != null && winnerFs.getName() != null ? winnerFs.getName() : winnerFid;
+
+        // 转移领土
+        for (String t : territories) {
+            String pid = getPidByName(t);
+            if (pid != null) {
+                Province p = getProvince(pid);
+                if (p != null && !p.isClaimable()) continue;
+            }
+            if (winnerFs.getTerritories() == null) winnerFs.setTerritories(new ArrayList<>());
+            if (!winnerFs.getTerritories().contains(t)) winnerFs.getTerritories().add(t);
+        }
+
+        // 标记覆灭
+        if (state.getDefeatedFactions() == null) state.setDefeatedFactions(new ArrayList<>());
+        state.getDefeatedFactions().add(fid);
+        fs.setTerritories(new ArrayList<>());
+        if (fs.getUnits() != null) fs.getUnits().clear();
+
+        // 事件
+        String text = "🏳 " + name + " 降伏于" + winnerName + "——兵力耗尽，举旗归顺。";
+        if (state.getDefeatEvents() == null) state.setDefeatEvents(new ArrayList<>());
+        state.getDefeatEvents().add(GameUtils.mapOf(
+                "name", name, "turn", state.getTurn(), "text", text,
+                "eliminated_faction", name, "eliminator_faction", winnerName,
+                "eliminator_fid", winnerFid, "eliminated_fid", fid));
+
+        return GameUtils.mapOf("faction_id", fid, "faction_name", name,
+                "territories", territories, "winner_name", winnerName);
+    }
+
     // ═══════════════════════════════════════════ 补给系统 ═══════════════════════════════════════════
 
     /**

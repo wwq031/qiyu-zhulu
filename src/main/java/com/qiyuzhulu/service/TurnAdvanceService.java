@@ -148,7 +148,15 @@ public class TurnAdvanceService {
         state.getEpicEventsThisTurn().addAll(
                 epicResults.stream().map(e -> (String) e.getOrDefault("name", "")).toList());
 
-        // 7f. 战役结算
+        // 7f. AI投降检查
+        for (var surr : engine.checkAiSurrender(state)) {
+            String fid = surr.get("fid");
+            String atkFid = surr.get("attacker_fid");
+            Map<String, Object> result = engine.executeSurrender(state, fid, atkFid);
+            if (result != null) events.add((String) result.getOrDefault("faction_name", "") + " 降伏！");
+        }
+
+        // 7g. 战役结算
         CampaignService.BattleResult br = campaignService.resolveAllCampaigns(state);
         events.addAll(br.messages);
         // 转换结构化结果为前端需要的格式
