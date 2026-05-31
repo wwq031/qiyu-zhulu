@@ -1,0 +1,4085 @@
+[
+  {
+    "name": "承德",
+    "pid": "adj_2071",
+    "lat": 41.37845710954774,
+    "lng": 117.7970093113578,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "北京",
+    "district": "京畿地区"
+  },
+  {
+    "name": "张家口",
+    "pid": "adj_2065",
+    "lat": 40.9083,
+    "lng": 114.8561,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "察哈尔地区"
+  },
+  {
+    "name": "保定",
+    "pid": "adj_2017",
+    "lat": 38.9958,
+    "lng": 115.0571,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "直隶地区"
+  },
+  {
+    "name": "唐山",
+    "pid": "adj_2036",
+    "lat": 39.79489340337817,
+    "lng": 118.44568864950608,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "天津",
+    "district": "天津地区"
+  },
+  {
+    "name": "沧州",
+    "pid": "adj_2094",
+    "lat": 38.28591165508984,
+    "lng": 116.57126402293058,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "天津",
+    "district": "天津地区"
+  },
+  {
+    "name": "石家庄",
+    "pid": "adj_2129",
+    "lat": 38.1078,
+    "lng": 114.4404,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "石门地区"
+  },
+  {
+    "name": "邢台",
+    "pid": "adj_2164",
+    "lat": 37.23485644385027,
+    "lng": 114.8497371657754,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "石家庄",
+    "district": "石门地区"
+  },
+  {
+    "name": "邯郸",
+    "pid": null,
+    "lat": 36.53484836263166,
+    "lng": 114.44394658433467,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "石家庄",
+    "district": "石门地区"
+  },
+  {
+    "name": "秦皇岛",
+    "pid": null,
+    "lat": 40.127577910052906,
+    "lng": 119.16273055555556,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "天津",
+    "district": "天津地区"
+  },
+  {
+    "name": "衡水",
+    "pid": "adj_2150",
+    "lat": 37.76269798723613,
+    "lng": 115.79554808951072,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "石家庄",
+    "district": "石门地区"
+  },
+  {
+    "name": "廊坊",
+    "pid": "adj_2063",
+    "lat": 39.027895439537225,
+    "lng": 116.50190281177038,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "天津",
+    "district": "天津地区"
+  },
+  {
+    "name": "忻州",
+    "pid": "bingjiao",
+    "lat": 38.907257146624474,
+    "lng": 112.36667494725738,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "太原",
+    "district": "太原地区"
+  },
+  {
+    "name": "吕梁",
+    "pid": "adj_2030",
+    "lat": 37.667002879901965,
+    "lng": 111.27114037990196,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "太原",
+    "district": "太原地区"
+  },
+  {
+    "name": "临汾",
+    "pid": "adj_2006",
+    "lat": 36.192807655172416,
+    "lng": 111.3598140229885,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "晋中",
+    "pid": "adj_2079",
+    "lat": 37.239288440860214,
+    "lng": 112.81489897849463,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "太原",
+    "district": "太原地区"
+  },
+  {
+    "name": "运城",
+    "pid": "adj_2158",
+    "lat": 35.30619067567567,
+    "lng": 111.21218815315316,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "大同",
+    "pid": "datong",
+    "lat": 40.0936,
+    "lng": 113.2918,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "大同地区"
+  },
+  {
+    "name": "长治",
+    "pid": null,
+    "lat": 36.49836980568012,
+    "lng": 112.95395810164425,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "太原",
+    "district": "太原地区"
+  },
+  {
+    "name": "朔州",
+    "pid": "adj_2080",
+    "lat": 39.609586778398516,
+    "lng": 112.6726300744879,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "大同",
+    "district": "大同地区"
+  },
+  {
+    "name": "晋城",
+    "pid": null,
+    "lat": 35.61035281124498,
+    "lng": 112.76777418674699,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "太原",
+    "pid": "taiyuan",
+    "lat": 37.8706,
+    "lng": 112.5509,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "太原地区"
+  },
+  {
+    "name": "阳泉",
+    "pid": "adj_2179",
+    "lat": 38.086488630490955,
+    "lng": 113.51429173126616,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "石家庄",
+    "district": "石门地区"
+  },
+  {
+    "name": "呼伦贝尔",
+    "pid": "adj_2033",
+    "lat": 50.32789266666666,
+    "lng": 122.43855847619048,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "阿拉善盟",
+    "pid": "adj_2182",
+    "lat": 39.5375859775641,
+    "lng": 103.29677740384615,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "武威",
+    "district": "凉州地区"
+  },
+  {
+    "name": "锡林郭勒盟",
+    "pid": null,
+    "lat": 43.537402948255114,
+    "lng": 116.03073731648615,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "张家口",
+    "district": "察哈尔地区"
+  },
+  {
+    "name": "鄂尔多斯",
+    "pid": "adj_2167",
+    "lat": 39.334665772357724,
+    "lng": 109.0335000813008,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "赤峰",
+    "pid": null,
+    "lat": 42.55641540880503,
+    "lng": 118.88730194968554,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "锦州",
+    "district": "辽西地区"
+  },
+  {
+    "name": "巴彦淖尔",
+    "pid": null,
+    "lat": 41.07393804347826,
+    "lng": 108.13192119565217,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "通辽",
+    "pid": "adj_2162",
+    "lat": 43.48400254166667,
+    "lng": 121.93536552777778,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "乌兰察布",
+    "pid": "adj_2010",
+    "lat": 41.54410607843137,
+    "lng": 113.29857823529413,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "张家口",
+    "district": "察哈尔地区"
+  },
+  {
+    "name": "兴安盟",
+    "pid": "adj_2021",
+    "lat": 46.18630649572649,
+    "lng": 121.71574495726495,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "包头",
+    "pid": null,
+    "lat": 41.144996739130434,
+    "lng": 110.27741847826086,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "呼和浩特",
+    "pid": "adj_2034",
+    "lat": 40.504658937198066,
+    "lng": 111.49674202898551,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "大同",
+    "district": "大同地区"
+  },
+  {
+    "name": "乌海",
+    "pid": null,
+    "lat": 39.43249137931034,
+    "lng": 106.85340689655172,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "大连",
+    "pid": "dalian",
+    "lat": 38.9137,
+    "lng": 121.6148,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "大连地区"
+  },
+  {
+    "name": "朝阳",
+    "pid": "adj_2081",
+    "lat": 41.51002865541922,
+    "lng": 119.95211155419223,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "锦州",
+    "district": "辽西地区"
+  },
+  {
+    "name": "丹东",
+    "pid": "adj_2008",
+    "lat": 40.64078435054773,
+    "lng": 124.4836668231612,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "奉天地区"
+  },
+  {
+    "name": "铁岭",
+    "pid": "adj_2171",
+    "lat": 42.69771317343174,
+    "lng": 124.18764589585895,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "沈阳",
+    "pid": "fengtian",
+    "lat": 41.8057,
+    "lng": 123.4315,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "奉天地区",
+    "historical_name": "奉天"
+  },
+  {
+    "name": "抚顺",
+    "pid": "adj_2072",
+    "lat": 41.855889215686275,
+    "lng": 124.68512021116139,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "葫芦岛",
+    "pid": "adj_2148",
+    "lat": 40.717316764132555,
+    "lng": 120.1030007797271,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "山海关",
+    "district": "临榆地区"
+  },
+  {
+    "name": "阜新",
+    "pid": "adj_2177",
+    "lat": 42.33829264132553,
+    "lng": 121.91254532163742,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "锦州",
+    "district": "辽西地区"
+  },
+  {
+    "name": "锦州",
+    "pid": "adj_2175",
+    "lat": 41.4714,
+    "lng": 121.5923,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "辽西地区"
+  },
+  {
+    "name": "鞍山",
+    "pid": "adj_2185",
+    "lat": 40.81536800766283,
+    "lng": 122.8924632183908,
+    "region": "northeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "奉天地区"
+  },
+  {
+    "name": "本溪",
+    "pid": "adj_2082",
+    "lat": 41.22003701472557,
+    "lng": 124.65338500669344,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "营口",
+    "pid": "adj_2147",
+    "lat": 40.44302442748092,
+    "lng": 122.4798544529262,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "辽西地区"
+  },
+  {
+    "name": "辽阳",
+    "pid": "fengjiao",
+    "lat": 41.176646853146856,
+    "lng": 123.19611118881119,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "盘锦",
+    "pid": null,
+    "lat": 41.052970684523814,
+    "lng": 122.08379851190476,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "锦州",
+    "district": "辽西地区"
+  },
+  {
+    "name": "延边",
+    "pid": null,
+    "lat": 43.11034718875502,
+    "lng": 129.36556972891566,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "延吉",
+    "district": "延边地区"
+  },
+  {
+    "name": "吉林",
+    "pid": "jilin",
+    "lat": 43.8378,
+    "lng": 126.5495,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吉林地区"
+  },
+  {
+    "name": "白城",
+    "pid": "adj_2124",
+    "lat": 45.53728970331588,
+    "lng": 122.96587303664921,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "松原",
+    "pid": "adj_2084",
+    "lat": 44.91825108695652,
+    "lng": 124.85349844720498,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "长春",
+    "pid": "changchun",
+    "lat": 44.336885942760944,
+    "lng": 125.82193164983165,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吉林地区"
+  },
+  {
+    "name": "白山",
+    "pid": "adj_2125",
+    "lat": 41.9809722826087,
+    "lng": 127.27247635869566,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "延吉",
+    "district": "延边地区"
+  },
+  {
+    "name": "通化",
+    "pid": "adj_2161",
+    "lat": 41.812748,
+    "lng": 125.91885433333333,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "奉天",
+    "district": "奉天地区"
+  },
+  {
+    "name": "四平",
+    "pid": "adj_2040",
+    "lat": 43.44106920498084,
+    "lng": 124.50240858237548,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "吉林",
+    "district": "吉林地区"
+  },
+  {
+    "name": "辽源",
+    "pid": "adj_2156",
+    "lat": 42.758037599206354,
+    "lng": 125.21868333333333,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "吉林",
+    "district": "吉林地区"
+  },
+  {
+    "name": "黑河",
+    "pid": "adj_2192",
+    "lat": 49.314998606965176,
+    "lng": 126.66078512437812,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "大兴安岭",
+    "pid": null,
+    "lat": 52.14726316056911,
+    "lng": 124.28969522357724,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "哈尔滨",
+    "pid": "haerbin",
+    "lat": 45.8038,
+    "lng": 126.535,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "齐齐哈尔",
+    "pid": "qiqihaer",
+    "lat": 47.3543,
+    "lng": 123.9182,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "牡丹江",
+    "pid": "adj_2119",
+    "lat": 44.66375067750677,
+    "lng": 129.87148895663955,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "延吉",
+    "district": "延边地区"
+  },
+  {
+    "name": "绥化",
+    "pid": "adj_2133",
+    "lat": 46.734116108786615,
+    "lng": 126.64027656903765,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "伊春",
+    "pid": "adj_2015",
+    "lat": 47.90003014705882,
+    "lng": 129.29583419117648,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "佳木斯",
+    "pid": "adj_2016",
+    "lat": 47.11219407894737,
+    "lng": 131.86750345394736,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "鸡西",
+    "pid": null,
+    "lat": 45.74885,
+    "lng": 132.38497515873016,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "延吉",
+    "district": "延边地区"
+  },
+  {
+    "name": "双鸭山",
+    "pid": null,
+    "lat": 46.65007887323944,
+    "lng": 132.53294906103287,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "大庆",
+    "pid": "adj_2043",
+    "lat": 46.20470313901345,
+    "lng": 124.69157264573992,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "齐齐哈尔",
+    "district": "齐齐哈尔地区"
+  },
+  {
+    "name": "鹤岗",
+    "pid": null,
+    "lat": 47.72083486842105,
+    "lng": 130.71215263157896,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "七台河",
+    "pid": "adj_2000",
+    "lat": 45.915673113207546,
+    "lng": 131.0360632075472,
+    "region": "northeast",
+    "type": "territory",
+    "parent_city": "哈尔滨",
+    "district": "哈尔滨地区"
+  },
+  {
+    "name": "盐城",
+    "pid": "yancheng",
+    "lat": 33.28320389221557,
+    "lng": 120.08976447105789,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "徐州",
+    "pid": "xuzhou",
+    "lat": 34.2048,
+    "lng": 117.2848,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "淮海地区"
+  },
+  {
+    "name": "南通",
+    "pid": "nantong",
+    "lat": 32.264013690625,
+    "lng": 120.8594061071314,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吴中地区"
+  },
+  {
+    "name": "淮安",
+    "pid": "huaian",
+    "lat": 33.34305416666667,
+    "lng": 118.9785041125541,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "苏州",
+    "pid": "adj_2140",
+    "lat": 31.3428,
+    "lng": 120.5681,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吴中地区"
+  },
+  {
+    "name": "宿迁",
+    "pid": "adj_2052",
+    "lat": 33.87359404761905,
+    "lng": 118.50611525974027,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南京",
+    "district": "江东地区"
+  },
+  {
+    "name": "连云港",
+    "pid": "adj_2159",
+    "lat": 34.462054155092595,
+    "lng": 119.07175532407408,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南京",
+    "district": "江东地区"
+  },
+  {
+    "name": "扬州",
+    "pid": "adj_2070",
+    "lat": 32.737823501199045,
+    "lng": 119.50177961630695,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "南京",
+    "pid": "nanjing",
+    "lat": 32.0603,
+    "lng": 118.7969,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "泰州",
+    "pid": "taizhou",
+    "lat": 32.666583571428575,
+    "lng": 120.04451488095238,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "无锡",
+    "pid": "wuxi",
+    "lat": 31.556608955223883,
+    "lng": 120.05294726368159,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吴中地区"
+  },
+  {
+    "name": "常州",
+    "pid": "adj_2057",
+    "lat": 31.591567421602786,
+    "lng": 119.6799637195122,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吴中地区"
+  },
+  {
+    "name": "镇江",
+    "pid": "adj_2176",
+    "lat": 31.96390014619883,
+    "lng": 119.40659210526316,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "丽水",
+    "pid": "adj_2009",
+    "lat": 28.23302865977291,
+    "lng": 119.59731289537713,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "温州",
+    "district": "瓯越地区"
+  },
+  {
+    "name": "杭州",
+    "pid": "hangzhou",
+    "lat": 30.2741,
+    "lng": 120.1551,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "温州",
+    "pid": "wenzhou",
+    "lat": 27.9939,
+    "lng": 120.6994,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "瓯越地区"
+  },
+  {
+    "name": "宁波",
+    "pid": "ningbo",
+    "lat": 29.8683,
+    "lng": 121.544,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "浙东地区"
+  },
+  {
+    "name": "舟山",
+    "pid": "adj_2138",
+    "lat": 30.22024322472701,
+    "lng": 122.26356163199834,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "宁波",
+    "district": "浙东地区"
+  },
+  {
+    "name": "台州",
+    "pid": "adj_2028",
+    "lat": 28.76864373848987,
+    "lng": 121.02100423572745,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "温州",
+    "district": "瓯越地区"
+  },
+  {
+    "name": "金华",
+    "pid": "adj_2170",
+    "lat": 29.114168293293293,
+    "lng": 119.96216554054055,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "衢州",
+    "pid": "adj_2151",
+    "lat": 28.911271928277486,
+    "lng": 118.68691851851852,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "绍兴",
+    "pid": "shaoxing",
+    "lat": 29.67391859965636,
+    "lng": 120.5985985395189,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "嘉兴",
+    "pid": "adj_2039",
+    "lat": 30.667495457363046,
+    "lng": 120.76522329845528,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "湖州",
+    "pid": "adj_2109",
+    "lat": 30.68087975308642,
+    "lng": 119.83739880070546,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "杭州地区"
+  },
+  {
+    "name": "六安",
+    "pid": "adj_2019",
+    "lat": 31.75918294467787,
+    "lng": 116.37346479691877,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "安庆",
+    "pid": "anqing",
+    "lat": 30.702052102713182,
+    "lng": 116.59968255813955,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "浔阳地区"
+  },
+  {
+    "name": "滁州",
+    "pid": "adj_2112",
+    "lat": 32.591141190476186,
+    "lng": 118.22684651629073,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南京",
+    "district": "江东地区"
+  },
+  {
+    "name": "宣城",
+    "pid": "adj_2051",
+    "lat": 30.677178635186294,
+    "lng": 118.79864478979876,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "杭州",
+    "district": "杭州地区"
+  },
+  {
+    "name": "阜阳",
+    "pid": "fuyang",
+    "lat": 32.875966631629524,
+    "lng": 115.68817940057544,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "江淮地区"
+  },
+  {
+    "name": "宿州",
+    "pid": "xujiao",
+    "lat": 33.90731829146095,
+    "lng": 117.10875012906779,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "黄山",
+    "pid": "adj_2190",
+    "lat": 29.948820334928232,
+    "lng": 118.05329282296651,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "九江",
+    "district": "浔阳地区"
+  },
+  {
+    "name": "巢湖",
+    "pid": "chaohu",
+    "lat": 31.47053695928753,
+    "lng": 117.76069565612505,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "亳州",
+    "pid": "bozhou",
+    "lat": 33.49830981721982,
+    "lng": 116.15119314574315,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "江淮地区"
+  },
+  {
+    "name": "池州",
+    "pid": "adj_2093",
+    "lat": 30.19274318415638,
+    "lng": 117.37319310699588,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "九江",
+    "district": "浔阳地区"
+  },
+  {
+    "name": "合肥",
+    "pid": "hefei",
+    "lat": 31.8206,
+    "lng": 117.2272,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江淮地区"
+  },
+  {
+    "name": "蚌埠",
+    "pid": "adj_2149",
+    "lat": 33.13802042824074,
+    "lng": 117.42408923611112,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "江淮地区"
+  },
+  {
+    "name": "芜湖",
+    "pid": "adj_2139",
+    "lat": 31.021739775910362,
+    "lng": 118.34772689075629,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江东地区"
+  },
+  {
+    "name": "淮北",
+    "pid": "adj_2105",
+    "lat": 33.71793355072464,
+    "lng": 116.7657904347826,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "淮南",
+    "pid": "adj_2106",
+    "lat": 32.713493965517245,
+    "lng": 116.76508793103449,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "马鞍山",
+    "pid": "adj_2187",
+    "lat": 31.567878046875,
+    "lng": 118.63788684895833,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南京",
+    "district": "江东地区"
+  },
+  {
+    "name": "铜陵",
+    "pid": "adj_2174",
+    "lat": 30.930682269503546,
+    "lng": 117.90676524822695,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "合肥",
+    "district": "江淮地区"
+  },
+  {
+    "name": "南平",
+    "pid": "adj_2026",
+    "lat": 27.31715026785714,
+    "lng": 118.18213652116403,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "三明",
+    "pid": "adj_2001",
+    "lat": 26.239620447761194,
+    "lng": 117.45424766169154,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "龙岩",
+    "pid": null,
+    "lat": 25.253011912751678,
+    "lng": 116.80113324944072,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "宁德",
+    "pid": "adj_2047",
+    "lat": 26.946113089635855,
+    "lng": 119.42627067413632,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "福州",
+    "pid": "fuzhou",
+    "lat": 26.0745,
+    "lng": 119.2965,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "闽中地区"
+  },
+  {
+    "name": "漳州",
+    "pid": "adj_2115",
+    "lat": 24.538002203065133,
+    "lng": 117.40379434865899,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "泉州",
+    "pid": "adj_2096",
+    "lat": 25.21278216989055,
+    "lng": 118.19162661530017,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "莆田",
+    "pid": "adj_2143",
+    "lat": 25.41814185052897,
+    "lng": 118.91346513502182,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "厦门",
+    "pid": "xiamen",
+    "lat": 24.4798,
+    "lng": 118.0894,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "闽南地区"
+  },
+  {
+    "name": "赣州",
+    "pid": "adj_2155",
+    "lat": 25.6965,
+    "lng": 115.2793,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "赣南地区"
+  },
+  {
+    "name": "吉安",
+    "pid": "adj_2029",
+    "lat": 26.90748434542949,
+    "lng": 114.83503189710612,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "赣南地区"
+  },
+  {
+    "name": "上饶",
+    "pid": "adj_2002",
+    "lat": 28.84200821959755,
+    "lng": 117.39747399387576,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": null,
+    "district": "赣北地区"
+  },
+  {
+    "name": "九江",
+    "pid": "jiujiang",
+    "lat": 29.7051,
+    "lng": 116.0019,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "浔阳地区"
+  },
+  {
+    "name": "抚州",
+    "pid": "hongjiao",
+    "lat": 27.51120877538829,
+    "lng": 116.49596771206691,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南昌",
+    "district": "赣北地区"
+  },
+  {
+    "name": "宜春",
+    "pid": "adj_2050",
+    "lat": 28.23273332057823,
+    "lng": 114.97334250992063,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南昌",
+    "district": "赣北地区"
+  },
+  {
+    "name": "南昌",
+    "pid": "nanchang",
+    "lat": 28.682,
+    "lng": 115.8582,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "赣北地区"
+  },
+  {
+    "name": "景德镇",
+    "pid": "jingdezhen",
+    "lat": 29.32171710816777,
+    "lng": 117.30138774834437,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "浔阳地区"
+  },
+  {
+    "name": "萍乡",
+    "pid": "adj_2146",
+    "lat": 27.526174390243902,
+    "lng": 113.9067918699187,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "鹰潭",
+    "pid": "adj_2188",
+    "lat": 28.201444444444444,
+    "lng": 117.09017303921568,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南昌",
+    "district": "赣北地区"
+  },
+  {
+    "name": "新余",
+    "pid": null,
+    "lat": 27.85203712250712,
+    "lng": 114.90450427350427,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "南昌",
+    "district": "赣北地区"
+  },
+  {
+    "name": "烟台",
+    "pid": "yantai",
+    "lat": 37.143971280602635,
+    "lng": 120.87669905838041,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "青岛",
+    "district": "济南地区"
+  },
+  {
+    "name": "临沂",
+    "pid": "adj_2007",
+    "lat": 35.36387871103118,
+    "lng": 118.3681954796163,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "淮海地区"
+  },
+  {
+    "name": "潍坊",
+    "pid": null,
+    "lat": 36.371821955128205,
+    "lng": 119.05728341346153,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "青岛",
+    "pid": "qingdao",
+    "lat": 36.426129143389204,
+    "lng": 120.20401918063315,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "济南地区"
+  },
+  {
+    "name": "菏泽",
+    "pid": "adj_2145",
+    "lat": 35.15622484405458,
+    "lng": 115.73193947368422,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "济宁",
+    "pid": "adj_2099",
+    "lat": 35.32952707767518,
+    "lng": 116.78360409197899,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "淮海地区"
+  },
+  {
+    "name": "德州",
+    "pid": "jijiao2",
+    "lat": 37.23546680124223,
+    "lng": 116.6929575492677,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "滨州",
+    "pid": "adj_2113",
+    "lat": 37.38122750771605,
+    "lng": 117.7952393132716,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "聊城",
+    "pid": "adj_2135",
+    "lat": 36.40976837742504,
+    "lng": 115.85451693121692,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "东营",
+    "pid": null,
+    "lat": 37.448857425742574,
+    "lng": 118.48610181518151,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "济南",
+    "pid": "jinan",
+    "lat": 36.6683,
+    "lng": 116.9972,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "济南地区"
+  },
+  {
+    "name": "泰安",
+    "pid": "adj_2097",
+    "lat": 35.98529368448637,
+    "lng": 117.00181572327044,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "威海",
+    "pid": "weihai",
+    "lat": 37.10299255319149,
+    "lng": 121.72764148936172,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "青岛",
+    "district": "济南地区"
+  },
+  {
+    "name": "日照",
+    "pid": null,
+    "lat": 35.56273086419753,
+    "lng": 119.1150348148148,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "徐州",
+    "district": "淮海地区"
+  },
+  {
+    "name": "淄博",
+    "pid": "adj_2104",
+    "lat": 36.567463512731486,
+    "lng": 118.0968546875,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "济南地区"
+  },
+  {
+    "name": "枣庄",
+    "pid": "adj_2087",
+    "lat": 34.89751635220126,
+    "lng": 117.39767405660378,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "徐州",
+    "district": "淮海地区"
+  },
+  {
+    "name": "莱芜",
+    "pid": "adj_2144",
+    "lat": 36.23478712737128,
+    "lng": 117.69646585365852,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "济南",
+    "district": "济南地区"
+  },
+  {
+    "name": "南阳",
+    "pid": "adj_2027",
+    "lat": 32.9704676384718,
+    "lng": 112.48467038705371,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "信阳",
+    "pid": "adj_2018",
+    "lat": 32.13387962088105,
+    "lng": 114.77863935528431,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "洛阳",
+    "pid": "luoyang",
+    "lat": 34.6181,
+    "lng": 112.454,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "河洛地区"
+  },
+  {
+    "name": "驻马店",
+    "pid": null,
+    "lat": 32.84649329051796,
+    "lng": 114.19275533973823,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "周口",
+    "pid": "adj_2032",
+    "lat": 33.72994856284856,
+    "lng": 114.89990751823251,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "商丘",
+    "pid": "adj_2037",
+    "lat": 34.24645550108932,
+    "lng": 115.6891347630719,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "三门峡",
+    "pid": null,
+    "lat": 34.3994004147813,
+    "lng": 111.2061221719457,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "新乡",
+    "pid": "adj_2075",
+    "lat": 35.33335097916667,
+    "lng": 114.08882962499999,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "平顶山",
+    "pid": "adj_2060",
+    "lat": 33.74488185763889,
+    "lng": 113.0526315625,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "郑州",
+    "pid": "zhengzhou",
+    "lat": 34.7466,
+    "lng": 113.6254,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "郑州地区"
+  },
+  {
+    "name": "安阳",
+    "pid": null,
+    "lat": 35.875382988855115,
+    "lng": 114.29372915906788,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "开封",
+    "pid": "kaifeng",
+    "lat": 34.7975,
+    "lng": 114.3076,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "开封地区"
+  },
+  {
+    "name": "焦作",
+    "pid": "adj_2118",
+    "lat": 35.13648641304348,
+    "lng": 112.85673146135265,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "许昌",
+    "pid": "zhengjiao",
+    "lat": 34.053607666666664,
+    "lng": 113.689932,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "郑州",
+    "district": "郑州地区"
+  },
+  {
+    "name": "濮阳",
+    "pid": null,
+    "lat": 35.832747121212115,
+    "lng": 115.35814794372293,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "漯河",
+    "pid": "adj_2114",
+    "lat": 33.63816753472222,
+    "lng": 113.89951597222222,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "郑州",
+    "district": "郑州地区"
+  },
+  {
+    "name": "鹤壁",
+    "pid": null,
+    "lat": 35.75690897435897,
+    "lng": 114.2851358974359,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "开封",
+    "district": "开封地区"
+  },
+  {
+    "name": "恩施",
+    "pid": "adj_2068",
+    "lat": 30.20939929549481,
+    "lng": 109.54295692698179,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "宜昌",
+    "district": "三峡地区"
+  },
+  {
+    "name": "十堰",
+    "pid": "adj_2024",
+    "lat": 32.44857298047494,
+    "lng": 110.40707372854469,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "宜昌",
+    "district": "三峡地区"
+  },
+  {
+    "name": "宜昌",
+    "pid": "yichang",
+    "lat": 30.6907,
+    "lng": 111.286,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "三峡地区"
+  },
+  {
+    "name": "襄阳",
+    "pid": "adj_2152",
+    "lat": 31.9257,
+    "lng": 111.9671,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "鄂北地区"
+  },
+  {
+    "name": "黄冈",
+    "pid": "adj_2189",
+    "lat": 30.89112837135615,
+    "lng": 115.26214348542459,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "荆州",
+    "pid": "yijiao",
+    "lat": 30.025895342592595,
+    "lng": 112.46332650617283,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "荆门",
+    "pid": "adj_2142",
+    "lat": 31.018229523809524,
+    "lng": 112.57279331797235,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "襄阳",
+    "district": "鄂北地区"
+  },
+  {
+    "name": "咸宁",
+    "pid": "adj_2035",
+    "lat": 29.575592624777183,
+    "lng": 114.18975789661319,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "随州",
+    "pid": "adj_2184",
+    "lat": 31.86423622278057,
+    "lng": 113.4918717755444,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "襄阳",
+    "district": "鄂北地区"
+  },
+  {
+    "name": "孝感",
+    "pid": null,
+    "lat": 31.14220609876543,
+    "lng": 113.89901098765432,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "武汉",
+    "pid": "wuhan",
+    "lat": 30.5928,
+    "lng": 114.3055,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "江汉地区"
+  },
+  {
+    "name": "黄石",
+    "pid": "adj_2191",
+    "lat": 29.914833552631578,
+    "lng": 114.92982843567252,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "神农架",
+    "pid": "adj_2130",
+    "lat": 31.558803643334684,
+    "lng": 110.42617311306158,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "宜昌",
+    "district": "三峡地区"
+  },
+  {
+    "name": "天门",
+    "pid": "adj_2045",
+    "lat": 30.640660555555556,
+    "lng": 113.10247444444445,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "仙桃",
+    "pid": "adj_2014",
+    "lat": 30.322673076923074,
+    "lng": 113.36441978021979,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "潜江",
+    "pid": "adj_2116",
+    "lat": 30.356010465116277,
+    "lng": 112.76916821705427,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "鄂州",
+    "pid": "adj_2168",
+    "lat": 30.26129285714286,
+    "lng": 114.74422738095238,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "怀化",
+    "pid": "adj_2067",
+    "lat": 27.461259849655452,
+    "lng": 109.98897080176741,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "遵义",
+    "district": "黔北地区"
+  },
+  {
+    "name": "永州",
+    "pid": "adj_2091",
+    "lat": 25.790433550242128,
+    "lng": 111.69009638485338,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "桂林",
+    "district": "桂林地区"
+  },
+  {
+    "name": "邵阳",
+    "pid": "adj_2165",
+    "lat": 26.88246086358636,
+    "lng": 110.92269792079206,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "遵义",
+    "district": "黔北地区"
+  },
+  {
+    "name": "郴州",
+    "pid": "adj_2166",
+    "lat": 25.869196053727613,
+    "lng": 113.12899290573372,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "桂林",
+    "district": "桂林地区"
+  },
+  {
+    "name": "常德",
+    "pid": "adj_2058",
+    "lat": 29.250443978937728,
+    "lng": 111.4169402014652,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "湘西",
+    "pid": "adj_2111",
+    "lat": 28.62611987909055,
+    "lng": 109.72052161407943,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "宜昌",
+    "district": "三峡地区"
+  },
+  {
+    "name": "衡阳",
+    "pid": "hengyang",
+    "lat": 26.8934,
+    "lng": 112.572,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "衡阳地区"
+  },
+  {
+    "name": "岳阳",
+    "pid": "adj_2054",
+    "lat": 29.085570740093242,
+    "lng": 113.24601208624708,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "益阳",
+    "pid": "adj_2126",
+    "lat": 28.541795198135198,
+    "lng": 111.90381628787878,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "长沙",
+    "pid": "changsha",
+    "lat": 28.2282,
+    "lng": 112.9388,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "湘中地区"
+  },
+  {
+    "name": "株洲",
+    "pid": "tanjiao",
+    "lat": 27.13888575464084,
+    "lng": 113.49926844632769,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "衡阳",
+    "district": "衡阳地区"
+  },
+  {
+    "name": "张家界",
+    "pid": null,
+    "lat": 29.342368885601577,
+    "lng": 110.50449546351085,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "娄底",
+    "pid": "adj_2046",
+    "lat": 27.699065860559468,
+    "lng": 111.72962377215461,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "衡阳",
+    "district": "衡阳地区"
+  },
+  {
+    "name": "湘潭",
+    "pid": "adj_2110",
+    "lat": 27.753083801020406,
+    "lng": 112.55715700113379,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "长沙",
+    "district": "湘中地区"
+  },
+  {
+    "name": "清远",
+    "pid": "adj_2108",
+    "lat": 24.388214305555554,
+    "lng": 112.78210101851852,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "广州",
+    "district": "广州地区"
+  },
+  {
+    "name": "韶关",
+    "pid": "adj_2186",
+    "lat": 24.864557468879667,
+    "lng": 113.8760499308437,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "广州",
+    "district": "广州地区"
+  },
+  {
+    "name": "湛江",
+    "pid": "zhanjiang",
+    "lat": 21.327188257575756,
+    "lng": 110.31061757575758,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": null,
+    "district": "琼州地区"
+  },
+  {
+    "name": "梅州",
+    "pid": null,
+    "lat": 24.31410301801802,
+    "lng": 116.11496653153154,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "汕头",
+    "district": "潮汕地区"
+  },
+  {
+    "name": "河源",
+    "pid": null,
+    "lat": 24.066617319277107,
+    "lng": 114.94761355421687,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "汕头",
+    "district": "潮汕地区"
+  },
+  {
+    "name": "肇庆",
+    "pid": "adj_2136",
+    "lat": 23.55167808219178,
+    "lng": 112.15524206621005,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "桂东地区"
+  },
+  {
+    "name": "惠州",
+    "pid": "adj_2069",
+    "lat": 23.240399999999998,
+    "lng": 114.49273288590604,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "香港地区"
+  },
+  {
+    "name": "茂名",
+    "pid": "adj_2141",
+    "lat": 22.105325401606425,
+    "lng": 110.89157269076306,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "梧州",
+    "district": "桂东地区"
+  },
+  {
+    "name": "江门",
+    "pid": "adj_2092",
+    "lat": 22.28021011235955,
+    "lng": 112.57208876404495,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "佛山地区"
+  },
+  {
+    "name": "阳江",
+    "pid": "yangjiang",
+    "lat": 22.08849375,
+    "lng": 111.80607124999999,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": null,
+    "district": "桂东地区"
+  },
+  {
+    "name": "云浮",
+    "pid": "adj_2012",
+    "lat": 22.81039253333333,
+    "lng": 111.7707264,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "梧州",
+    "district": "桂东地区"
+  },
+  {
+    "name": "广州",
+    "pid": "guangzhou",
+    "lat": 23.1291,
+    "lng": 113.2644,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "广州地区"
+  },
+  {
+    "name": "汕尾",
+    "pid": null,
+    "lat": 23.034444444444446,
+    "lng": 115.59565324074073,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "汕头",
+    "district": "潮汕地区"
+  },
+  {
+    "name": "揭阳",
+    "pid": "adj_2073",
+    "lat": 23.33332724014337,
+    "lng": 116.1736247311828,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "汕头",
+    "district": "潮汕地区"
+  },
+  {
+    "name": "珠海",
+    "pid": "adj_2123",
+    "lat": 22.14552549019608,
+    "lng": 113.61640980392156,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "香港",
+    "district": "香港地区"
+  },
+  {
+    "name": "佛山",
+    "pid": "foshan",
+    "lat": 23.0219,
+    "lng": 113.1216,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "佛山地区"
+  },
+  {
+    "name": "潮州",
+    "pid": "adj_2117",
+    "lat": 23.823232692307695,
+    "lng": 116.79809957264956,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "汕头",
+    "district": "潮汕地区"
+  },
+  {
+    "name": "汕头",
+    "pid": "shantou",
+    "lat": 23.3541,
+    "lng": 116.682,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "潮汕地区"
+  },
+  {
+    "name": "深圳",
+    "pid": "adj_2107",
+    "lat": 22.63044,
+    "lng": 114.13875454545455,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "香港",
+    "district": "香港地区"
+  },
+  {
+    "name": "东莞",
+    "pid": "adj_2003",
+    "lat": 22.89894,
+    "lng": 114.00814499999998,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "香港",
+    "district": "香港地区"
+  },
+  {
+    "name": "中山",
+    "pid": null,
+    "lat": 22.497425,
+    "lng": 113.425946875,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "佛山",
+    "district": "佛山地区"
+  },
+  {
+    "name": "百色",
+    "pid": "baise",
+    "lat": 23.96553667475728,
+    "lng": 106.22512394822006,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "南宁",
+    "district": "南宁地区"
+  },
+  {
+    "name": "河池",
+    "pid": "adj_2095",
+    "lat": 24.7109696408046,
+    "lng": 107.89369963984674,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "柳州",
+    "district": "桂中地区"
+  },
+  {
+    "name": "桂林",
+    "pid": "guilin",
+    "lat": 25.2736,
+    "lng": 110.29,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "桂林地区"
+  },
+  {
+    "name": "南宁",
+    "pid": "nanning",
+    "lat": 22.817,
+    "lng": 108.3665,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "南宁地区"
+  },
+  {
+    "name": "柳州",
+    "pid": "liuzhou",
+    "lat": 24.326,
+    "lng": 109.428,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "桂中地区"
+  },
+  {
+    "name": "崇左",
+    "pid": null,
+    "lat": 22.523614473684212,
+    "lng": 107.3034939849624,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "南宁",
+    "district": "南宁地区"
+  },
+  {
+    "name": "来宾",
+    "pid": "adj_2083",
+    "lat": 23.930344871794873,
+    "lng": 109.42489863636364,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "柳州",
+    "district": "桂中地区"
+  },
+  {
+    "name": "玉林",
+    "pid": "adj_2120",
+    "lat": 22.445996517412937,
+    "lng": 110.18982406716418,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "梧州",
+    "district": "桂东地区"
+  },
+  {
+    "name": "梧州",
+    "pid": "wuzhou",
+    "lat": 23.477,
+    "lng": 111.279,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "桂东地区"
+  },
+  {
+    "name": "贺州",
+    "pid": "guijiao",
+    "lat": 24.348580269871107,
+    "lng": 111.31421608485499,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "梧州",
+    "district": "桂东地区"
+  },
+  {
+    "name": "钦州",
+    "pid": "yongjiao",
+    "lat": 22.171260782163742,
+    "lng": 109.0664091374269,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "南宁",
+    "district": "南宁地区"
+  },
+  {
+    "name": "贵港",
+    "pid": "adj_2153",
+    "lat": 23.3035358490566,
+    "lng": 110.0305195754717,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "梧州",
+    "district": "桂东地区"
+  },
+  {
+    "name": "防城港",
+    "pid": "adj_2178",
+    "lat": 21.916679284037556,
+    "lng": 108.02148884976526,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "南宁",
+    "district": "南宁地区"
+  },
+  {
+    "name": "北海",
+    "pid": "adj_2023",
+    "lat": 21.641786850152904,
+    "lng": 109.32148455657492,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "南宁",
+    "district": "南宁地区"
+  },
+  {
+    "name": "甘孜",
+    "pid": null,
+    "lat": 30.951026131889762,
+    "lng": 100.06146427165355,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "西康",
+    "district": "西康地区"
+  },
+  {
+    "name": "阿坝",
+    "pid": "adj_2181",
+    "lat": 32.60756633744856,
+    "lng": 102.57233670781893,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "凉山",
+    "pid": "adj_2022",
+    "lat": 27.91647532808399,
+    "lng": 102.02693175853018,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "西康",
+    "district": "西康地区"
+  },
+  {
+    "name": "绵阳",
+    "pid": "adj_2134",
+    "lat": 31.80056062015504,
+    "lng": 104.76484108527131,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "蜀中地区"
+  },
+  {
+    "name": "达州",
+    "pid": "adj_2157",
+    "lat": 31.337058817491613,
+    "lng": 107.7479721567727,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "重庆",
+    "district": "巴渝地区"
+  },
+  {
+    "name": "广元",
+    "pid": null,
+    "lat": 32.248655084745764,
+    "lng": 105.72751892655367,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "雅安",
+    "pid": "xikang",
+    "lat": 30.0017,
+    "lng": 102.0,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": "成都",
+    "district": "西康地区",
+    "historical_name": "西康"
+  },
+  {
+    "name": "宜宾",
+    "pid": null,
+    "lat": 28.58318433333333,
+    "lng": 104.46253711111112,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "乐山",
+    "pid": "adj_2011",
+    "lat": 29.245333125000002,
+    "lng": 103.60105395833334,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "南充",
+    "pid": "adj_2025",
+    "lat": 31.194934838709678,
+    "lng": 106.15649096774193,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "巴渝地区"
+  },
+  {
+    "name": "巴中",
+    "pid": "adj_2055",
+    "lat": 31.997522627737226,
+    "lng": 107.02475547445255,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "重庆",
+    "district": "巴渝地区"
+  },
+  {
+    "name": "泸州",
+    "pid": "adj_2098",
+    "lat": 28.508551491690767,
+    "lng": 105.75103246328665,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "遵义",
+    "district": "黔北地区"
+  },
+  {
+    "name": "成都",
+    "pid": "chengdu",
+    "lat": 30.5728,
+    "lng": 104.0668,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "蜀中地区"
+  },
+  {
+    "name": "资阳",
+    "pid": "adj_2154",
+    "lat": 30.12950330230184,
+    "lng": 104.99181537041744,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "攀枝花",
+    "pid": null,
+    "lat": 26.778019444444446,
+    "lng": 101.72416220238095,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "眉山",
+    "pid": "adj_2127",
+    "lat": 29.891331884057973,
+    "lng": 103.71727995169083,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "广安",
+    "pid": "adj_2061",
+    "lat": 30.398158016936215,
+    "lng": 106.68139259131566,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "重庆",
+    "district": "巴渝地区"
+  },
+  {
+    "name": "德阳",
+    "pid": "adj_2066",
+    "lat": 31.06337070707071,
+    "lng": 104.52947878787879,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "内江",
+    "pid": "neijiang",
+    "lat": 29.646772571492136,
+    "lng": 104.88448469151423,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "遂宁",
+    "pid": "adj_2163",
+    "lat": 30.569534953120776,
+    "lng": 105.5407930154791,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "自贡",
+    "pid": "adj_2137",
+    "lat": 29.310301260504204,
+    "lng": 104.64120560224089,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "遵义",
+    "pid": "zunyi",
+    "lat": 27.725,
+    "lng": 106.927,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "黔北地区"
+  },
+  {
+    "name": "黔东南",
+    "pid": "adj_2193",
+    "lat": 26.488955770327177,
+    "lng": 108.56898841367024,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "贵阳",
+    "district": "黔中地区"
+  },
+  {
+    "name": "毕节",
+    "pid": "adj_2090",
+    "lat": 27.061616135734074,
+    "lng": 105.13084315789474,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "黔中地区"
+  },
+  {
+    "name": "黔南",
+    "pid": "adj_2194",
+    "lat": 26.124060027723946,
+    "lng": 107.26257707256676,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "贵阳",
+    "district": "黔中地区"
+  },
+  {
+    "name": "铜仁",
+    "pid": "adj_2172",
+    "lat": 28.0345959819526,
+    "lng": 108.58476044287728,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "遵义",
+    "district": "黔北地区"
+  },
+  {
+    "name": "黔西南",
+    "pid": "adj_2195",
+    "lat": 25.289512330133633,
+    "lng": 105.40713009599096,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "贵阳",
+    "district": "黔中地区"
+  },
+  {
+    "name": "六盘水",
+    "pid": "adj_2020",
+    "lat": 26.09848150221953,
+    "lng": 104.9294045803067,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "贵阳",
+    "district": "黔中地区"
+  },
+  {
+    "name": "安顺",
+    "pid": "zhujiao",
+    "lat": 25.992894920298628,
+    "lng": 106.02179723567393,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "黔中地区"
+  },
+  {
+    "name": "贵阳",
+    "pid": "guiyang",
+    "lat": 26.647,
+    "lng": 106.6302,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "黔中地区"
+  },
+  {
+    "name": "普洱",
+    "pid": "puer",
+    "lat": 23.115916000000002,
+    "lng": 100.82561960000001,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "红河",
+    "pid": "adj_2132",
+    "lat": 23.518031102362205,
+    "lng": 103.16791496062991,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "文山",
+    "pid": "adj_2074",
+    "lat": 23.67512237179487,
+    "lng": 104.88995230769231,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "曲靖",
+    "pid": "kunjiao",
+    "lat": 25.724364710767468,
+    "lng": 104.02387049255441,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "楚雄",
+    "pid": "adj_2088",
+    "lat": 25.304323049645394,
+    "lng": 101.62444414893616,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "大理",
+    "pid": "dali",
+    "lat": 25.761464676616914,
+    "lng": 99.98539502487561,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "临沧",
+    "pid": "lincang",
+    "lat": 24.010846206896552,
+    "lng": 99.61660068965517,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "迪庆",
+    "pid": "adj_2160",
+    "lat": 27.99315643939394,
+    "lng": 99.41306540404041,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "西康",
+    "district": "西康地区"
+  },
+  {
+    "name": "昭通",
+    "pid": "adj_2078",
+    "lat": 27.65444741263441,
+    "lng": 104.1488941532258,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "贵阳",
+    "district": "黔中地区"
+  },
+  {
+    "name": "昆明",
+    "pid": "kunming",
+    "lat": 25.0389,
+    "lng": 102.7183,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "丽江",
+    "pid": "lijiang",
+    "lat": 26.965481264775413,
+    "lng": 100.47858253546099,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "西双版纳",
+    "pid": null,
+    "lat": 21.857734285714287,
+    "lng": 101.01340214285715,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "保山",
+    "pid": "baoshan",
+    "lat": 24.985987837837836,
+    "lng": 98.97056013513514,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "玉溪",
+    "pid": "adj_2122",
+    "lat": 24.218420720720722,
+    "lng": 102.21335855855857,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "怒江",
+    "pid": null,
+    "lat": 26.93123276422764,
+    "lng": 98.83067609756098,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "德宏",
+    "pid": null,
+    "lat": 24.541187155963303,
+    "lng": 98.07545688073394,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昆明",
+    "district": "滇中地区"
+  },
+  {
+    "name": "那曲",
+    "pid": "sajiao",
+    "lat": 32.57958399705014,
+    "lng": 90.03281238938054,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "拉萨",
+    "district": "卫藏地区"
+  },
+  {
+    "name": "阿里",
+    "pid": "ali",
+    "lat": 32.64744582278481,
+    "lng": 82.76304151898734,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "拉萨",
+    "district": "卫藏地区"
+  },
+  {
+    "name": "日喀则",
+    "pid": "adj_2076",
+    "lat": 29.750780219780218,
+    "lng": 86.18083406593406,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "拉萨",
+    "district": "卫藏地区"
+  },
+  {
+    "name": "林芝",
+    "pid": "adj_2085",
+    "lat": 29.21383841301461,
+    "lng": 95.46478167330676,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "昌都",
+    "pid": "changdu",
+    "lat": 31.14,
+    "lng": 97.18,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": null,
+    "district": "康区"
+  },
+  {
+    "name": "山南",
+    "pid": "adj_2053",
+    "lat": 28.507001503759398,
+    "lng": 92.07848496240602,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "拉萨",
+    "district": "卫藏地区"
+  },
+  {
+    "name": "拉萨",
+    "pid": "lasa",
+    "lat": 29.65,
+    "lng": 91.1,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "卫藏地区"
+  },
+  {
+    "name": "榆林",
+    "pid": "adj_2089",
+    "lat": 37.88577361111111,
+    "lng": 109.3655664874552,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "太原",
+    "district": "太原地区"
+  },
+  {
+    "name": "延安",
+    "pid": "adj_2064",
+    "lat": 36.57969369590643,
+    "lng": 109.16437684210526,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "西安",
+    "district": "关中地区"
+  },
+  {
+    "name": "汉中",
+    "pid": "hanzhong",
+    "lat": 33.0678,
+    "lng": 107.0237,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "汉中地区"
+  },
+  {
+    "name": "安康",
+    "pid": "adj_2048",
+    "lat": 32.65952357143597,
+    "lng": 109.0765272894069,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "宜昌",
+    "district": "三峡地区"
+  },
+  {
+    "name": "商洛",
+    "pid": "adj_2038",
+    "lat": 33.66804611842105,
+    "lng": 109.96702596491228,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "西安",
+    "district": "关中地区"
+  },
+  {
+    "name": "宝鸡",
+    "pid": "liangjiao",
+    "lat": 34.363819061302685,
+    "lng": 107.06019224137931,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "汉中",
+    "district": "汉中地区"
+  },
+  {
+    "name": "渭南",
+    "pid": null,
+    "lat": 34.97286779448621,
+    "lng": 109.89056892230576,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "西安",
+    "district": "关中地区"
+  },
+  {
+    "name": "咸阳",
+    "pid": "gaojiao",
+    "lat": 34.89922713864307,
+    "lng": 108.39065766961652,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "西安",
+    "district": "关中地区"
+  },
+  {
+    "name": "西安",
+    "pid": "xian",
+    "lat": 34.261,
+    "lng": 108.9422,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "关中地区"
+  },
+  {
+    "name": "铜川",
+    "pid": "adj_2173",
+    "lat": 35.20388524590164,
+    "lng": 109.1097262295082,
+    "region": "huabei",
+    "type": "territory",
+    "parent_city": "西安",
+    "district": "关中地区"
+  },
+  {
+    "name": "酒泉",
+    "pid": "adj_2169",
+    "lat": 39.75698311258278,
+    "lng": 96.72894580573951,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "嘉峪关",
+    "district": "肃州地区"
+  },
+  {
+    "name": "张掖",
+    "pid": "zhangye",
+    "lat": 38.931,
+    "lng": 100.455,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "甘州地区"
+  },
+  {
+    "name": "甘南",
+    "pid": null,
+    "lat": 34.15267074275362,
+    "lng": 102.67077554347826,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "兰州",
+    "district": "金城地区"
+  },
+  {
+    "name": "武威",
+    "pid": "wuwei",
+    "lat": 37.929,
+    "lng": 102.639,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "凉州地区"
+  },
+  {
+    "name": "陇南",
+    "pid": "adj_2183",
+    "lat": 33.63370648907104,
+    "lng": 105.34631769125683,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "天水",
+    "district": "秦州地区"
+  },
+  {
+    "name": "庆阳",
+    "pid": "adj_2062",
+    "lat": 36.30327356995885,
+    "lng": 107.35633129012346,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "天水",
+    "district": "秦州地区"
+  },
+  {
+    "name": "白银",
+    "pid": "lanjiao",
+    "lat": 36.5618898241206,
+    "lng": 104.71244654941373,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "兰州",
+    "district": "金城地区"
+  },
+  {
+    "name": "定西",
+    "pid": "adj_2049",
+    "lat": 35.084084,
+    "lng": 104.4818782962963,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "兰州",
+    "district": "金城地区"
+  },
+  {
+    "name": "天水",
+    "pid": "adj_2044",
+    "lat": 34.6465,
+    "lng": 105.7721,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "秦州地区"
+  },
+  {
+    "name": "兰州",
+    "pid": "lanzhou",
+    "lat": 36.0611,
+    "lng": 103.8343,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "金城地区"
+  },
+  {
+    "name": "平凉",
+    "pid": "adj_2059",
+    "lat": 35.34877081513828,
+    "lng": 106.47287030567685,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "天水",
+    "district": "秦州地区"
+  },
+  {
+    "name": "临夏",
+    "pid": "adj_2005",
+    "lat": 35.60262402912621,
+    "lng": 103.32014207119741,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "兰州",
+    "district": "金城地区"
+  },
+  {
+    "name": "金昌",
+    "pid": null,
+    "lat": 38.33208392857143,
+    "lng": 102.05593035714286,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "武威",
+    "district": "凉州地区"
+  },
+  {
+    "name": "嘉峪关",
+    "pid": "jiayuguan",
+    "lat": 39.773,
+    "lng": 98.289,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "肃州地区"
+  },
+  {
+    "name": "海西",
+    "pid": "adj_2103",
+    "lat": 37.27529715007215,
+    "lng": 95.36214707792209,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "玉树",
+    "pid": "adj_2121",
+    "lat": 33.932586663732394,
+    "lng": 94.24415554577465,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "果洛",
+    "pid": "adj_2086",
+    "lat": 33.936540022675736,
+    "lng": 99.66498010204081,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "海南",
+    "pid": "adj_2102",
+    "lat": 35.88844472222222,
+    "lng": 100.38885833333333,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "海北",
+    "pid": "adj_2101",
+    "lat": 37.859652884615386,
+    "lng": 100.27218752913753,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "昌都",
+    "district": "康区"
+  },
+  {
+    "name": "黄南",
+    "pid": null,
+    "lat": 35.04975581395349,
+    "lng": 101.69336094961241,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "海东",
+    "pid": "adj_2100",
+    "lat": 36.231058525641025,
+    "lng": 102.35120846153846,
+    "region": "southwest",
+    "type": "territory",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "西宁",
+    "pid": "xining",
+    "lat": 36.6171,
+    "lng": 101.7785,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "青海地区"
+  },
+  {
+    "name": "吴忠",
+    "pid": "adj_2031",
+    "lat": 37.454750281293954,
+    "lng": 106.48077254746835,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "中卫",
+    "pid": "adj_2004",
+    "lat": 37.0009172985782,
+    "lng": 105.48650385466034,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "固原",
+    "pid": "adj_2041",
+    "lat": 35.939620893719805,
+    "lng": 106.23417164251208,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "天水",
+    "district": "秦州地区"
+  },
+  {
+    "name": "银川",
+    "pid": "yinchuan",
+    "lat": 38.4872,
+    "lng": 106.2309,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "宁夏地区"
+  },
+  {
+    "name": "石嘴山",
+    "pid": "adj_2128",
+    "lat": 38.99409933333334,
+    "lng": 106.45070666666666,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "银川",
+    "district": "宁夏地区"
+  },
+  {
+    "name": "巴音郭楞蒙古",
+    "pid": "adj_2056",
+    "lat": 39.27169197530864,
+    "lng": 87.91496818181818,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "和田",
+    "pid": "hetian",
+    "lat": 35.82982155172414,
+    "lng": 80.60403793103448,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "哈密",
+    "pid": "hami",
+    "lat": 42.827,
+    "lng": 93.515,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "伊州地区"
+  },
+  {
+    "name": "阿克苏",
+    "pid": "akesu",
+    "lat": 41.5512198019802,
+    "lng": 80.91800297029702,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "阿勒泰",
+    "pid": "adj_2180",
+    "lat": 47.69486603773584,
+    "lng": 88.33744056603774,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "喀什",
+    "pid": "kashgar",
+    "lat": 39.4677,
+    "lng": 75.9897,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "葱岭地区"
+  },
+  {
+    "name": "塔城",
+    "pid": "adj_2042",
+    "lat": 45.19770625,
+    "lng": 84.66917857142857,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "昌吉",
+    "pid": "adj_2077",
+    "lat": 44.20831230769231,
+    "lng": 90.03279230769232,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "克孜勒苏柯尔克孜",
+    "pid": null,
+    "lat": 39.55153977900552,
+    "lng": 75.9320364640884,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "吐鲁番",
+    "pid": "dijiao",
+    "lat": 42.49684382022472,
+    "lng": 89.5679595505618,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "伊犁",
+    "pid": "yili",
+    "lat": 43.4075136,
+    "lng": 82.240836,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "博尔塔拉",
+    "pid": null,
+    "lat": 44.73799090909091,
+    "lng": 81.85496363636364,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "乌鲁木齐",
+    "pid": "dihua",
+    "lat": 43.8256,
+    "lng": 87.6168,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "西域地区",
+    "historical_name": "迪化"
+  },
+  {
+    "name": "克拉玛依",
+    "pid": null,
+    "lat": 45.468157500000004,
+    "lng": 85.17974749999999,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "阿拉尔",
+    "pid": null,
+    "lat": 40.6193037037037,
+    "lng": 81.16496296296297,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "图木舒克",
+    "pid": null,
+    "lat": 39.806903125,
+    "lng": 79.09263125,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "五家渠",
+    "pid": "adj_2013",
+    "lat": 44.33897777777778,
+    "lng": 87.55493333333334,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "石河子",
+    "pid": null,
+    "lat": 44.33184545454546,
+    "lng": 86.02893636363636,
+    "region": "xibei",
+    "type": "territory",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "澳门",
+    "pid": null,
+    "lat": 22.13334325283346,
+    "lng": 113.56231906968769,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "赣州",
+    "district": "赣南地区"
+  },
+  {
+    "name": "北京",
+    "pid": "beijing",
+    "lat": 39.9042,
+    "lng": 116.4074,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "京畿地区"
+  },
+  {
+    "name": "天津",
+    "pid": "tianjin",
+    "lat": 39.1252,
+    "lng": 117.1989,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "天津地区"
+  },
+  {
+    "name": "上海",
+    "pid": "shanghai",
+    "lat": 31.2304,
+    "lng": 121.4737,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "沪上地区"
+  },
+  {
+    "name": "重庆",
+    "pid": "chongqing",
+    "lat": 29.4316,
+    "lng": 106.9123,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "巴渝地区"
+  },
+  {
+    "name": "香港",
+    "pid": "hongkong",
+    "lat": 22.3193,
+    "lng": 114.1694,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "香港地区"
+  },
+  {
+    "name": "北台湾",
+    "pid": null,
+    "lat": 24.76584292377625,
+    "lng": 120.96047221529989,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "中台湾",
+    "pid": null,
+    "lat": 24.509475359253578,
+    "lng": 120.96226366221254,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "南台湾",
+    "pid": null,
+    "lat": 22.99651908476457,
+    "lng": 120.61827228223062,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "东台湾",
+    "pid": null,
+    "lat": 23.787301583264547,
+    "lng": 121.34653299724427,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "离岛",
+    "pid": "adj_2131",
+    "lat": 23.21349264389958,
+    "lng": 119.41995961464563,
+    "region": "southeast",
+    "type": "territory",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "琼北",
+    "pid": null,
+    "lat": 19.74377826594789,
+    "lng": 110.76089142857143,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "海口",
+    "district": "琼州地区"
+  },
+  {
+    "name": "琼南",
+    "pid": null,
+    "lat": 18.652071500964702,
+    "lng": 109.0814161298377,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "海口",
+    "district": "琼州地区"
+  },
+  {
+    "name": "琼西",
+    "pid": null,
+    "lat": 19.526163685897433,
+    "lng": 109.41676107566816,
+    "region": "lingnan",
+    "type": "territory",
+    "parent_city": "海口",
+    "district": "琼州地区"
+  },
+  {
+    "name": "旅顺",
+    "pid": "lvshun",
+    "lat": 38.812,
+    "lng": 121.257,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "旅顺地区"
+  },
+  {
+    "name": "山海关",
+    "pid": "shanhaiguan",
+    "lat": 40.009,
+    "lng": 119.7537,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "临榆地区"
+  },
+  {
+    "name": "延吉",
+    "pid": "yanji",
+    "lat": 42.89,
+    "lng": 129.51,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "延边地区"
+  },
+  {
+    "name": "海口",
+    "pid": "haikou",
+    "lat": 20.0308,
+    "lng": 110.3286,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "琼州地区"
+  },
+  {
+    "name": "马尼拉",
+    "pid": "manila",
+    "lat": 14.5995,
+    "lng": 120.9842,
+    "region": "nanyang",
+    "type": "city",
+    "parent_city": null,
+    "district": "吕宋地区"
+  },
+  {
+    "name": "新加坡",
+    "pid": "xinjiapo",
+    "lat": 1.3521,
+    "lng": 103.8198,
+    "region": "nanyang",
+    "type": "city",
+    "parent_city": null,
+    "district": "海峡地区"
+  },
+  {
+    "name": "西贡",
+    "pid": "xigong",
+    "lat": 10.7626,
+    "lng": 106.6602,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "交趾支那"
+  },
+  {
+    "name": "河内",
+    "pid": "hanoi",
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "region": "lingnan",
+    "type": "city",
+    "parent_city": null,
+    "district": "交趾地区"
+  },
+  {
+    "name": "曼谷",
+    "pid": "bangkok",
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "region": "nanyang",
+    "type": "city",
+    "parent_city": null,
+    "district": "暹罗地区"
+  },
+  {
+    "name": "奉天",
+    "pid": "fengtian",
+    "lat": 41.8057,
+    "lng": 123.4315,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "奉天地区"
+  },
+  {
+    "name": "通州",
+    "pid": "jingjiao",
+    "lat": 40.1871,
+    "lng": 116.4752,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "北京",
+    "district": "京畿地区"
+  },
+  {
+    "name": "潼关",
+    "pid": "tongguan",
+    "lat": 34.544,
+    "lng": 110.246,
+    "region": "huabei",
+    "type": "pass",
+    "parent_city": "洛阳",
+    "district": "关中地区"
+  },
+  {
+    "name": "松江",
+    "pid": "hujiao",
+    "lat": 31.0062,
+    "lng": 121.5474,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "上海",
+    "district": "沪上地区"
+  },
+  {
+    "name": "浦口",
+    "pid": "ningjiao",
+    "lat": 31.9485,
+    "lng": 118.8545,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "南京",
+    "district": "江东地区"
+  },
+  {
+    "name": "花县",
+    "pid": "suijiao",
+    "lat": 23.352,
+    "lng": 113.5631,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "广州",
+    "district": "广州地区"
+  },
+  {
+    "name": "雷州",
+    "pid": "leizhou",
+    "lat": 20.914,
+    "lng": 110.084,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "海口",
+    "district": "琼州地区"
+  },
+  {
+    "name": "凭祥",
+    "pid": "pingxiang",
+    "lat": 22.094,
+    "lng": 106.766,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "南宁",
+    "district": "交趾地区"
+  },
+  {
+    "name": "双流",
+    "pid": "rongjiao",
+    "lat": 30.6418,
+    "lng": 103.9362,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": "成都",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "西康",
+    "pid": "xikang",
+    "lat": 30.0017,
+    "lng": 102.0,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": null,
+    "district": "西康地区"
+  },
+  {
+    "name": "万县",
+    "pid": "wanxian",
+    "lat": 30.807,
+    "lng": 108.408,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": "重庆",
+    "district": "巴渝地区"
+  },
+  {
+    "name": "剑门关",
+    "pid": "jianmenguan",
+    "lat": 32.058,
+    "lng": 105.615,
+    "region": "southwest",
+    "type": "pass",
+    "parent_city": "汉中",
+    "district": "蜀中地区"
+  },
+  {
+    "name": "槟城",
+    "pid": "binlang",
+    "lat": 5.4164,
+    "lng": 100.3327,
+    "region": "nanyang",
+    "type": "port",
+    "parent_city": "马尼拉",
+    "district": "海峡地区"
+  },
+  {
+    "name": "南沙",
+    "pid": "nansha",
+    "lat": 10.0,
+    "lng": 115.0,
+    "region": "nanyang",
+    "type": "rural",
+    "parent_city": "马尼拉",
+    "district": "吕宋地区"
+  },
+  {
+    "name": "西沙",
+    "pid": "xisha",
+    "lat": 16.5,
+    "lng": 112.0,
+    "region": "nanyang",
+    "type": "rural",
+    "parent_city": "广州",
+    "district": "吕宋地区"
+  },
+  {
+    "name": "吉隆坡",
+    "pid": "kualalumpur",
+    "lat": 3.139,
+    "lng": 101.6869,
+    "region": "nanyang",
+    "type": "rural",
+    "parent_city": "新加坡",
+    "district": "海峡地区"
+  },
+  {
+    "name": "暹罗湾",
+    "pid": "xianluowan",
+    "lat": 9.5,
+    "lng": 102.0,
+    "region": "nanyang",
+    "type": "rural",
+    "parent_city": "新加坡",
+    "district": "暹罗地区"
+  },
+  {
+    "name": "顺化",
+    "pid": "hue",
+    "lat": 16.4637,
+    "lng": 107.5907,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "西贡",
+    "district": "琼州地区"
+  },
+  {
+    "name": "金边",
+    "pid": "phnompenh",
+    "lat": 11.5564,
+    "lng": 104.9282,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "西贡",
+    "district": "交趾支那"
+  },
+  {
+    "name": "迪化",
+    "pid": "dihua",
+    "lat": 43.8256,
+    "lng": 87.6168,
+    "region": "xibei",
+    "type": "city",
+    "parent_city": null,
+    "district": "西域地区"
+  },
+  {
+    "name": "精河",
+    "pid": "jinghe",
+    "lat": 44.6,
+    "lng": 82.9,
+    "region": "xibei",
+    "type": "rural",
+    "parent_city": "迪化",
+    "district": "西域地区"
+  },
+  {
+    "name": "安陆",
+    "pid": "hanjiao",
+    "lat": 31.1422,
+    "lng": 113.899,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "武汉",
+    "district": "江汉地区"
+  },
+  {
+    "name": "蛟河",
+    "pid": "jijiao",
+    "lat": 43.6009,
+    "lng": 126.8358,
+    "region": "northeast",
+    "type": "rural",
+    "parent_city": "吉林",
+    "district": "吉林地区"
+  },
+  {
+    "name": "南关岭",
+    "pid": "lvjiao",
+    "lat": 39.6634,
+    "lng": 122.3399,
+    "region": "northeast",
+    "type": "rural",
+    "parent_city": "旅顺",
+    "district": "大连地区"
+  },
+  {
+    "name": "陕州",
+    "pid": "luojiao",
+    "lat": 34.3994,
+    "lng": 111.2061,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "洛阳",
+    "district": "河洛地区"
+  },
+  {
+    "name": "萧山",
+    "pid": "hangjiao",
+    "lat": 29.6739,
+    "lng": 120.5986,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "杭州",
+    "district": "杭州地区"
+  },
+  {
+    "name": "黄梅",
+    "pid": "xunjiao",
+    "lat": 30.7021,
+    "lng": 116.5997,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "九江",
+    "district": "浔阳地区"
+  },
+  {
+    "name": "涪陵",
+    "pid": "yujiao",
+    "lat": 29.9316,
+    "lng": 107.9293,
+    "region": "southwest",
+    "type": "rural",
+    "parent_city": "重庆",
+    "district": "巴渝地区"
+  },
+  {
+    "name": "顺德",
+    "pid": "chanjiao",
+    "lat": 22.4974,
+    "lng": 113.4259,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "佛山",
+    "district": "佛山地区"
+  },
+  {
+    "name": "清化",
+    "pid": "hejiao",
+    "lat": 19.8,
+    "lng": 105.7667,
+    "region": "lingnan",
+    "type": "rural",
+    "parent_city": "河内",
+    "district": "交趾地区"
+  },
+  {
+    "name": "英吉沙",
+    "pid": "kajiao",
+    "lat": 39.5515,
+    "lng": 75.932,
+    "region": "xibei",
+    "type": "rural",
+    "parent_city": "喀什",
+    "district": "葱岭地区"
+  },
+  {
+    "name": "永昌",
+    "pid": "liangjiao2",
+    "lat": 38.3321,
+    "lng": 102.0559,
+    "region": "xibei",
+    "type": "rural",
+    "parent_city": "武威",
+    "district": "凉州地区"
+  },
+  {
+    "name": "高台",
+    "pid": "ganjiao",
+    "lat": 38.7558,
+    "lng": 100.0065,
+    "region": "xibei",
+    "type": "rural",
+    "parent_city": "张掖",
+    "district": "甘州地区"
+  },
+  {
+    "name": "塘沽",
+    "pid": "tanggu",
+    "lat": 39.2217,
+    "lng": 117.4153,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "天津",
+    "district": "天津地区"
+  },
+  {
+    "name": "金州",
+    "pid": "jinzhou",
+    "lat": 39.6634,
+    "lng": 122.3399,
+    "region": "northeast",
+    "type": "rural",
+    "parent_city": "大连",
+    "district": "大连地区"
+  },
+  {
+    "name": "马尾",
+    "pid": "mawei",
+    "lat": 26.1043,
+    "lng": 119.1957,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "福州",
+    "district": "闽中地区"
+  },
+  {
+    "name": "集美",
+    "pid": "jimei",
+    "lat": 24.6816,
+    "lng": 118.1234,
+    "region": "southeast",
+    "type": "rural",
+    "parent_city": "厦门",
+    "district": "闽南地区"
+  },
+  {
+    "name": "丽江",
+    "pid": "lijiang",
+    "lat": 26.8,
+    "lng": 100.2,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "长春",
+    "pid": "changchun",
+    "lat": 43.88,
+    "lng": 125.32,
+    "region": "northeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吉林地区"
+  },
+  {
+    "name": "青岛",
+    "pid": "qingdao",
+    "lat": 36.07,
+    "lng": 120.38,
+    "region": "huabei",
+    "type": "city",
+    "parent_city": null,
+    "district": "胶东地区"
+  },
+  {
+    "name": "烟台",
+    "pid": "yantai",
+    "lat": 37.5,
+    "lng": 121.4,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "青岛",
+    "district": "胶东地区"
+  },
+  {
+    "name": "威海",
+    "pid": "weihai",
+    "lat": 37.5,
+    "lng": 122.1,
+    "region": "huabei",
+    "type": "rural",
+    "parent_city": "青岛",
+    "district": "胶东地区"
+  },
+  {
+    "name": "大理",
+    "pid": "dali",
+    "lat": 25.6,
+    "lng": 100.2,
+    "region": "southwest",
+    "type": "city",
+    "parent_city": null,
+    "district": "滇中地区"
+  },
+  {
+    "name": "安庆",
+    "pid": "anqing",
+    "lat": 30.5,
+    "lng": 117.0,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "浔阳地区"
+  },
+  {
+    "name": "景德镇",
+    "pid": "jingdezhen",
+    "lat": 29.3,
+    "lng": 117.2,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "赣北地区"
+  },
+  {
+    "name": "无锡",
+    "pid": "wuxi",
+    "lat": 31.5,
+    "lng": 120.3,
+    "region": "southeast",
+    "type": "city",
+    "parent_city": null,
+    "district": "吴中地区"
+  }
+]

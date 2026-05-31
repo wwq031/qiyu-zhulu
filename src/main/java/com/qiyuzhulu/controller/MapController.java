@@ -18,6 +18,7 @@ public class MapController {
     private final GameEngine engine;
     private final MapDataRepo mapData;
     private final StateController stateCtrl;
+    private final com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
 
     private static final Map<String, String> REGION_NAMES = Map.of(
             "northeast","东北","huabei","华北","southeast","东南","southwest","西南",
@@ -98,13 +99,15 @@ public class MapController {
         result.put("regions", regionList);
         result.put("cross_region_routes", mapData.getCrossRegionGates());
 
+        // 名称→PID映射（多处使用）
+        Map<String, String> nameToPid = new HashMap<>();
+        for (var e : provinces.entrySet()) {
+            nameToPid.put(e.getValue().getName(), e.getKey());
+        }
+
         // 所有权
         GameState game = stateCtrl.getGame();
         if (game != null && !"1".equals(spectator)) {
-            Map<String, String> nameToPid = new HashMap<>();
-            for (var e : provinces.entrySet()) {
-                nameToPid.put(e.getValue().getName(), e.getKey());
-            }
             Map<String, Object> ownership = new LinkedHashMap<>();
 
             // 玩家
@@ -160,20 +163,146 @@ public class MapController {
             result.put("garrisons", garrisons);
         }
 
-        // City store (简化版 — 从省份数据构建)
-        List<Map<String, Object>> cityStore = new ArrayList<>();
-        for (var e : provinces.entrySet()) {
-            Province p = e.getValue();
-            if ("city".equals(p.getType()) || "port".equals(p.getType())) {
-                cityStore.add(Map.of(
-                        "name", p.getName(), "lat", p.getLat(), "lng", p.getLng(),
-                        "region", p.getRegion(), "type", p.getType(), "pid", e.getKey(),
-                        "district", p.getDistrict()));
+        // ── 构建 pid→owner 查找表 ──
+        Map<String, Map<String, Object>> pidOwner = new LinkedHashMap<>();
+        Map<String, String> pidOwnerName = new LinkedHashMap<>(); // pid → faction_name (for garrison check)
+        if (game != null && !"1".equals(spectator)) {
+            // 玩家
+            FactionState pfs = game.getFactionState();
+            FactionDefinition pf = engine.getFaction(game.getPlayerFactionId()).orElse(null);
+            String pColor = pf != null ? pf.getColor() : "#ffffff";
+            String pName = pf != null ? pf.getName() : pfs.getName();
+            for (String t : pfs.getTerritories()) {
+                String pid = nameToPid.get(t);
+                if (pid != null) {
+                    pidOwner.put(pid, mapOf("owner_name", pName, "owner_color", pColor, "is_player", true));
+                    pidOwnerName.put(pid, pfs.getName());
+                }
+            }
+            // AI势力 — 动态state优先，静态game_data回退
+            Map<String, FactionDefinition> allFactions = engine.getGameData().getFactions();
+            if (allFactions != null) {
+                for (var fe : allFactions.entrySet()) {
+                    String fid = fe.getKey();
+                    if (fid.equals(game.getPlayerFactionId())) continue;
+                    if (game.getDefeatedFactions().contains(fid)) continue;
+                    FactionDefinition fdef = fe.getValue();
+
+                    // 优先动态territories
+                    List<String> aiTerrs = null;
+                    String aName = fdef.getName();
+                    String aColor = fdef.getColor() != null ? fdef.getColor() : "#888";
+                    var aiData = game.getAiFactions().get(fid);
+                    if (aiData != null) {
+                        FactionState afs = aiData.getFactionState();
+                        if (afs != null && afs.getTerritories() != null && !afs.getTerritories().isEmpty()) {
+                            aiTerrs = afs.getTerritories();
+                            if (afs.getName() != null) aName = afs.getName();
+                        }
+                    }
+                    // 回退：静态initial_territory
+                    if (aiTerrs == null) aiTerrs = fdef.getInitialTerritory();
+                    if (aiTerrs == null || aiTerrs.isEmpty()) continue;
+
+                    for (String t : aiTerrs) {
+                        String pid = nameToPid.get(t);
+                        if (pid != null && !pidOwner.containsKey(pid)) {
+                            pidOwner.put(pid, mapOf("owner_name", aName, "owner_color", aColor, "is_player", false));
+                            pidOwnerName.put(pid, aName);
+                        }
+                    }
+                }
+            }
+            // NPC static territories
+            Map<String, NpcDefinition> npcs = engine.getGameData().getHostileNpcs();
+            if (npcs != null) {
+                for (var ne : npcs.entrySet()) {
+                    if (game.getDefeatedFactions().contains(ne.getKey())) continue;
+                    NpcDefinition ndata = ne.getValue();
+                    if (ndata.getTerritories() == null) continue;
+                    for (String t : ndata.getTerritories()) {
+                        String pid = nameToPid.get(t);
+                        if (pid != null && !pidOwner.containsKey(pid)) {
+                            pidOwner.put(pid, mapOf("owner_name", ndata.getName(), "owner_color", "#8426d8", "is_player", false));
+                            pidOwnerName.put(pid, ndata.getName());
+                        }
+                    }
+                }
             }
         }
+
+        // ── 加载 city_store_static.json（预建353城，含parent_city继承关系）──
+        List<Map<String, Object>> staticStore = loadCityStoreStatic();
+
+        // ── 合并动态所有权到静态city_store ──
+        List<Map<String, Object>> cityStore = new ArrayList<>();
+        Map<String, Object> capitals = new LinkedHashMap<>();
+
+        // 先收集所有势力首都信息
+        if (game != null) {
+            FactionState pfs = game.getFactionState();
+            String playerCap = pfs.getCapital();
+            if (playerCap != null && !playerCap.isEmpty()) {
+                String capPid = nameToPid.get(playerCap);
+                if (capPid != null)
+                    capitals.put(game.getPlayerFactionId(), Map.of("pid", capPid, "name", playerCap, "is_player", true));
+            }
+            for (var ae : game.getAiFactions().entrySet()) {
+                FactionState afs = ae.getValue().getFactionState();
+                if (afs != null && afs.getCapital() != null && !afs.getCapital().isEmpty()) {
+                    String capPid = nameToPid.get(afs.getCapital());
+                    if (capPid != null)
+                        capitals.put(ae.getKey(), Map.of("pid", capPid, "name", afs.getCapital(), "is_player", false));
+                }
+            }
+        }
+
+        for (Map<String, Object> city : staticStore) {
+            String cname = (String) city.get("name");
+            String cpid = (String) city.get("pid");
+            String parent = (String) city.get("parent_city");
+
+            // 确定所有权
+            Map<String, Object> owner = null;
+            // 1) 直接PID匹配
+            if (cpid != null && pidOwner.containsKey(cpid)) {
+                owner = pidOwner.get(cpid);
+            }
+            // 2) 城市自身名字匹配（port/pass/rural等地块）
+            if (owner == null) {
+                String ownPid = nameToPid.get(cname);
+                if (ownPid != null && pidOwner.containsKey(ownPid)) {
+                    owner = pidOwner.get(ownPid);
+                }
+            }
+            // 3) 父城继承：属地城市继承parent_city的归属
+            if (owner == null && parent != null) {
+                String parentPid = nameToPid.get(parent);
+                if (parentPid != null && pidOwner.containsKey(parentPid)) {
+                    owner = pidOwner.get(parentPid);
+                }
+            }
+
+            Map<String, Object> cs = new LinkedHashMap<>();
+            cs.put("name", cname);
+            cs.put("lat", city.getOrDefault("lat", 0));
+            cs.put("lng", city.getOrDefault("lng", 0));
+            cs.put("region", city.getOrDefault("region", ""));
+            cs.put("type", city.getOrDefault("type", "city"));
+            cs.put("pid", cpid != null ? cpid : "");
+            cs.put("district", city.getOrDefault("district", ""));
+            if (parent != null) cs.put("parent_city", parent);
+            if (owner != null) {
+                cs.put("owner_name", owner.get("owner_name"));
+                cs.put("owner_color", owner.get("owner_color"));
+                cs.put("is_player", owner.get("is_player"));
+            }
+            cityStore.add(cs);
+        }
+
         result.put("city_store", cityStore);
+        result.put("capitals", capitals);
         result.put("faction_boundaries", Map.of("type", "FeatureCollection", "features", List.of()));
-        result.put("capitals", Map.of());
 
         return result;
     }
@@ -238,5 +367,24 @@ public class MapController {
         info.put("territory_count", fs.getTerritories().size());
         info.put("territory_economy", engine.aggregateTerritoryEconomy(fs));
         return info;
+    }
+
+    /** 从 classpath 加载 city_store_static.json（预建353城） */
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> loadCityStoreStatic() {
+        try {
+            var resource = new org.springframework.core.io.ClassPathResource("static/vendor/city_store_static.json");
+            return mapper.readValue(resource.getInputStream(),
+                    new com.fasterxml.jackson.core.type.TypeReference<List<Map<String, Object>>>() {});
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> mapOf(Object... kv) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
+        return m;
     }
 }
