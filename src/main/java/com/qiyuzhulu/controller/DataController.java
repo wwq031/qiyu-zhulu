@@ -4,6 +4,7 @@ import com.qiyuzhulu.model.FactionDefinition;
 import com.qiyuzhulu.repo.GameDataRepo;
 import com.qiyuzhulu.repo.MapDataRepo;
 import com.qiyuzhulu.repo.SaveRepo;
+import com.qiyuzhulu.service.AiProviderService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -19,11 +20,14 @@ public class DataController {
     private final GameDataRepo gameData;
     private final MapDataRepo mapData;
     private final SaveRepo saveRepo;
+    private final AiProviderService aiProvider;
 
-    public DataController(GameDataRepo gameData, MapDataRepo mapData, SaveRepo saveRepo) {
+    public DataController(GameDataRepo gameData, MapDataRepo mapData, SaveRepo saveRepo,
+                           AiProviderService aiProvider) {
         this.gameData = gameData;
         this.mapData = mapData;
         this.saveRepo = saveRepo;
+        this.aiProvider = aiProvider;
     }
 
     /** GET /api/saves — 列出存档 */
@@ -88,37 +92,21 @@ public class DataController {
     /** GET /api/config — AI配置 */
     @GetMapping("/config")
     public Map<String, Object> getConfig() {
-        Map<String, Object> config = new LinkedHashMap<>();
-        config.put("provider", "local");
-        config.put("api_key_set", false);
-        config.put("model", "deepseek-chat");
-        config.put("base_url", "");
-        config.put("providers", Map.of(
-                "local", Map.of("available", true, "name", "本地模板"),
-                "deepseek", Map.of("available", false, "name", "DeepSeek"),
-                "openai", Map.of("available", false, "name", "OpenAI"),
-                "anthropic", Map.of("available", false, "name", "Claude")
-        ));
-        return config;
+        return aiProvider.getConfig();
     }
 
-    /** POST /api/config — 保存AI配置（暂存内存） */
+    /** POST /api/config — 保存AI配置 */
     @PostMapping("/config")
     public Map<String, Object> saveConfig(@RequestBody Map<String, Object> body) {
-        // 简化：仅接受并返回确认
-        Map<String, Object> resp = new LinkedHashMap<>();
-        resp.put("message", "配置已保存（本次会话有效）");
-        resp.put("provider", body.getOrDefault("provider", "local"));
-        return resp;
+        Map<String, Object> cfg = aiProvider.setConfig(body);
+        cfg.put("message", "配置已保存（本次会话有效）");
+        return cfg;
     }
 
     /** GET /api/config/check — 测试AI供应商连接 */
     @GetMapping("/config/check")
     public Map<String, Object> checkConfig() {
-        Map<String, Object> resp = new LinkedHashMap<>();
-        resp.put("ok", true);
-        resp.put("message", "本地模板模式，无需连接测试");
-        return resp;
+        return aiProvider.checkConnection();
     }
 
     private String getRegionName(String regionId) {

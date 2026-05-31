@@ -148,7 +148,10 @@ public class TurnAdvanceService {
         // 7b. AI初始化（首次）
         aiService.initialize(state);
 
-        // 7c. AI势力回合处理
+        // 7c. 世界传言
+        events.addAll(generateRumors(state, fs));
+
+        // 7d. AI势力回合处理
         List<String> aiResults = aiService.process(state);
         events.addAll(aiResults);
 
@@ -414,6 +417,31 @@ public class TurnAdvanceService {
             msgs.add("⚠ 民心低迷(" + support + "%)，各地不满情绪正在蔓延。");
         }
         return msgs;
+    }
+
+    /** 生成世界传言 */
+    private List<String> generateRumors(GameState state, FactionState fs) {
+        List<String> rumors = new ArrayList<>();
+        Random rng = new Random();
+        String[] templates = {
+            "📰 据传，COLUMN1正在秘密扩充军备。",
+            "📰 COLUMN1的特使被目击出现在COLUMN2首都。",
+            "📰 列强银行团向COLUMN1提供了新一轮贷款。",
+            "📰 COLUMN1境内爆发了小规模农民起义，但被迅速镇压。",
+            "📰 国际市场上橡胶价格暴涨，COLUMN1港口的商船数量翻了一倍。",
+            "📰 COLUMN1与COLUMN2在边境发生了小规模武装冲突。",
+            "📰 某大国驻COLUMN1领事馆遭到不明身份者袭击。",
+        };
+        if (rng.nextDouble() < 0.4 && rumors.size() < 2) {
+            String t = templates[rng.nextInt(templates.length)];
+            var aiFactions = new ArrayList<>(state.getAiFactions().entrySet());
+            String col1 = fs.getName();
+            String col2 = !aiFactions.isEmpty()
+                    ? aiFactions.get(rng.nextInt(aiFactions.size())).getValue().getFactionState().getName()
+                    : "邻国";
+            rumors.add(t.replace("COLUMN1", col1).replace("COLUMN2", col2));
+        }
+        return rumors;
     }
 
     /** 补给系统：每回合检查部队补给状态 */

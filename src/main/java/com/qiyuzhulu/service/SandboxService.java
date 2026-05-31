@@ -13,10 +13,12 @@ import java.util.*;
 public class SandboxService {
 
     private final GameEngine engine;
+    private final AiProviderService aiProvider;
     private final Random rng = new Random();
 
-    public SandboxService(GameEngine engine) {
+    public SandboxService(GameEngine engine, AiProviderService aiProvider) {
         this.engine = engine;
+        this.aiProvider = aiProvider;
     }
 
     /** 构建自由指令裁决上下文（发送给AI GM或前端显示） */
@@ -44,6 +46,11 @@ public class SandboxService {
         ctx.put("ap", state.getActionPoints());
         ctx.put("request", "请根据上述游戏状态评估此自由行动。以JSON返回裁决。");
         return ctx;
+    }
+
+    /** 裁决——根据配置的provider分发（local/DeepSeek/OpenAI/Claude） */
+    public Map<String, Object> aiAdjudicate(GameState state, String order) {
+        return aiProvider.adjudicate(buildContext(state, order));
     }
 
     /** 本地模板裁决（无AI时的fallback） */

@@ -356,6 +356,12 @@ public class MapController {
         return Map.of("error", "无主之地");
     }
 
+    /** GET /api/spectator/map — 旁观模式地图（无游戏状态时使用） */
+    @GetMapping("/spectator/map")
+    public Map<String, Object> spectatorMap() {
+        return getMap("1");
+    }
+
     private Map<String, Object> buildFactionInfo(String fid, FactionState fs, GameState game) {
         Map<String, Object> info = new LinkedHashMap<>();
         info.put("faction_id", fid);
