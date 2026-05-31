@@ -1,6 +1,8 @@
 package com.qiyuzhulu.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 六围属性 + 海军。
@@ -42,6 +44,9 @@ public class Stats {
         this.navalPower = navalPower;
     }
 
+    @JsonProperty("_flex")
+    private Map<String, Integer> flexibleStats; // AI返回的非标准键（如intelligence）
+
     // ── Getters / Setters ──
 
     public int getIndustry() { return industry; }
@@ -75,7 +80,7 @@ public class Stats {
             case "ideology" -> ideology;
             case "diplomacy" -> diplomacy;
             case "naval_power" -> navalPower;
-            default -> 0;
+            default -> flexibleStats != null ? flexibleStats.getOrDefault(key, 0) : 0;
         };
     }
 
@@ -89,6 +94,10 @@ public class Stats {
             case "ideology" -> ideology = value;
             case "diplomacy" -> diplomacy = value;
             case "naval_power" -> navalPower = value;
+            default -> {
+                if (flexibleStats == null) flexibleStats = new HashMap<>();
+                flexibleStats.put(key, value);
+            }
         }
         return this;
     }
@@ -100,7 +109,9 @@ public class Stats {
 
     /** 创建深拷贝 */
     public Stats copy() {
-        return new Stats(industry, agriculture, military, economy, ideology, diplomacy, navalPower);
+        Stats s = new Stats(industry, agriculture, military, economy, ideology, diplomacy, navalPower);
+        if (flexibleStats != null) s.flexibleStats = new HashMap<>(flexibleStats);
+        return s;
     }
 
     @Override

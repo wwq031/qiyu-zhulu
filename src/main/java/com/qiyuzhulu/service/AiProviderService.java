@@ -310,15 +310,49 @@ public class AiProviderService {
     @SuppressWarnings("unchecked")
     private Map<String, Object> extractJsonFromText(String text, String providerName) {
         try {
-            // 尝试提取JSON块
+            // 1. 尝试提取 ```json ... ``` 块
+            int cbStart = text.indexOf("```json");
+            if (cbStart >= 0) {
+                int cbEnd = text.indexOf("```", cbStart + 7);
+                if (cbEnd > cbStart) {
+                    String json = text.substring(cbStart + 7, cbEnd).trim();
+                    Map<String, Object> r = new com.fasterxml.jackson.databind.ObjectMapper().readValue(json, Map.class);
+                    if (!r.containsKey("narrative")) r.put("narrative", "");
+                    return r;
+                }
+            }
+            // 2. 尝试提取 ``` ... ``` 块（无语言标记）
+            cbStart = text.indexOf("```");
+            if (cbStart >= 0) {
+                int cbEnd = text.indexOf("```", cbStart + 3);
+                if (cbEnd > cbStart) {
+                    String block = text.substring(cbStart + 3, cbEnd).trim();
+                    if (block.startsWith("{")) {
+                        Map<String, Object> r = new com.fasterxml.jackson.databind.ObjectMapper().readValue(block, Map.class);
+                        if (!r.containsKey("narrative")) r.put("narrative", "");
+                        return r;
+                    }
+                }
+            }
+            // 3. 尝试提取裸JSON块
             int start = text.indexOf('{');
             int end = text.lastIndexOf('}');
             if (start >= 0 && end > start) {
                 String json = text.substring(start, end + 1);
-                return new com.fasterxml.jackson.databind.ObjectMapper().readValue(json, Map.class);
+                Map<String, Object> r = new com.fasterxml.jackson.databind.ObjectMapper().readValue(json, Map.class);
+                if (!r.containsKey("narrative")) r.put("narrative", "");
+                return r;
             }
-        } catch (Exception e) { /* fall through */ }
-        return Map.of("provider", providerName, "raw_response", text);
+            // 4. 无JSON → 把全文当叙事
+            return Map.of("provider", providerName, "narrative", text,
+                    "feasibility", "medium", "cost", Map.of(), "effects", Map.of(),
+                    "risk", "medium", "ap_cost", 1);
+        } catch (Exception e) {
+            return Map.of("provider", providerName, "narrative", text,
+                    "feasibility", "medium", "cost", Map.of(), "effects", Map.of(),
+                    "risk", "medium", "ap_cost", 1,
+                    "parse_error", e.getMessage());
+        }
     }
 
     private static boolean matches(String text, String... keywords) {
@@ -354,5 +388,10 @@ public class AiProviderService {
         你是"七域逐鹿"游戏的AI GM。这是一款架空1910年代中华大地的文字策略战棋游戏。
         玩家输入自然语言指令，你根据游戏上下文裁决行动的可行性、成本、效果、风险和AP消耗。
         裁决必须合理——消耗与收益对等，叙事需贴合时代背景。
-        返回JSON格式，不要额外解释。""";
+
+        有效属性键(effects/cost可用): industry, agriculture, military, economy, ideology, diplomacy, naval_power, population_support, treasury
+        AP消耗: 简单行动1AP, 复杂行动2AP, 重大行动3AP
+        风险: low(10%触发)/medium(20%)/high(35%), 触发则民心-1~5
+
+        返回纯JSON，不要额外解释。""";
 }
