@@ -179,7 +179,7 @@ public class SandboxService {
         resp.put("risk", risk);
         resp.put("risk_triggered", riskTriggered);
         resp.put("special", special);
-        resp.put("provider", "local");
+        resp.put("provider", adjudication.getOrDefault("provider", "local"));
         return resp;
     }
 }

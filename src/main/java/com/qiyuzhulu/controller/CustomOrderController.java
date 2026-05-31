@@ -27,8 +27,8 @@ public class CustomOrderController {
         if (order == null || order.isEmpty()) return Map.of("error", "缺少 order 参数");
         return Map.of(
                 "context", sandbox.buildContext(game, order),
-                "local_hint", sandbox.localAdjudicate(game, order),
-                "message", "请裁决此自由行动，然后 POST /api/custom-order/apply"
+                "local_hint", sandbox.aiAdjudicate(game, order),
+                "message", "裁决完成（若配置了AI API则使用AI，否则本地模板）"
         );
     }
 
@@ -55,11 +55,10 @@ public class CustomOrderController {
         String order = (String) body.get("order");
         if (order == null || order.isEmpty()) return Map.of("error", "缺少 order");
         Map<String, Object> result = sandbox.apply(game, order,
-                sandbox.localAdjudicate(game, order));
+                sandbox.aiAdjudicate(game, order));
         Map<String, Object> resp = stateCtrl.buildPanelResponse(game);
         resp.putAll(result);
-        resp.put("fallback", true);
-        resp.put("provider", "local");
+        resp.put("fallback", "local".equals(result.getOrDefault("provider", "local")));
         return resp;
     }
 }

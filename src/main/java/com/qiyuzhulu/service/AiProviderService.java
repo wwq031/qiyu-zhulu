@@ -217,7 +217,10 @@ public class AiProviderService {
             if (resp.statusCode() == 200) {
                 Map<String, Object> respData = new com.fasterxml.jackson.databind.ObjectMapper()
                         .readValue(resp.body(), Map.class);
-                return parseAiResponse(respData, providerName);
+                Map<String, Object> result = parseAiResponse(respData, providerName);
+                if (!result.containsKey("error") && !result.containsKey("provider"))
+                    result.put("provider", providerName);
+                return result;
             }
             return Map.of("provider", providerName, "error",
                     "API返回错误 " + resp.statusCode() + ": " + resp.body().substring(0, Math.min(200, resp.body().length())));
