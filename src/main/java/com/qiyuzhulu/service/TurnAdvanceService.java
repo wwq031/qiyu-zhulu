@@ -139,8 +139,11 @@ public class TurnAdvanceService {
         events.addAll(supplyMsgs);
 
         // 7. 民心自然波动
-        int supportChange = new Random().nextInt(5) - 2; // -2 to +2
+        int supportChange = new Random().nextInt(5) - 2;
         fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() + supportChange, 0, 100));
+
+        // 7b. 低民心叛乱/分离
+        events.addAll(checkPopularUnrest(state, fs));
 
         // 7b. AI初始化（首次）
         aiService.initialize(state);
@@ -376,6 +379,41 @@ public class TurnAdvanceService {
         u.setMaxStrength(100);
         u.setStatus("ready");
         return u;
+    }
+
+    /** 民心叛乱检查 */
+    private List<String> checkPopularUnrest(GameState state, FactionState fs) {
+        List<String> msgs = new ArrayList<>();
+        int support = fs.getPopulationSupport();
+        Random rng = new Random();
+
+        if (support < 10 && rng.nextDouble() < 0.3) {
+            // 军事哗变
+            List<Unit> active = fs.getActiveUnits();
+            if (!active.isEmpty()) {
+                Unit deserter = active.get(rng.nextInt(active.size()));
+                if (rng.nextDouble() < 0.5) {
+                    deserter.setStatus("annihilated");
+                    msgs.add("🔴 民心崩溃(" + support + "%)！" + deserter.getName() + " 发生哗变，部队溃散！");
+                } else {
+                    deserter.setMorale(Math.max(5, deserter.getMorale() - 30));
+                    msgs.add("🔴 民心崩溃(" + support + "%)！" + deserter.getName() + " 士气暴跌！");
+                }
+            }
+        }
+        if (support < 20 && rng.nextDouble() < 0.12) {
+            // 分离主义
+            List<String> terrs = fs.getTerritories();
+            if (terrs != null && !terrs.isEmpty()) {
+                String seceding = terrs.get(rng.nextInt(terrs.size()));
+                terrs.remove(seceding);
+                msgs.add("🟠 民怨沸腾(" + support + "%)！" + seceding + " 宣告脱离" + fs.getName() + "独立！");
+            }
+        }
+        if (support < 30 && rng.nextDouble() < 0.15) {
+            msgs.add("⚠ 民心低迷(" + support + "%)，各地不满情绪正在蔓延。");
+        }
+        return msgs;
     }
 
     /** 补给系统：每回合检查部队补给状态 */
