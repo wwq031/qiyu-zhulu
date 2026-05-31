@@ -109,6 +109,61 @@ public class GameEngine {
         return pf != null ? pf.getRegion() : "";
     }
 
+    // ═══════════════════════════════════════════ 自动占领 ═══════════════════════════════════════════
+
+    /** 部队到达地块时自动占领无主地。返回消息或null。 */
+    @SuppressWarnings("unchecked")
+    public String autoClaimArrival(GameState state, Unit unit, String posPid) {
+        Province pos = getProvince(posPid);
+        if (pos == null || !pos.isClaimable()) return null;
+        String pname = pos.getName();
+        if (pname == null || pname.isEmpty()) return null;
+
+        // 跨区限制
+        FactionDefinition pf = getPlayerFaction(state);
+        if (pf != null) {
+            String provRegion = pos.getRegion();
+            if (provRegion != null && !provRegion.equals(pf.getRegion())) {
+                if (!isRegionUnified(state, state.getPlayerFactionId())) return null;
+            }
+        }
+
+        List<String> myTerritories = state.getFactionState().getTerritories();
+        if (myTerritories.contains(pname)) return null;
+
+        // 已被AI占领
+        for (var ae : state.getAiFactions().entrySet()) {
+            if (state.getDefeatedFactions().contains(ae.getKey())) continue;
+            FactionState afs = ae.getValue().getFactionState();
+            if (afs != null && afs.getTerritories() != null && afs.getTerritories().contains(pname))
+                return null;
+        }
+
+        // 在未击败势力的静态领土中
+        Set<String> allStatic = new HashSet<>();
+        for (var fe : gameData.getFactions().entrySet()) {
+            if (fe.getKey().equals(state.getPlayerFactionId())) continue;
+            if (state.getDefeatedFactions().contains(fe.getKey())) continue;
+            allStatic.addAll(fe.getValue().getInitialTerritory());
+        }
+        for (var ne : gameData.getNpcFactions().entrySet()) {
+            if (state.getDefeatedFactions().contains(ne.getKey())) continue;
+            allStatic.addAll(ne.getValue().getInitialTerritory());
+        }
+        for (var he : gameData.getHostileNpcs().entrySet()) {
+            if (state.getDefeatedFactions().contains(he.getKey())) continue;
+            List<String> t = he.getValue().getTerritories();
+            if (t != null) allStatic.addAll(t);
+        }
+        if (allStatic.contains(pname)) return null;
+
+        // 占领！
+        if (state.getFactionState().getTerritories() == null)
+            state.getFactionState().setTerritories(new ArrayList<>());
+        state.getFactionState().getTerritories().add(pname);
+        return "🏴 占领 " + pname;
+    }
+
     // ═══════════════════════════════════════════ AI投降系统 ═══════════════════════════════════════════
 
     /** 检查是否有AI势力应投降。返回 [{fid, attacker_fid}, ...] */

@@ -124,7 +124,17 @@ public class TurnAdvanceService {
             fs.setTreasury(0);
         }
 
-        // 6b. 补给系统
+        // 6b. 自动占领（检查部队当前位置的无主地块）
+        for (Unit u : fs.getUnits()) {
+            if (!u.isActive() || "fighting".equals(u.getStatus())) continue;
+            String pid = engine.resolvePositionToPid(u.getPosition());
+            if (pid != null) {
+                String claimMsg = engine.autoClaimArrival(state, u, pid);
+                if (claimMsg != null) events.add(claimMsg);
+            }
+        }
+
+        // 6c. 补给系统
         List<String> supplyMsgs = processUnitSupply(state);
         events.addAll(supplyMsgs);
 
