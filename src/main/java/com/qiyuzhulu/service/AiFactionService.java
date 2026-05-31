@@ -106,6 +106,22 @@ public class AiFactionService {
             int income = calcAiIncome(fs);
             fs.setTreasury(fs.getTreasury() + income);
 
+            // 1b. 补给
+            for (Unit u : fs.getUnits()) {
+                if (!u.isActive() || "fighting".equals(u.getStatus())) continue;
+                Object[] s = engine.calcSupply(engine.resolvePositionToPid(u.getPosition()), fs.getTerritories());
+                String lvl = (String) s[0];
+                u.setSupply(lvl);
+                if ("isolated".equals(lvl)) {
+                    u.setMorale(Math.max(5, u.getMorale() - 15));
+                    u.setStrength(Math.max(1, u.getStrength() - 5));
+                } else if ("cut_off".equals(lvl)) {
+                    u.setMorale(Math.max(10, u.getMorale() - 5));
+                } else if ("strained".equals(lvl)) {
+                    u.setMorale(Math.max(15, u.getMorale() - 2));
+                }
+            }
+
             // 2. 维持费
             int maint = engine.calcTotalMaintenance(fs);
             if (fs.getTreasury() >= maint) {

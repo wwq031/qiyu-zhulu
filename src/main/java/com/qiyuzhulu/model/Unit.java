@@ -40,6 +40,9 @@ public class Unit {
     @JsonProperty("_routed_turns")
     private int routedTurns;
 
+    @JsonProperty("_supply")
+    private String supply;  // supplied/strained/cut_off/isolated
+
     @JsonProperty("_original_name")
     private String originalName;
 
@@ -100,6 +103,9 @@ public class Unit {
 
     public String getOriginalName() { return originalName; }
     public void setOriginalName(String v) { this.originalName = v; }
+
+    public String getSupply() { return supply; }
+    public void setSupply(String v) { this.supply = v; }
 
     /** 部队是否处于活跃状态（非歼灭/投降/溃散） */
     public boolean isActive() {

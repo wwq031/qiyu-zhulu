@@ -434,6 +434,7 @@ public class StateController {
                 ui.put("strength", u.getStrength());
                 ui.put("max_strength", u.getMaxStrength());
                 ui.put("status", u.getStatus());
+                ui.put("supply", u.getSupply());
                 ui.put("index", fs.getUnits().indexOf(u));
                 unitList.add(ui);
             }

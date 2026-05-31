@@ -124,6 +124,10 @@ public class TurnAdvanceService {
             fs.setTreasury(0);
         }
 
+        // 6b. 补给系统
+        List<String> supplyMsgs = processUnitSupply(state);
+        events.addAll(supplyMsgs);
+
         // 7. 民心自然波动
         int supportChange = new Random().nextInt(5) - 2; // -2 to +2
         fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() + supportChange, 0, 100));
@@ -354,5 +358,33 @@ public class TurnAdvanceService {
         u.setMaxStrength(100);
         u.setStatus("ready");
         return u;
+    }
+
+    /** 补给系统：每回合检查部队补给状态 */
+    private List<String> processUnitSupply(GameState state) {
+        List<String> msgs = new ArrayList<>();
+        FactionState fs = state.getFactionState();
+        List<String> terrNames = fs.getTerritories();
+        List<Unit> units = fs.getUnits();
+        if (units == null) return msgs;
+        for (Unit u : units) {
+            if (!u.isActive() || "fighting".equals(u.getStatus())) continue;
+            Object[] s = engine.calcSupply(engine.resolvePositionToPid(u.getPosition()), terrNames);
+            String lvl = (String) s[0];
+            u.setSupply(lvl);
+            switch (lvl) {
+                case "isolated" -> {
+                    u.setMorale(Math.max(5, u.getMorale() - 15));
+                    u.setStrength(Math.max(1, u.getStrength() - 5));
+                    msgs.add("⚠ " + u.getName() + " 补给断绝！士气-15 兵力-5");
+                }
+                case "cut_off" -> {
+                    u.setMorale(Math.max(10, u.getMorale() - 5));
+                    msgs.add("⚠ " + u.getName() + " 补给线中断！士气-5");
+                }
+                case "strained" -> u.setMorale(Math.max(15, u.getMorale() - 2));
+            }
+        }
+        return msgs;
     }
 }

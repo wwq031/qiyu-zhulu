@@ -109,6 +109,58 @@ public class GameEngine {
         return pf != null ? pf.getRegion() : "";
     }
 
+    // ═══════════════════════════════════════════ 补给系统 ═══════════════════════════════════════════
+
+    /**
+     * 计算部队补给状态。
+     * @return ["supplied"|"strained"|"cut_off"|"isolated", distance, nearestCityName]
+     */
+    public Object[] calcSupply(String unitPosition, List<String> friendlyTerritories) {
+        if (friendlyTerritories == null || friendlyTerritories.isEmpty())
+            return new Object[]{"supplied", 0, "无己方领地"};
+
+        // 找所有己方城池
+        List<String> friendlyCities = new ArrayList<>();
+        for (var entry : mapData.getAll().entrySet()) {
+            Province p = entry.getValue();
+            if ("city".equals(p.getType()) && friendlyTerritories.contains(p.getName())) {
+                friendlyCities.add(entry.getKey());
+            }
+        }
+        if (friendlyCities.isEmpty()) return new Object[]{"supplied", 0, "无己方城池"};
+
+        // BFS找最近城池
+        int minDist = Integer.MAX_VALUE;
+        String nearestCity = null;
+        for (String cityPid : friendlyCities) {
+            Object[] result = getDistance(unitPosition, cityPid);
+            if (result[0] != null) {
+                int dist = ((Number) result[0]).intValue();
+                if (dist < minDist) {
+                    minDist = dist;
+                    Province cp = getProvince(cityPid);
+                    nearestCity = cp != null ? cp.getName() : cityPid;
+                }
+            }
+        }
+        if (minDist == Integer.MAX_VALUE) return new Object[]{"isolated", 999, "无连接"};
+
+        // 铁路加速
+        if (hasRailway(unitPosition)) minDist = Math.max(1, minDist / 2);
+
+        // 友方领地内改善
+        Province up = getProvince(unitPosition);
+        if (up != null && friendlyTerritories.contains(up.getName())) minDist = Math.max(0, minDist - 1);
+
+        String level;
+        if (minDist <= 1) level = "supplied";
+        else if (minDist <= 3) level = "strained";
+        else if (minDist <= 5) level = "cut_off";
+        else level = "isolated";
+
+        return new Object[]{level, minDist, nearestCity != null ? nearestCity : "?"};
+    }
+
     /** 获取国家精神 */
     public NationalSpirit getNationalSpirit(FactionDefinition faction) {
         if (faction.getNationalSpirit() != null && faction.getNationalSpirit().getName() != null) {
