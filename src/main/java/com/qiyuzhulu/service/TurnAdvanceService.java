@@ -432,13 +432,16 @@ public class TurnAdvanceService {
             "📰 COLUMN1与COLUMN2在边境发生了小规模武装冲突。",
             "📰 某大国驻COLUMN1领事馆遭到不明身份者袭击。",
         };
-        if (rng.nextDouble() < 0.4 && rumors.size() < 2) {
+        if (rng.nextDouble() < 0.7) {
             String t = templates[rng.nextInt(templates.length)];
             var aiFactions = new ArrayList<>(state.getAiFactions().entrySet());
             String col1 = fs.getName();
-            String col2 = !aiFactions.isEmpty()
-                    ? aiFactions.get(rng.nextInt(aiFactions.size())).getValue().getFactionState().getName()
-                    : "邻国";
+            String col2 = "邻国";
+            if (!aiFactions.isEmpty()) {
+                var entry = aiFactions.get(rng.nextInt(aiFactions.size()));
+                var afs = entry.getValue().getFactionState();
+                if (afs != null && afs.getName() != null) col2 = afs.getName();
+            }
             rumors.add(t.replace("COLUMN1", col1).replace("COLUMN2", col2));
         }
         return rumors;
