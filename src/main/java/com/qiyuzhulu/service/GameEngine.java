@@ -164,6 +164,71 @@ public class GameEngine {
         return "🏴 占领 " + pname;
     }
 
+    // ═══════════════════════════════════════════ 意识形态 & 威胁 ═══════════════════════════════════════════
+
+    private static final Map<String, Map<String, Integer>> IDEOLOGY_CONFLICT = new LinkedHashMap<>();
+    static {
+        put("共产主义","军阀独裁",40); put("共产主义","君主立宪",35);
+        put("共产党革命","军阀独裁",40); put("共产党革命","军事独裁",40);
+        put("共产党革命","旧官僚独裁",35); put("左翼土地革命","军阀独裁",35);
+        put("左翼土地革命","财阀民主",30); put("军阀独裁","民主联邦",25);
+        put("军阀独裁","自由主义宪政",25); put("军事独裁","共产主义",40);
+        put("地方军阀","共产主义",30); put("国家主义","共产主义",35);
+        put("三民主义共和","共产主义",25); put("三民主义共和","军阀独裁",20);
+        put("海权军国","共产主义",30); put("华人民族主义","满蒙民族主义",20);
+        put("泛突厥民族主义","华人民族主义",25); put("亲英自强","华人民族主义",20);
+    }
+    private static void put(String a, String b, int v) {
+        IDEOLOGY_CONFLICT.put(a, new HashMap<>(Map.of(b, v)));
+        IDEOLOGY_CONFLICT.put(b, new HashMap<>(Map.of(a, v)));
+    }
+
+    public int ideologyDistance(String ideo1, String ideo2) {
+        if (ideo1 == null || ideo2 == null) return 15;
+        if (ideo1.equals(ideo2)) return 0;
+        var m = IDEOLOGY_CONFLICT.get(ideo1);
+        if (m != null && m.containsKey(ideo2)) return m.get(ideo2);
+        return 15;
+    }
+
+    public int calcThreat(GameState state, String targetFid) {
+        int threat = 0;
+        String fid = state.getPlayerFactionId();
+        FactionDefinition pf = getPlayerFaction(state);
+        FactionDefinition tf = getFaction(targetFid).orElse(null);
+        if (pf == null || tf == null) return 30;
+
+        // 1. 意识形态冲突 (0-25)
+        threat += Math.min(25, ideologyDistance(pf.getIdeology(), tf.getIdeology()));
+
+        // 2. 领土竞争 (0-30)
+        if (pf.getRegion().equals(tf.getRegion())) threat += 30;
+        else {
+            Map<String, List<String>> adj = Map.of(
+                    "northeast", List.of("huabei"), "huabei", List.of("northeast","southeast","xibei"),
+                    "southeast", List.of("huabei","lingnan"), "lingnan", List.of("southeast","southwest","nanyang"),
+                    "southwest", List.of("lingnan","xibei"), "xibei", List.of("huabei","southwest"),
+                    "nanyang", List.of("southeast","lingnan"));
+            if (adj.getOrDefault(pf.getRegion(), List.of()).contains(tf.getRegion())) threat += 15;
+        }
+
+        // 3. 战争/关系历史 (0-20)
+        if (state.getActiveWars().contains(targetFid)) threat += 20;
+        else {
+            var dr = state.getDiplomaticRelations().get(targetFid);
+            if (dr != null && dr.getScore() < -20) threat += 10;
+        }
+
+        // 4. 军力对比 (0-25)
+        int myMil = state.getFactionState().getStats().getMilitary();
+        int tMil = tf.getStats().getMilitary();
+        if (tMil > myMil * 1.5) threat += 25;
+        else if (tMil > myMil * 1.2) threat += 15;
+        else if (tMil > myMil) threat += 5;
+
+        return clamp(threat, 0, 100);
+    }
+
     // ═══════════════════════════════════════════ AI投降系统 ═══════════════════════════════════════════
 
     /** 检查是否有AI势力应投降。返回 [{fid, attacker_fid}, ...] */
