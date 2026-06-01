@@ -19,8 +19,14 @@ async function init() {
   // 首页模式：检查连接但停留在首页
   await checkConnection();
   setInterval(checkConnection, 10000);
-  // 补给按钮委托
-  document.getElementById('submenu-panel').addEventListener('click', (e) => {
+  // 自定义指令栏事件委托
+  document.getElementById('dept-content').addEventListener('click', function(e) {
+    var btn = e.target.closest('.btn-resupply');
+    if (btn) { showResupplyPopup(btn.dataset.unitName, parseInt(btn.dataset.unitStr), parseInt(btn.dataset.unitMax)); }
+  });
+  // 旧版兼容
+  var sp = document.getElementById('submenu-panel');
+  if (sp) sp.addEventListener('click', function(e) {
     const btn = e.target.closest('.btn-resupply');
     if (btn) {
       const name = btn.dataset.unitName;
@@ -88,44 +94,24 @@ function renderAll(data) {
 
   // 切换到游戏视图
   document.getElementById('home-view').style.display = 'none';
-  document.getElementById('game-view').style.display = 'block';
+  document.getElementById('game-view').style.display = 'flex';
 
-  // 顶栏
-  document.getElementById('faction-info').textContent = data.faction || '';
-  document.getElementById('turn-info').textContent =
-    `回合 ${data.turn||0} · ${data.date||''} · ${data.phase_name||''}`;
+  // 顶栏更新
+  document.getElementById('tb-faction').textContent = data.faction || '';
+  document.getElementById('tb-turn').textContent = 'Turn ' + (data.turn||0);
+  document.getElementById('tb-date').textContent = data.date || '';
+  document.getElementById('tb-phase').textContent = data.phase_name || '';
+  document.getElementById('tb-gold').textContent = '💰' + (data.treasury||0);
+  document.getElementById('tb-corruption').textContent = '🦠' + (data.corruption||0) + '%';
+  document.getElementById('tb-support').textContent = '❤️' + (data.population_support||0) + '%';
+  document.getElementById('tb-ap').textContent = 'AP:' + (data.action_points||0);
+  document.getElementById('status-text').textContent = '就绪';
 
-  // 面板文本
-  const panel = document.getElementById('game-panel');
-  if (data.panel_text) {
-    let html = '';
+  // AI叙事弹出
+  if (data.narrative) showEventPopup('📜 AI GM 裁决', data.narrative, false);
+  if (data.reason) showEventPopup('⚠ GM 判定', data.reason, false);
 
-    // AI裁决叙事（自由行动返回）
-    if (data.narrative) {
-      html += '<div style="margin:8px 0;padding:10px 14px;background:var(--panel2);border-left:3px solid var(--cyan);border-radius:4px;line-height:1.6;">';
-      html += '<div style="color:var(--cyan);font-weight:bold;margin-bottom:4px;">📜 AI GM 裁决</div>';
-      html += '<div style="color:var(--text);">' + escapeHtml(data.narrative) + '</div>';
-      if (data.special) html += '<div style="color:var(--gold);font-size:0.8em;margin-top:4px;">🏷 ' + escapeHtml(data.special) + '</div>';
-      html += '</div>';
-    }
-
-    // AI拒绝提示
-    if (data.reason) {
-      html += '<div style="margin:8px 0;padding:10px 14px;background:var(--panel2);border-left:3px solid var(--red);border-radius:4px;line-height:1.6;">';
-      html += '<div style="color:var(--red);font-weight:bold;">⚠ GM 判定: 不可行</div>';
-      html += '<div style="color:var(--text-dim);margin-top:4px;">' + escapeHtml(data.reason) + '</div>';
-      html += '</div>';
-    }
-
-    html += colorizePanel(data.panel_text);
-    panel.innerHTML = html;
-    panel.scrollTop = 0;
-  }
-
-  // 顶部信息栏（六围 + 国库 + AP + 领土）
-  renderInfoBar(data);
-
-  // 事件日志
+  // 事件日志（弹窗形式）
   if (data.output && data.output.trim()) {
     addLogEntry(data.output.trim());
   }
@@ -500,6 +486,104 @@ document.addEventListener('click', function(e) {
     dismissEventPopup();
   }
 });
+
+// ═══════════════════════════════════════ 部门面板 ═══════════════════════════════════════
+
+function openDept(type) {
+  var panel = document.getElementById('dept-panel');
+  var content = document.getElementById('dept-content');
+  panel.classList.add('open');
+  content.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">加载中...</div>';
+
+  // 根据类型发送对应 action 获取菜单数据
+  var actionMap = {
+    military: '1', domestic: '3', diplomacy: '3', intel: '4',
+    build: '2', tech: '8', resolutions: '7'
+  };
+  var action = actionMap[type] || '1';
+
+  apiPost('/api/action', {action: action}).then(function(data) {
+    if (data.error) { content.innerHTML = '<p style="color:var(--red)">错误: ' + data.error + '</p>'; return; }
+    renderDeptContent(type, data);
+  }).catch(function(e) {
+    content.innerHTML = '<p style="color:var(--red)">连接失败</p>';
+  });
+}
+
+function closeDept() {
+  document.getElementById('dept-panel').classList.remove('open');
+}
+
+function renderDeptContent(type, data) {
+  var content = document.getElementById('dept-content');
+  var html = '';
+  var titleMap = {military:'⚔ 国防部', domestic:'🏛 政府', diplomacy:'🌐 外交院', intel:'🕵 情报局', build:'🏗 建设部', tech:'🔬 科技院', resolutions:'📜 国策院'};
+  html += '<h3>' + (titleMap[type]||type) + '</h3>';
+
+  switch(type) {
+    case 'military':
+      var ap = data.action_points || 0;
+      html += '<div class="submenu-target">AP: ' + ap + ' | 部队: ' + ((data.data||{}).unit_count||0) + '支</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'1.1\')"><span class="icon">🎖</span>军队训练</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'1.4\')"><span class="icon">🎯</span>军事行动</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'1.2\')"><span class="icon">⚡</span>当前战争</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'1.3\')"><span class="icon">📋</span>兵力部署</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'1.5\')"><span class="icon">🔧</span>军事设计局</div>';
+      break;
+    case 'domestic':
+      var t = data.treasury || 0; var s = data.stats || {};
+      html += '<div class="submenu-target">国库: 💰' + t + ' | 民心: ❤️' + (data.population_support||0) + '% | 腐败: 🦠' + (data.corruption||0) + '%</div>';
+      html += '<div style="font-size:0.82em;color:var(--text-dim);margin:4px 0;">';
+      html += '🏭' + (s.industry||0) + ' 🌾' + (s.agriculture||0) + ' ⚔' + (s.military||0) + ' 💰' + (s.economy||0) + ' 📖' + (s.ideology||0) + ' 🌐' + (s.diplomacy||0);
+      html += '</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'9\')"><span class="icon">🛡</span>反腐行动 (20💰, -5~15腐败)</div>';
+      html += '<hr><div class="section-title">自定义指令</div>';
+      html += '<div style="margin-top:4px;"><input id="quick-order" style="width:100%;padding:6px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:3px;" placeholder="输入自由指令..."><button class="btn btn-small" style="margin-top:4px;width:100%;" onclick="var o=document.getElementById(\'quick-order\').value;if(o){document.getElementById(\'custom-input\').value=o;sendCustomOrder();closeDept();}">✧ 执行</button></div>';
+      break;
+    case 'diplomacy':
+      var targets = (data.data||{}).diplo_targets || [];
+      html += '<div class="submenu-target">外交对象: ' + targets.length + '个势力</div>';
+      targets.slice(0,8).forEach(function(t,i) {
+        var warTag = t.at_war ? ' [交战中]' : '';
+        html += '<div class="submenu-item" onclick="sendAction(\'3.1\',{target_index:'+i+'})"><span class="icon">🤝</span>' + t.name + warTag + '<span class="cost">军' + t.military + '</span></div>';
+      });
+      html += '<div class="submenu-item" onclick="sendAction(\'3.5\')"><span class="icon">🌍</span>列强援助</div>';
+      break;
+    case 'intel':
+      html += '<div class="submenu-item" onclick="sendAction(\'4.1\')"><span class="icon">🔍</span>侦察敌情</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'4.2\')"><span class="icon">🛡</span>内部维稳 (5💰)</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'4.3\')"><span class="icon">📡</span>邻区侦察</div>';
+      html += '<div class="submenu-item" onclick="sendAction(\'4.4\')"><span class="icon">🕵</span>反间谍 (6💰)</div>';
+      break;
+    case 'build':
+      var items = (data.data||{}).items || [];
+      html += '<div class="submenu-target">建设项目: ' + items.length + '个可用</div>';
+      items.forEach(function(item) {
+        html += '<div class="submenu-item" onclick="sendAction(\''+item.id+'\')"><span class="icon">'+item.icon+'</span>'+item.name+'<span class="cost">'+item.cost+'💰/'+item.turns+'回合</span></div>';
+      });
+      break;
+    case 'tech':
+      var avail = (data.data||{}).available || [];
+      var researched = (data.data||{}).researched || [];
+      html += '<div class="submenu-target">已研发: ' + researched.length + ' | 可用: ' + avail.length + '</div>';
+      avail.forEach(function(t) {
+        var tag = t.prereqs_met ? '✅' : '🔒';
+        html += '<div class="submenu-item" onclick="sendAction(\'8.'+t.id+'\')"><span class="icon">🔬</span>'+tag+' '+t.name+'<span class="cost">'+t.cost+'💰/'+t.turns+'回合</span></div>';
+      });
+      break;
+    case 'resolutions':
+      var resos = (data.data||{}).resolutions || [];
+      var availR = resos.filter(function(r){return r.available;});
+      html += '<div class="submenu-target">可用国策: ' + availR.length + '/' + resos.length + '</div>';
+      availR.forEach(function(r) {
+        html += '<div class="submenu-item" onclick="sendAction(\'7.'+r.id+'\')"><span class="icon">📜</span>'+r.name+'<span class="cost">'+r.category+'</span></div>';
+      });
+      break;
+    default:
+      html += '<p style="color:var(--text-dim)">' + JSON.stringify(data.output || '无数据') + '</p>';
+  }
+  content.innerHTML = html;
+}
 
 // ── 启动 ──────────────────────────────────────────────────
 init();

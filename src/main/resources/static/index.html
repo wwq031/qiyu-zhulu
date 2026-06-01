@@ -5,278 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>七域逐鹿 · 文字策略战棋</title>
 <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css">
-  <link rel="stylesheet" href="/static/css/game.css">
+<link rel="stylesheet" href="/static/css/game.css">
 </head>
 <body>
-<!-- ═══════════════════════════════════════════════════════════ 顶栏 -->
+
+<!-- ═══════════════════ 顶部状态栏 ═══════════════════ -->
 <div id="topbar">
-  <h1>七域逐鹿</h1>
-  <span class="subtitle">架空1910年代 · 文字策略战棋</span>
-  <span id="faction-info" style="color:var(--yellow);font-weight:bold;"></span>
-  <span id="turn-info" style="color:var(--text-dim)"></span>
-  <span id="ai-mode" style="font-size:0.75em;color:var(--text-dim);" title="AI GM模式">本地</span>
-  <span id="connection" class="off">● 未连接</span>
+  <span id="tb-faction">七域逐鹿</span>
+  <span id="tb-turn">Turn 0</span>
+  <span id="tb-date">1910-03</span>
+  <span id="tb-phase" style="margin-left:auto;"></span>
+  <span id="tb-gold">💰0</span>
+  <span id="tb-corruption">🦠0%</span>
+  <span id="tb-support">❤️0%</span>
+  <span id="tb-ap">AP:0</span>
+  <span id="connection" class="on" title="连接状态"></span>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════ 首页视图 -->
-<div id="home-view">
+<!-- ═══════════════════ 游戏视图 ═══════════════════ -->
+<div id="game-view" style="display:none;">
+  <div id="map-wrapper"><div id="game-map"></div></div>
+  <div id="side-menu">
+    <button class="dept-btn" onclick="openDept('military')">⚔<span>国防</span></button>
+    <button class="dept-btn" onclick="openDept('domestic')">🏛<span>政府</span></button>
+    <button class="dept-btn" onclick="openDept('diplomacy')">🌐<span>外交</span></button>
+    <button class="dept-btn" onclick="openDept('intel')">🕵<span>情报</span></button>
+    <button class="dept-btn" onclick="openDept('build')">🏗<span>建设</span></button>
+    <button class="dept-btn" onclick="openDept('tech')">🔬<span>科技</span></button>
+    <button class="dept-btn" onclick="openDept('resolutions')">📜<span>国策</span></button>
+    <button class="dept-btn end-turn" onclick="sendAction('E')">⏭<span>结束</span></button>
+    <div class="dept-spacer"></div>
+    <button class="dept-btn small" onclick="goHome()" title="首页">⌂</button>
+    <button class="dept-btn small" onclick="saveGame()" title="存档">💾</button>
+    <span id="status-text">就绪</span>
+  </div>
+  <div id="dept-panel"><span id="dept-close" onclick="closeDept()">✕</span><div id="dept-content"></div></div>
+</div>
+
+<!-- ═══════════════════ 首页 ═══════════════════ -->
+<div id="home-view" class="home-center">
   <div class="home-banner">
-    <div class="title-box">
-      <h1>七 域 逐 鹿</h1>
-    </div>
-    <div class="sub">架空1910年代 · 中华大地 · 文字策略战棋</div>
-    <div class="sub2">28路豪杰 · 七域争雄</div>
+    <h1>七 域 逐 鹿</h1>
+    <p>架空1910年代 · 中华大地 · 文字策略战棋</p>
+    <p>28路豪杰 · 七域争雄</p>
   </div>
-  <div class="home-menu">
-    <button onclick="showNewGameModal()"><span class="key">[N]</span> 开始新游戏 <span class="desc">选择国策、势力</span></button>
-    <button onclick="quickStart()"><span class="key">[Q]</span> 快速开局 <span class="desc">随机国策，直达选区</span></button>
-    <button onclick="showLoadModal()"><span class="key">[L]</span> 读取存档</button>
-    <button onclick="showFactionDossier()"><span class="key">[F]</span> 势力图鉴</button>
-    <button onclick="showRulesModal()"><span class="key">[R]</span> 规则速览</button>
-    <button onclick="showTutorial()"><span class="key">[G]</span> 新手教程</button>
-    <button onclick="showMapModal()"><span class="key">[M]</span> 战略地图</button>
-		    <button onclick="showSettingsModal()"><span class="key">[S]</span> API配置 <span class="desc">自定义AI Key</span></button>
-    <div class="tagline">帝国已死，七域待雄。28路豪杰，谁主沉浮？</div>
+  <div class="home-btns">
+    <button class="btn btn-gold" onclick="showNewGameModal()">⚔ 开始新游戏</button>
+    <button class="btn" onclick="quickStart()">⚡ 快速开局</button>
+    <button class="btn" onclick="showLoadModal()">📂 读取存档</button>
+    <button class="btn" onclick="showFactionDossier()">📋 势力图鉴</button>
+    <button class="btn" onclick="showRulesModal()">📖 规则速览</button>
+    <button class="btn" onclick="showMapModal()">🗺 战略地图</button>
+    <button class="btn" onclick="showSettingsModal()">⚙ 设置</button>
   </div>
-  <div id="home-connection">
-    <span class="dot off" id="home-dot">●</span>
-    <span id="home-conn-text">检测服务器连接...</span>
-  </div>
+  <p id="home-status">▸ 检查连接中...</p>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════ 游戏视图 -->
-<div id="game-view">
+<!-- ═══════════════════ 模态框 ═══════════════════ -->
+<div id="newgame-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('newgame-modal')">✕</span><h3>选择势力</h3><div id="region-filter"></div><div id="faction-list"></div></div></div>
+<div id="load-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('load-modal')">✕</span><h3>读取存档</h3><div id="save-list"></div></div></div>
+<div id="faction-dossier-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('faction-dossier-modal')">✕</span><h3>势力图鉴</h3><div id="dossier-content"></div></div></div>
+<div id="rules-modal" class="modal-overlay"><div class="modal-content narrow"><span class="modal-close" onclick="closeModal('rules-modal')">✕</span><h3>规则速览</h3><div class="rules-text"></div></div></div>
+<div id="map-modal" class="modal-overlay fullscreen"><div class="modal-content map-full"><span class="modal-close" onclick="closeMapModal()">✕</span><div id="map-container" style="width:100%;height:100%;"></div></div></div>
+<div id="event-popup-overlay" class="event-popup-overlay"><div class="event-popup"><div class="event-popup-body"></div><button class="btn btn-gold" onclick="dismissEventPopup()">确定</button></div></div>
+<div id="settings-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('settings-modal')">✕</span><h3>⚙ API 配置</h3><div id="settings-body"></div></div></div>
+<div id="sel-info"></div>
 
-<!-- ═══════════════════════════════════════════════════════════ 主布局 -->
-<div id="main">
-
-  <!-- 左侧：地图 + 菜单 -->
-  <div id="left-col">
-    <div id="info-bar" style="display:none;margin-bottom:6px;padding:5px 10px;background:var(--panel);border:1px solid var(--border);border-radius:4px;font-size:0.78em;color:var(--text-dim);line-height:1.6;">
-    </div>
-    <div id="game-map" style="flex:1;min-height:360px;position:relative;background:var(--bg);border:1px solid var(--border);border-radius:6px;overflow:hidden;">
-      <div class="dim" style="text-align:center;padding-top:25%;" id="game-map-placeholder">🗺 开始游戏后显示战略地图</div>
-          <div id="sel-info"><span class="sel-count" id="sel-count-text"></span><button onclick="clearUnitSelection()">✕ 取消</button><button onclick="batchMoveSelected()">🚚 移动</button><button onclick="batchAttackSelected()">⚔ 攻击</button></div>
-      <div class="map-legend"></div>
-    </div>
-    <div class="side-panel" id="event-log-panel" style="max-height:140px;overflow-y:auto;">
-      <h3>📋 事件日志</h3>
-      <div id="event-log"><span class="dim">—</span></div>
-    </div>
-
-    <div id="actions">
-      <button class="btn-war" onclick="sendAction('1')" title="训练/战争/兵力/作战">⚔ 军事</button>
-      <button class="btn-domestic" onclick="sendAction('2')" title="工厂/军校/招兵">🏗 内政</button>
-      <button class="btn-diplo" onclick="sendAction('3')" title="结盟/贸易/条约">🌐 外交</button>
-      <button class="btn-intel" onclick="sendAction('4')" title="侦察/间谍">🔍 情报</button>
-      <button class="btn-reso" onclick="sendAction('5')" title="统一本区条件检查">🗺 区域攻略</button>
-      <button class="btn-reso" onclick="sendAction('7')" title="颁布国策决议">📜 国策</button>
-      <button class="btn-tech" onclick="sendAction('8')" title="科技研发">🔬 科技</button>
-      <button class="btn-end" onclick="sendAction('E')">⏩ 结束回合</button>
-      <span id="phase-btns" style="display:none;"></span>
-    </div>
-
-    <div id="submenu-panel"></div>
-
-    <div id="custom-bar">
-      <span style="color:var(--gold);font-size:1.1em;">✧</span>
-      <input id="custom-input" type="text" placeholder="自由行动 — 输入自然语言指令，AI GM裁决..."
-             onkeydown="if(event.key==='Enter')sendCustomOrder()">
-      <button id="custom-send" onclick="sendCustomOrder()">裁决</button>
-      <span id="custom-mode">
-        <select id="custom-mode-select" onchange="updateCustomMode()">
-          <option value="auto">AI自动</option>
-          <option value="sandbox">沙盒</option>
-          <option value="manual">手动</option>
-        </select>
-      </span>
-    </div>
-  </div>
-
-  <!-- 右侧：游戏面板 -->
-  <div id="right-col">
-    <div id="game-panel" style="flex:1;overflow-y:auto;"><span class="dim">等待连接服务器...</span></div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 底部 -->
-<div id="bottombar">
-  <button onclick="showNewGameModal()">🆕 新游戏</button>
-  <button onclick="showLoadModal()">📂 读档</button>
-  <button onclick="saveGame()">💾 存档</button>
-  <button onclick="refreshState()">🔄 刷新</button>
-		  <button onclick="showSettingsModal()">⚙ 设置</button>
-  <button onclick="goHome()">🏠 首页</button>
-  <span style="margin-left:auto;" id="status-text">就绪</span>
-</div>
-
-</div><!-- /#game-view -->
-
-<!-- ═══════════════════════════════════════════════════════════ 新游戏模态框 -->
-<div class="modal-overlay" id="newgame-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('newgame-modal')">&times;</button>
-  <h2>🆕 选择势力</h2>
-  <div id="region-overview" style="margin-bottom:8px;font-size:0.8em;color:var(--text-dim);"></div>
-  <div style="margin-bottom:12px;">
-    <label style="color:var(--text-dim);font-size:0.85em;">
-      筛选区域：
-      <select id="region-filter" onchange="filterFactions()" style="background:var(--panel);color:var(--text);border:1px solid var(--border);padding:4px 8px;border-radius:3px;">
-        <option value="all">全部</option>
-      </select>
-    </label>
-  </div>
-  <div class="faction-cards" id="faction-list">加载中...</div>
-  <div style="margin-top:16px;text-align:right;">
-    <button class="btn btn-red" onclick="closeModal('newgame-modal')">取消</button>
-    <button class="btn btn-gold" id="start-game-btn" disabled onclick="startNewGame()">选定势力，开始征程</button>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 读档模态框 -->
-<div class="modal-overlay" id="load-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('load-modal')">&times;</button>
-  <h2>📂 读取存档</h2>
-  <ul class="save-list" id="save-list">加载中...</ul>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 势力图鉴模态框 -->
-<div class="modal-overlay" id="faction-dossier-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('faction-dossier-modal')">&times;</button>
-  <h2>📖 势力图鉴 — 28路豪杰</h2>
-  <div id="faction-dossier-content">加载中...</div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 规则速览模态框 -->
-<div class="modal-overlay" id="rules-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('rules-modal')">&times;</button>
-  <h2>📜 规则速览</h2>
-  <div style="font-size:0.85em;line-height:1.8;color:var(--text-dim);">
-    <p><b style="color:var(--gold)">五阶段</b>：帝国余晖 → 帝国崩溃 → 区域统一战 → 七强并立 → 天下归一</p>
-    <p><b style="color:var(--gold)">六围属性</b>：🏭工业 🌾农业 ⚔军事 💰经济 📖思想 🌐外交（0-100）</p>
-    <p><b style="color:var(--gold)">每回合</b>：3点行动点(AP)，可分配于军事/内政/外交/情报/国策/科技</p>
-    <p><b style="color:var(--gold)">胜利条件</b>：统一全国（占领全部84个可占领省份）</p>
-    <p><b style="color:var(--gold)">战败条件</b>：军事降至0</p>
-    <p style="margin-top:8px;"><b style="color:var(--gold)">自由指令</b>：输入 <code style="color:var(--yellow)">*你的行动描述</code> 触发AI GM裁决</p>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 教程模态框 -->
-<div class="modal-overlay" id="tutorial-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('tutorial-modal')">&times;</button>
-  <h2>🎓 新手教程</h2>
-  <div style="font-size:0.85em;line-height:1.8;color:var(--text-dim);" id="tutorial-content">
-    <h4 style="color:var(--gold)">一、游戏目标</h4>
-    <p>你扮演1910年代中华大地28个势力之一，通过军事征服/经济建设/外交斡旋，统一全国。</p>
-    <h4 style="color:var(--gold)">二、基本操作</h4>
-    <p><b>[1]军事</b> — 查看可攻击目标，选择战术发起进攻</p>
-    <p><b>[2]内政</b> — 建造工厂/军校/招募部队，提升国力</p>
-    <p><b>[3]外交</b> — 结盟/贸易/条约</p>
-    <p><b>[4]情报</b> — 侦察敌情/派遣间谍</p>
-    <p><b>[7]国策</b> — 颁布重大决议，改变国运</p>
-    <p><b>[8]科技</b> — 研发军事/工业科技</p>
-    <h4 style="color:var(--gold)">三、自由行动</h4>
-    <p>输入 <code style="color:var(--yellow)">*你的行动描述</code> 触发AI GM裁决，如 <code style="color:var(--yellow)">*派间谍去南京</code></p>
-    <h4 style="color:var(--gold)">四、回合与AP</h4>
-    <p>每回合3点行动点(AP)，行动消耗后需结束回合推进时间。建设/训练跨回合持续。</p>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 地图模态框 -->
-<div class="modal-overlay" id="map-modal">
-<div class="modal" style="max-width:95vw;width:1100px;max-height:92vh;padding:10px;">
-  <button class="close" onclick="closeMapModal()">&times;</button>
-  <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 6px 0;">
-    <span style="color:var(--gold);font-size:1.5em;font-weight:bold;">🗺 战略地图 — 124省·7大区</span>
-    <span style="font-size:0.78em;display:flex;gap:10px;align-items:center;flex-shrink:0;">
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('cityFill',this)"> 填色</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('regionLine',this)"> 大区界</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('cityLink',this)"> 连线</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('marker',this)"> 标记</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('country',this)"> 邻国</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('garrison',this)"> 驻军</label>
-      <label style="cursor:pointer;color:var(--text-dim);white-space:nowrap;"><input type="checkbox" checked onchange="toggleMapLayer('capital',this)"> 首都</label>
-    </span>
-  </div>  <div id="map-container" style="height:78vh;min-height:450px;position:relative;">
-    <div class="map-legend"></div>
-  </div>
-</div>
-</div>
-
-
-<!-- ═══════════════════════════════════════════════════════════ 事件弹窗 -->
-<div class="event-popup-overlay" id="event-popup-overlay">
-<div class="event-popup" id="event-popup">
-  <h3 id="event-popup-title"></h3>
-  <div class="event-body" id="event-popup-body"></div>
-  <button onclick="dismissEventPopup()">确定</button>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ API配置模态框 -->
-<div class="modal-overlay" id="settings-modal">
-<div class="modal">
-  <button class="close" onclick="closeModal('settings-modal')">&times;</button>
-  <h2>⚙ API 配置</h2>
-  <p style="color:var(--text-dim);font-size:0.8em;margin-bottom:16px;">
-    配置AI供应商API密钥，用于 *自由指令 裁决。本地模板模式无需任何配置。
-  </p>
-
-  <div style="margin-bottom:12px;">
-    <label style="color:var(--text-dim);font-size:0.85em;">AI供应商</label>
-    <select id="cfg-provider" onchange="onCfgProviderChange()"
-            style="width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);padding:8px;border-radius:4px;margin-top:4px;font-size:0.9em;">
-      <option value="local">本地模板（无需API，默认推荐）</option>
-      <option value="deepseek">DeepSeek</option>
-      <option value="openai">OpenAI</option>
-      <option value="anthropic">Anthropic Claude</option>
-    </select>
-  </div>
-
-  <div style="margin-bottom:12px;">
-    <label style="color:var(--text-dim);font-size:0.85em;">API Key</label>
-    <input id="cfg-api-key" type="password" placeholder="sk-..."
-           style="width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);padding:8px;border-radius:4px;margin-top:4px;font-size:0.9em;font-family:var(--mono);">
-    <div style="font-size:0.75em;color:var(--text-dim);margin-top:4px;">
-      <label><input type="checkbox" id="cfg-save-key"> 保存到文件（持久化，请确保文件安全）</label>
-      <span style="margin-left:8px;">未勾选则仅本次会话有效</span>
-    </div>
-  </div>
-
-  <div style="margin-bottom:12px;">
-    <label style="color:var(--text-dim);font-size:0.85em;">模型（可选）</label>
-    <input id="cfg-model" type="text" placeholder="留空使用默认模型"
-           style="width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);padding:8px;border-radius:4px;margin-top:4px;font-size:0.9em;">
-  </div>
-
-  <div style="margin-bottom:16px;">
-    <label style="color:var(--text-dim);font-size:0.85em;">自定义API地址（可选）</label>
-    <input id="cfg-base-url" type="text" placeholder="留空使用官方地址，代理用"
-           style="width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--border);padding:8px;border-radius:4px;margin-top:4px;font-size:0.9em;">
-  </div>
-
-  <div id="cfg-status" style="font-size:0.82em;margin-bottom:12px;padding:8px;border-radius:4px;display:none;"></div>
-
-  <div style="display:flex;gap:8px;justify-content:flex-end;">
-    <button class="btn btn-red" onclick="closeModal('settings-modal')">取消</button>
-    <button class="btn" style="background:var(--panel2);border-color:var(--blue);color:var(--blue);" onclick="testConnection()">🔍 测试连接</button>
-    <button class="btn btn-gold" onclick="saveSettings()">💾 保存配置</button>
-  </div>
-</div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════ 脚本 -->
-
-<!-- ═══════════════════════════════ 脚本 -->
+<!-- ═══════════════════ 脚本 ═══════════════════ -->
 <script src="/static/vendor/leaflet/leaflet.js"></script>
 <script src="/static/js/utils.js"></script>
 <script src="/static/js/app.js"></script>
@@ -287,6 +82,5 @@
 <script src="/static/js/newgame.js"></script>
 <script src="/static/js/custom-order.js"></script>
 <script src="/static/js/settings.js"></script>
-</script>
 </body>
 </html>
