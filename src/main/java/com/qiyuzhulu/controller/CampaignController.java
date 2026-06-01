@@ -17,13 +17,16 @@ public class CampaignController {
     private final CampaignService campaign;
     private final MilitaryService military;
     private final StateController stateCtrl;
+    private final EventService eventService;
 
     public CampaignController(GameEngine engine, CampaignService campaign,
-                               MilitaryService military, StateController stateCtrl) {
+                               MilitaryService military, StateController stateCtrl,
+                               EventService eventService) {
         this.engine = engine;
         this.campaign = campaign;
         this.military = military;
         this.stateCtrl = stateCtrl;
+        this.eventService = eventService;
     }
 
     /** POST /api/campaign/honor — 战役授勋 */
@@ -91,26 +94,62 @@ public class CampaignController {
         return resp;
     }
 
-    /** POST /api/map/reachable — 可到达省份 */
+    /** POST /api/map/reachable — BFS多步搜索可达省份（铁路加速） */
     @PostMapping("/map/reachable")
     public Map<String, Object> reachable(@RequestBody Map<String, Object> body) {
         GameState game = stateCtrl.getGame();
         if (game == null) return Map.of("error", "无存档");
-        String pos = (String) body.get("position");
+        String pos = engine.resolvePositionToPid((String) body.get("position"));
         FactionState fs = game.getFactionState();
 
+        // 获取部队速度
+        int baseSpeed = 1;
+        Object idxObj = body.get("unit_index");
+        if (idxObj instanceof Number) {
+            int idx = ((Number) idxObj).intValue();
+            if (idx >= 0 && idx < fs.getUnits().size())
+                baseSpeed = fs.getUnits().get(idx).getSpeed();
+        }
+        int effectiveSpeed = engine.hasRailway(pos) ? baseSpeed * 2 : baseSpeed;
+
+        // BFS
         List<Map<String, Object>> reachable = new ArrayList<>();
-        Province fromP = engine.getProvince(pos);
-        if (fromP != null && fromP.getConnections() != null) {
-            for (String nbPid : fromP.getConnections().keySet()) {
-                Province nb = engine.getProvince(nbPid);
-                if (nb != null) {
-                    reachable.add(Map.of(
-                            "pid", nbPid, "name", nb.getName(),
-                            "lat", nb.getLat(), "lng", nb.getLng(),
-                            "distance", 1, "path", List.of(pos, nbPid),
-                            "is_enemy", !fs.getTerritories().contains(nb.getName()),
-                            "enemy_fid", ""));
+        Set<String> visited = new HashSet<>();
+        visited.add(pos);
+        Queue<Object[]> queue = new LinkedList<>();
+        queue.add(new Object[]{pos, new ArrayList<>(List.of(pos)), 1, engine.hasRailway(pos)});
+
+        while (!queue.isEmpty()) {
+            Object[] item = queue.poll();
+            String current = (String) item[0];
+            @SuppressWarnings("unchecked")
+            List<String> path = (List<String>) item[1];
+            int dist = (int) item[2];
+            boolean onRail = (boolean) item[3];
+            Province p = engine.getProvince(current);
+            if (p == null || p.getConnections() == null) continue;
+
+            for (var nbEntry : p.getConnections().entrySet()) {
+                String nbPid = nbEntry.getKey();
+                int nbDistRaw = nbEntry.getValue();
+                boolean nbRail = engine.hasRailway(nbPid);
+                int nbDist = (onRail && nbRail) ? Math.max(1, nbDistRaw / 2) : nbDistRaw;
+                int totalDist = dist + nbDist - 1;
+                if (!visited.contains(nbPid)) {
+                    visited.add(nbPid);
+                    Province nb = engine.getProvince(nbPid);
+                    if (nb != null && totalDist <= effectiveSpeed) {
+                        List<String> newPath = new ArrayList<>(path);
+                        newPath.add(nbPid);
+                        reachable.add(Map.of(
+                                "pid", nbPid, "name", nb.getName(),
+                                "lat", nb.getLat(), "lng", nb.getLng(),
+                                "distance", totalDist, "path", newPath,
+                                "is_enemy", !fs.getTerritories().contains(nb.getName()),
+                                "enemy_fid", ""));
+                        if (totalDist < effectiveSpeed)
+                            queue.add(new Object[]{nbPid, newPath, totalDist + 1, nbRail});
+                    }
                 }
             }
         }
@@ -125,7 +164,7 @@ public class CampaignController {
         if (game == null) return Map.of("error", "无存档");
         FactionState fs = game.getFactionState();
 
-        String destPid = (String) body.get("dest_pid");
+        String destPid = engine.resolvePositionToPid((String) body.get("dest_pid"));
         Province dest = engine.getProvince(destPid);
         if (dest == null) return Map.of("error", "无效目的地");
 
@@ -164,7 +203,7 @@ public class CampaignController {
         GameState game = stateCtrl.getGame();
         if (game == null) return Map.of("error", "无存档");
 
-        String destPid = (String) body.get("dest_pid");
+        String destPid = engine.resolvePositionToPid((String) body.get("dest_pid"));
         Province dest = engine.getProvince(destPid);
         if (dest == null) return Map.of("error", "无效目标");
 
@@ -210,9 +249,17 @@ public class CampaignController {
         return Map.of("enemy_provinces", campaign.listEnemyProvinces(game));
     }
 
-    /** POST /api/event-chain/resolve — 事件链抉择（占位，后续事件系统补充） */
+    /** POST /api/event-chain/resolve — 事件链抉择 */
     @PostMapping("/event-chain/resolve")
     public Map<String, Object> resolveChain(@RequestBody Map<String, Object> body) {
-        return Map.of("ok", true, "message", "抉择已处理");
+        GameState game = stateCtrl.getGame();
+        if (game == null) return Map.of("error", "无存档");
+        String chainKey = (String) body.get("chain_key");
+        Integer optionIndex = body.get("option_index") != null
+                ? ((Number) body.get("option_index")).intValue() : 0;
+        Map<String, Object> result = eventService.resolveChainChoice(game, chainKey, optionIndex);
+        Map<String, Object> resp = stateCtrl.buildPanelResponse(game);
+        resp.putAll(result);
+        return resp;
     }
 }
