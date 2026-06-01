@@ -308,6 +308,29 @@ public class StateController {
             return resp;
         }
 
+        // 设计局 — 自定义战术 1.5.1
+        if ("1.5.1".equals(action)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> meta = (Map<String, Object>) body.get("meta");
+            if (meta == null) { resp = buildPanelResponse(); resp.put("output", "缺少 meta 参数"); return resp; }
+            Map<String, Object> result = military.registerCustomTactic(game, meta);
+            resp = buildPanelResponse();
+            resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
+            resp.put("output", result.get("message"));
+            return resp;
+        }
+        // 设计局 — 自定义兵种 1.5.2
+        if ("1.5.2".equals(action)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> meta = (Map<String, Object>) body.get("meta");
+            if (meta == null) { resp = buildPanelResponse(); resp.put("output", "缺少 meta 参数"); return resp; }
+            Map<String, Object> result = military.registerCustomUnitType(game, meta);
+            resp = buildPanelResponse();
+            resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
+            resp.put("output", result.get("message"));
+            return resp;
+        }
+
         // 默认
         game.setActionPoints(ap - 1);
         resp = buildPanelResponse();

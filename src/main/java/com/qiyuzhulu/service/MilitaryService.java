@@ -250,4 +250,101 @@ public class MilitaryService {
         Map<String, Object> ut = (Map<String, Object>) GameEngine.UNIT_TYPES.getOrDefault(type, Map.of());
         return (String) ut.getOrDefault("name", type);
     }
+
+    // ═══════════════════════════════════════════ 自定义战术/兵种 ═══════════════════════════════════════════
+
+    /** 注册自定义战术 */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> registerCustomTactic(GameState state, Map<String, Object> data) {
+        String tacticId = ((String) data.getOrDefault("tactic_id", "")).strip();
+        if (tacticId == null || tacticId.isEmpty()) return GameUtils.mapOf("ok", false, "message", "未指定战术id");
+        if (GameEngine.TACTICS.containsKey(tacticId))
+            return GameUtils.mapOf("ok", false, "message", "战术id \"" + tacticId + "\" 与内置战术冲突");
+
+        String name = ((String) data.getOrDefault("name", "")).strip();
+        if (name == null || name.isEmpty()) return GameUtils.mapOf("ok", false, "message", "未指定战术名称");
+
+        double atkMult = Double.parseDouble(String.valueOf(data.getOrDefault("atk_mult", 1.0)));
+        double defMult = Double.parseDouble(String.valueOf(data.getOrDefault("def_mult", 1.0)));
+        if (atkMult < 0.1 || atkMult > 5.0) return GameUtils.mapOf("ok", false, "message", "攻击倍率需在0.1~5.0之间");
+        if (defMult < 0 || defMult > 5.0) return GameUtils.mapOf("ok", false, "message", "防御倍率需在0~5.0之间");
+
+        FactionState fs = state.getFactionState();
+        int fee = data.containsKey("design_fee") ? ((Number) data.get("design_fee")).intValue() : 5;
+        if (fs.getTreasury() < fee) return GameUtils.mapOf("ok", false, "message", "设计费不足（需" + fee + "💰）");
+        fs.setTreasury(fs.getTreasury() - fee);
+
+        CustomTactic ct = new CustomTactic();
+        ct.setName(name);
+        ct.setIcon((String) data.getOrDefault("icon", "✦"));
+        ct.setAtkMult(atkMult);
+        ct.setDefMult(defMult);
+        ct.setPro((String) data.getOrDefault("pro", "灵活应变"));
+        ct.setCon((String) data.getOrDefault("con", "无专精"));
+        if (state.getCustomTactics() == null) state.setCustomTactics(new LinkedHashMap<>());
+        state.getCustomTactics().put(tacticId, ct);
+
+        double loss = deriveLossMult(atkMult, defMult);
+        return GameUtils.mapOf("ok", true, "message",
+                "自定义战术「" + name + "」已创建（攻x" + String.format("%.1f", atkMult)
+                        + " 防x" + String.format("%.1f", defMult)
+                        + " 损耗x" + String.format("%.1f", loss) + "）消耗" + fee + "💰");
+    }
+
+    /** 注册自定义兵种 */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> registerCustomUnitType(GameState state, Map<String, Object> data) {
+        String typeId = ((String) data.getOrDefault("type_id", "")).strip();
+        if (typeId == null || typeId.isEmpty()) return GameUtils.mapOf("ok", false, "message", "未指定兵种id");
+        if (GameEngine.UNIT_TYPES.containsKey(typeId))
+            return GameUtils.mapOf("ok", false, "message", "兵种id \"" + typeId + "\" 与内置兵种冲突");
+
+        String name = ((String) data.getOrDefault("name", "")).strip();
+        if (name == null || name.isEmpty()) return GameUtils.mapOf("ok", false, "message", "未指定兵种名称");
+
+        int atk = ((Number) data.getOrDefault("atk", 14)).intValue();
+        int def = ((Number) data.getOrDefault("def", 8)).intValue();
+        int morale = ((Number) data.getOrDefault("morale", 55)).intValue();
+        int exp = ((Number) data.getOrDefault("exp", 25)).intValue();
+        if (atk < 5 || atk > 50) return GameUtils.mapOf("ok", false, "message", "攻击力需在5~50之间");
+        if (def < 3 || def > 50) return GameUtils.mapOf("ok", false, "message", "防御力需在3~50之间");
+        if (morale < 20 || morale > 100) return GameUtils.mapOf("ok", false, "message", "士气需在20~100之间");
+        if (exp < 10 || exp > 80) return GameUtils.mapOf("ok", false, "message", "经验需在10~80之间");
+
+        FactionState fs = state.getFactionState();
+        int fee = data.containsKey("design_fee") ? ((Number) data.get("design_fee")).intValue() : 10;
+        if (fs.getTreasury() < fee) return GameUtils.mapOf("ok", false, "message", "设计费不足（需" + fee + "💰）");
+        fs.setTreasury(fs.getTreasury() - fee);
+
+        CustomUnitType cut = new CustomUnitType();
+        cut.setName(name);
+        cut.setIcon((String) data.getOrDefault("icon", "✦"));
+        cut.setAtk(atk);
+        cut.setDef(def);
+        cut.setMorale(morale);
+        cut.setExp(exp);
+        cut.setSuffix((String) data.getOrDefault("suffix", "号"));
+        if (state.getCustomUnitTypes() == null) state.setCustomUnitTypes(new LinkedHashMap<>());
+        state.getCustomUnitTypes().put(typeId, cut);
+
+        int cost = deriveUnitCost(atk, def, morale, exp);
+        int turns = deriveUnitTurns(cost);
+        return GameUtils.mapOf("ok", true, "message",
+                "自定义兵种「" + name + "」已创建（攻" + atk + " 防" + def + " 造价" + cost + "💰/" + turns + "回合）消耗" + fee + "💰");
+    }
+
+    // ── 推导公式 ──
+
+    public static double deriveLossMult(double atkMult, double defMult) {
+        return Math.max(0.2, Math.min(3.0,
+                Math.round((atkMult * 0.8 + Math.max(0, 1.0 - defMult) * 0.4) * 10) / 10.0));
+    }
+
+    public static int deriveUnitCost(int atk, int def, int morale, int exp) {
+        return Math.max(5, (int) Math.round(atk * 0.55 + def * 0.40 + morale * 0.04 + exp * 0.03));
+    }
+
+    public static int deriveUnitTurns(int cost) {
+        return Math.max(2, (int) Math.round(cost / 4.5));
+    }
 }
