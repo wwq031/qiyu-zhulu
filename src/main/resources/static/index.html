@@ -76,19 +76,6 @@
       <span id="phase-btns" style="display:none;"></span>
     </div>
 
-    <div id="cmd-bar">
-      <span style="color:var(--cyan);font-size:1.1em;">🗣</span>
-      <input id="cmd-input" type="text" placeholder="指令：把安国第1师调到山海关..."
-             onkeydown="if(event.key==='Enter')parseCommand()">
-      <button id="cmd-parse-btn" onclick="parseCommand()">解析</button>
-      <button id="cmd-execute-btn" onclick="executeCommand()">▶ 执行</button>
-      <span id="cmd-mode-toggle">
-        <button id="cmd-local-btn" class="cmd-mode-btn active" onclick="setCmdMode('local')">⚡本地</button>
-        <button id="cmd-ai-btn" class="cmd-mode-btn" onclick="setCmdMode('ai')">🤖AI</button>
-      </span>
-    </div>
-    <div id="cmd-preview"></div>
-
     <div id="submenu-panel"></div>
 
     <div id="custom-bar">
