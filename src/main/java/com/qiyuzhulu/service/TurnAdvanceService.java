@@ -1,6 +1,7 @@
 package com.qiyuzhulu.service;
 
 import com.qiyuzhulu.model.*;
+import com.qiyuzhulu.repo.GameDataRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,15 +17,18 @@ public class TurnAdvanceService {
     private final AiFactionService aiService;
     private final EventService eventService;
     private final CampaignService campaignService;
+    private final GameDataRepo gameData;
+    private final Random rng = new Random();
 
     public TurnAdvanceService(GameEngine engine, PanelRenderer renderer,
                                AiFactionService aiService, EventService eventService,
-                               CampaignService campaignService) {
+                               CampaignService campaignService, GameDataRepo gameData) {
         this.engine = engine;
         this.renderer = renderer;
         this.aiService = aiService;
         this.eventService = eventService;
         this.campaignService = campaignService;
+        this.gameData = gameData;
     }
 
     /**
@@ -431,32 +435,191 @@ public class TurnAdvanceService {
         return msgs;
     }
 
-    /** 生成世界传言 */
+    /** 生成世界传言（对标 Python get_rumors + _generate_dynamic_rumors） */
+    @SuppressWarnings("unchecked")
     private List<String> generateRumors(GameState state, FactionState fs) {
         List<String> rumors = new ArrayList<>();
-        Random rng = new Random();
-        String[] templates = {
-            "📰 据传，COLUMN1正在秘密扩充军备。",
-            "📰 COLUMN1的特使被目击出现在COLUMN2首都。",
-            "📰 列强银行团向COLUMN1提供了新一轮贷款。",
-            "📰 COLUMN1境内爆发了小规模农民起义，但被迅速镇压。",
-            "📰 国际市场上橡胶价格暴涨，COLUMN1港口的商船数量翻了一倍。",
-            "📰 COLUMN1与COLUMN2在边境发生了小规模武装冲突。",
-            "📰 某大国驻COLUMN1领事馆遭到不明身份者袭击。",
-        };
-        if (rng.nextDouble() < 0.7) {
-            String t = templates[rng.nextInt(templates.length)];
-            var aiFactions = new ArrayList<>(state.getAiFactions().entrySet());
-            String col1 = fs.getName();
-            String col2 = "邻国";
-            if (!aiFactions.isEmpty()) {
-                var entry = aiFactions.get(rng.nextInt(aiFactions.size()));
-                var afs = entry.getValue().getFactionState();
-                if (afs != null && afs.getName() != null) col2 = afs.getName();
+        Map<String, Object> bg = (Map<String, Object>) state.getBackgroundSimulation();
+        if (bg == null) { state.setBackgroundSimulation(new LinkedHashMap<>()); bg = (Map<String, Object>) state.getBackgroundSimulation(); }
+        int turn = state.getTurn();
+
+        // 预设时间线传闻
+        Map<String, Object> regions = (Map<String, Object>) bg.get("regions");
+        if (regions != null) {
+            for (var re : regions.entrySet()) {
+                String rid = re.getKey();
+                Map<String, Object> rdata = (Map<String, Object>) re.getValue();
+                List<Map<String, Object>> timeline = (List<Map<String, Object>>) rdata.get("timeline");
+                if (timeline != null) {
+                    for (Map<String, Object> evt : timeline) {
+                        if (((Number) evt.get("turn")).intValue() == turn) {
+                            String rname = GameEngine.REGION_NAMES.getOrDefault(rid, rid);
+                            rumors.add(rname + "：" + evt.get("narrative"));
+                        }
+                    }
+                }
             }
-            rumors.add(t.replace("COLUMN1", col1).replace("COLUMN2", col2));
         }
+        List<Map<String, Object>> crossEvents = (List<Map<String, Object>>) bg.get("cross_region_events");
+        if (crossEvents != null) {
+            for (Map<String, Object> evt : crossEvents) {
+                if (((Number) evt.get("turn")).intValue() == turn) rumors.add((String) evt.get("narrative"));
+            }
+        }
+        List<Map<String, Object>> foreignEvents = (List<Map<String, Object>>) bg.get("foreign_interventions");
+        if (foreignEvents != null) {
+            for (Map<String, Object> evt : foreignEvents) {
+                if (((Number) evt.get("turn")).intValue() == turn) rumors.add((String) evt.get("narrative"));
+            }
+        }
+
+        // 动态传闻回退
+        if (rumors.isEmpty()) rumors = generateDynamicRumors(state, fs);
         return rumors;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> generateDynamicRumors(GameState state, FactionState fs) {
+        List<String> rumors = new ArrayList<>();
+        String playerRegion = engine.getPlayerRegion(state);
+        Set<String> defeated = new HashSet<>(state.getDefeatedFactions());
+
+        List<Object[]> candidates = new ArrayList<>(); // [category, name, region, territories, mil]
+        for (var ae : state.getAiFactions().entrySet()) {
+            if (defeated.contains(ae.getKey())) continue;
+            FactionState afs = ae.getValue().getFactionState();
+            if (afs == null || afs.getTerritories() == null || afs.getTerritories().isEmpty()) continue;
+            int mil = afs.getStats().getMilitary();
+            String region = "";
+            var af = engine.getFaction(ae.getKey()).orElse(null);
+            if (af != null) region = af.getRegion();
+            if (mil >= 50) candidates.add(new Object[]{"strong", afs.getName(), region, afs.getTerritories(), mil});
+            else if (mil >= 30) candidates.add(new Object[]{"medium", afs.getName(), region, afs.getTerritories(), mil});
+            else if (rng.nextDouble() < 0.4) candidates.add(new Object[]{"weak", afs.getName(), region, afs.getTerritories(), mil});
+        }
+
+        // 邻区边境威胁
+        Map<String, List<String>> adj = Map.of(
+                "northeast", List.of("huabei"), "huabei", List.of("northeast","southeast","xibei"),
+                "southeast", List.of("huabei","lingnan"), "lingnan", List.of("southeast","southwest","nanyang"),
+                "southwest", List.of("lingnan","xibei"), "xibei", List.of("huabei","southwest"),
+                "nanyang", List.of("southeast","lingnan"));
+        List<String> neighbors = adj.getOrDefault(playerRegion, List.of());
+        List<Object[]> threats = candidates.stream()
+                .filter(c -> neighbors.contains((String) c[2]) && (int) c[4] >= 35).toList();
+        if (!threats.isEmpty() && rng.nextDouble() < 0.6) {
+            Object[] t = threats.get(rng.nextInt(threats.size()));
+            String rname = GameEngine.REGION_NAMES.getOrDefault((String) t[2], "邻区");
+            List<String> terrs = (List<String>) t[3];
+            rumors.add(rname + "：" + t[1] + "在" + (terrs.isEmpty() ? "边境" : terrs.get(0)) + "集结约" + ((int) t[4] / 5) + "个团，边境局势趋紧。");
+        }
+
+        // 扩张动态
+        List<Object[]> expanding = candidates.stream()
+                .filter(c -> "strong".equals(c[0]) && ((List<String>) c[3]).size() >= 3).toList();
+        if (!expanding.isEmpty() && rng.nextDouble() < 0.5) {
+            Object[] e = expanding.get(rng.nextInt(expanding.size()));
+            String rname = GameEngine.REGION_NAMES.getOrDefault((String) e[2], "某区");
+            List<String> terrs = (List<String>) e[3];
+            rumors.add(rname + "：" + e[1] + "已控制" + terrs.size() + "处领地，势力持续膨胀。");
+        }
+
+        if (rumors.isEmpty()) {
+            rumors.add("各方势力按兵不动，暗流涌动。" );
+            rumors.add("列强使馆区内灯火通明，密使往来不断。");
+        }
+        return rumors.subList(0, Math.min(2, rumors.size()));
+    }
+
+    /** 生成背景推演（新游戏时调用，对标 Python generate_background_simulation） */
+    @SuppressWarnings("unchecked")
+    public void initBackgroundSimulation(GameState state) {
+        String playerRegion = engine.getPlayerRegion(state);
+        if (playerRegion == null || playerRegion.isEmpty()) return;
+
+        Map<String, Object> bg = new LinkedHashMap<>();
+        bg.put("player_region", playerRegion);
+        Map<String, Object> regions = new LinkedHashMap<>();
+        List<Map<String, Object>> crossEvents = new ArrayList<>();
+        List<Map<String, Object>> foreignEvents = new ArrayList<>();
+        bg.put("regions", regions);
+        bg.put("cross_region_events", crossEvents);
+        bg.put("foreign_interventions", foreignEvents);
+
+        // 为非玩家区生成预测胜者+时间线
+        for (String rid : GameEngine.REGION_IDS) {
+            if (rid.equals(playerRegion)) continue;
+            var rFactions = new ArrayList<>(gameData.getFactions().values().stream()
+                    .filter(f -> rid.equals(f.getRegion())).toList());
+            var rNpcs = new ArrayList<>(gameData.getHostileNpcs().values().stream()
+                    .filter(n -> rid.equals(n.getRegion())).toList());
+
+            // 评分排序
+            record Scored(String name, int military, int industry, int economy, int ideology, int diplomacy, boolean isFaction) {}
+            List<Scored> scored = new ArrayList<>();
+            for (var f : rFactions) scored.add(new Scored(f.getName(), f.getStats().getMilitary(), f.getStats().getIndustry(), f.getStats().getEconomy(), f.getStats().getIdeology(), f.getStats().getDiplomacy(), true));
+            for (var n : rNpcs) scored.add(new Scored(n.getName(), n.getStats().getMilitary(), n.getStats().getIndustry(), n.getStats().getEconomy(), n.getStats().getIdeology(), n.getStats().getDiplomacy(), false));
+            scored.sort((a, b) -> Double.compare(
+                    b.military*0.4+b.industry*0.2+b.economy*0.2+b.ideology*0.1+b.diplomacy*0.1,
+                    a.military*0.4+a.industry*0.2+a.economy*0.2+a.ideology*0.1+a.diplomacy*0.1));
+
+            if (scored.isEmpty()) continue;
+            // 60%/30%/8% 概率选择胜者
+            Scored winner = scored.get(0); // fallback = highest score
+            double roll = rng.nextDouble();
+            double cumulative = 0;
+            for (int i = 0; i < scored.size(); i++) {
+                double prob = i == 0 ? 0.60 : i == 1 ? 0.30 : i == 2 ? 0.08 : 0.02 / Math.max(1, scored.size()-3);
+                cumulative += prob;
+                if (roll < cumulative) { winner = scored.get(i); break; }
+            }
+            int winnerMil = winner.military;
+            int baseTurns = 12 + rng.nextInt(13) - 4;
+            int bonus = Math.max(0, (winnerMil - 30) / 10);
+            int uniTurn = Math.max(6, baseTurns - bonus);
+            int t1 = Math.max(2, uniTurn / 3 + rng.nextInt(4) - 1);
+            int t2 = Math.max(t1 + 2, uniTurn * 2 / 3 + rng.nextInt(5) - 2);
+            String rname = GameEngine.REGION_NAMES.getOrDefault(rid, rid);
+            String rivalName = scored.size() > 1 ? scored.get(1).name : "地方武装";
+            String rTerrain = "平原"; // simplified
+
+            List<Map<String, Object>> timeline = new ArrayList<>();
+            timeline.add(Map.of("turn", t1, "type", "conflict", "narrative", winner.name + "在" + rTerrain + "地带击溃" + rivalName + "，控制" + rname + "北部。"));
+            timeline.add(Map.of("turn", t2, "type", "conflict", "narrative", winner.name + "攻占" + rname + "重镇，" + rivalName + "残部退守边境。"));
+            timeline.add(Map.of("turn", uniTurn, "type", "unification", "narrative", winner.name + "肃清" + rname + "全境，宣布统一。"));
+
+            regions.put(rid, Map.of("winner_name", (Object) winner.name, "unification_turn", uniTurn, "timeline", (Object) timeline));
+        }
+
+        // 跨区事件
+        String[][] pairs = {{"northeast","huabei"},{"huabei","southeast"},{"huabei","xibei"},{"southeast","lingnan"},{"southwest","lingnan"},{"southwest","xibei"},{"lingnan","nanyang"},{"southeast","nanyang"}};
+        for (String[] pair : pairs) {
+            if (rng.nextDouble() < 0.30) {
+                String wa = getWinnerName(regions, pair[0]);
+                String wb = getWinnerName(regions, pair[1]);
+                int t = rng.nextInt(13) + 8;
+                crossEvents.add(Map.of("turn", t, "type", "war", "narrative", wa + "与" + wb + "在边界爆发冲突，双方互有攻守。"));
+            }
+        }
+
+        // 列强干涉
+        Map<String, String> fpMap = Map.of("northeast","日本","huabei","日本","xibei","俄国","southwest","英国","lingnan","法国","nanyang","英国","southeast","美国");
+        for (String rid : GameEngine.REGION_IDS) {
+            if (rid.equals(playerRegion)) continue;
+            String power = fpMap.get(rid);
+            if (power != null && rng.nextDouble() < 0.35) {
+                int t = rng.nextInt(11) + 5;
+                foreignEvents.add(Map.of("turn", t, "power", power, "narrative", power + "以护侨为名向" + GameEngine.REGION_NAMES.getOrDefault(rid, rid) + "增兵，干涉风险上升。"));
+            }
+        }
+
+        state.setBackgroundSimulation(bg);
+    }
+
+    private String getWinnerName(Map<String, Object> regions, String rid) {
+        Map<String, Object> r = (Map<String, Object>) regions.get(rid);
+        if (r != null && r.get("winner_name") != null) return (String) r.get("winner_name");
+        return GameEngine.REGION_NAMES.getOrDefault(rid, rid);
     }
 
     /** 补给系统：每回合检查部队补给状态 */

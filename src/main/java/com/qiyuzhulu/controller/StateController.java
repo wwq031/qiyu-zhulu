@@ -383,6 +383,7 @@ public class StateController {
 
         try {
             game = engine.newState(factionId, policies);
+            turnAdvance.initBackgroundSimulation(game);
             autoSave();
             Map<String, Object> resp = buildPanelResponse();
             resp.put("message", "新游戏已创建：" + game.getFactionState().getName());

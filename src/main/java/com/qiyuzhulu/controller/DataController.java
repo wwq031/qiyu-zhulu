@@ -109,6 +109,24 @@ public class DataController {
         return aiProvider.checkConnection();
     }
 
+    /** GET /api/stats/rankings — 势力综合排名 */
+    @GetMapping("/stats/rankings")
+    public Map<String, Object> getRankings(@RequestParam(defaultValue = "auto") String slot) {
+        return Map.of("rankings", saveRepo.getRankings(slot));
+    }
+
+    /** GET /api/stats/player-trend — 玩家属性趋势 */
+    @GetMapping("/stats/player-trend")
+    public Map<String, Object> getPlayerTrend(@RequestParam(defaultValue = "auto") String slot) {
+        return Map.of("trend", saveRepo.getPlayerTrend(slot));
+    }
+
+    /** GET /api/stats/summary — 游戏摘要 */
+    @GetMapping("/stats/summary")
+    public Map<String, Object> getSummary(@RequestParam(defaultValue = "auto") String slot) {
+        return saveRepo.getSummary(slot);
+    }
+
     private String getRegionName(String regionId) {
         return switch (regionId) {
             case "northeast" -> "东北";
