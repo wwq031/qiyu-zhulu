@@ -323,8 +323,9 @@ function renderInfoBar(data) {
 var _logDedup = new Set();
 
 function addLogEntry(msg) {
-  const log = document.getElementById('event-log');
-  const turn = gameState ? gameState.turn || '?' : '?';
+  var log = document.getElementById('event-log');
+  if (!log) return; // 新版UI无事件日志
+  var turn = gameState ? gameState.turn || '?' : '?';
   // 去掉ANSI转义码
   const clean = msg.replace(/\x1b\[[0-9;]*m/g, '').trim();
   if (!clean) return;
