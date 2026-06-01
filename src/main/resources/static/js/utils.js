@@ -1,5 +1,10 @@
 // 七域逐鹿 · Web Client
 
+// ── 全局常量 ────────────────────────────────────────────────
+window._STAT_ICONS = {industry:'🏭',agriculture:'🌾',military:'⚔',economy:'💰',ideology:'📖',diplomacy:'🌐',naval_power:'⚓'};
+window._AI_MODES  = {local:'本地模板',deepseek:'DeepSeek',openai:'OpenAI',anthropic:'Claude'};
+window._OPEN_MODAL = function(id) { var el=document.getElementById(id); if(el)el.classList.add('show'); };
+
 function statusText(msg) { document.getElementById('status-text').textContent = msg; }
 function colorizePanel(text) {
   // ANSI SGR → HTML span (single-pass regex)

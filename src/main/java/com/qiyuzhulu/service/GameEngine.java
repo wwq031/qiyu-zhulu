@@ -55,6 +55,21 @@ public class GameEngine {
         TACTICS.put("all_out",    Map.of("name","总攻","icon","🔥","atk_mult",2.0,"def_mult",0.0,"loss_mult",2.5));
     }
 
+    /** 区域→列强映射 */
+    /** 区域邻接表 */
+    public static final Map<String, List<String>> REGION_ADJACENCY = Map.of(
+            "northeast", List.of("huabei"),
+            "huabei", List.of("northeast","southeast","xibei"),
+            "southeast", List.of("huabei","lingnan"),
+            "lingnan", List.of("southeast","southwest","nanyang"),
+            "southwest", List.of("lingnan","xibei"),
+            "xibei", List.of("huabei","southwest"),
+            "nanyang", List.of("southeast","lingnan"));
+
+    public static final Map<String, String> FOREIGN_POWERS = Map.of(
+            "northeast","日本","huabei","日本","xibei","俄国",
+            "southwest","英国","lingnan","法国","nanyang","英国","southeast","美国");
+
     public static final Map<String, String> REGION_NAMES = Map.of(
             "northeast","东北","huabei","华北","southeast","东南","southwest","西南",
             "lingnan","岭南","nanyang","南洋","xibei","西北");
@@ -111,31 +126,40 @@ public class GameEngine {
 
     // ═══════════════════════════════════════════ 自动占领 ═══════════════════════════════════════════
 
-    /** 部队到达地块时自动占领无主地。返回消息或null。 */
-    @SuppressWarnings("unchecked")
+    /** 部队到达地块时自动占领无主地（玩家专用）。返回消息或null。 */
     public String autoClaimArrival(GameState state, Unit unit, String posPid) {
+        return autoClaimArrival(state, state.getPlayerFactionId(), state.getFactionState(), unit, posPid);
+    }
+
+    /** 部队到达地块时自动占领无主地（通用版）。返回消息或null。 */
+    @SuppressWarnings("unchecked")
+    public String autoClaimArrival(GameState state, String factionId, FactionState fs, Unit unit, String posPid) {
         Province pos = getProvince(posPid);
         if (pos == null || !pos.isClaimable()) return null;
         String pname = pos.getName();
         if (pname == null || pname.isEmpty()) return null;
 
         // 跨区限制
-        FactionDefinition pf = getPlayerFaction(state);
+        FactionDefinition pf = getFaction(factionId).orElse(null);
         if (pf != null) {
             String provRegion = pos.getRegion();
             if (provRegion != null && !provRegion.equals(pf.getRegion())) {
-                if (!isRegionUnified(state, state.getPlayerFactionId())) return null;
+                if (!isRegionUnified(state, factionId)) return null;
             }
         }
 
-        List<String> myTerritories = state.getFactionState().getTerritories();
+        List<String> myTerritories = fs.getTerritories();
         if (myTerritories.contains(pname)) return null;
 
-        // 已被AI占领
+        // 已被AI占领（动态state优先，静态AiFactionData回退）
         for (var ae : state.getAiFactions().entrySet()) {
             if (state.getDefeatedFactions().contains(ae.getKey())) continue;
             FactionState afs = ae.getValue().getFactionState();
             if (afs != null && afs.getTerritories() != null && afs.getTerritories().contains(pname))
+                return null;
+            // 回退：AiFactionData静态领土（AI未初始化时）
+            List<String> staticTer = ae.getValue().getTerritories();
+            if (staticTer != null && staticTer.contains(pname))
                 return null;
         }
 
@@ -146,21 +170,34 @@ public class GameEngine {
             if (state.getDefeatedFactions().contains(fe.getKey())) continue;
             allStatic.addAll(fe.getValue().getInitialTerritory());
         }
-        for (var ne : gameData.getNpcFactions().entrySet()) {
+        for (var ne : gameData.getHostileNpcs().entrySet()) {
             if (state.getDefeatedFactions().contains(ne.getKey())) continue;
-            allStatic.addAll(ne.getValue().getInitialTerritory());
-        }
-        for (var he : gameData.getHostileNpcs().entrySet()) {
-            if (state.getDefeatedFactions().contains(he.getKey())) continue;
-            List<String> t = he.getValue().getTerritories();
+            List<String> t = ne.getValue().getTerritories();
             if (t != null) allStatic.addAll(t);
         }
         if (allStatic.contains(pname)) return null;
 
         // 占领！
-        if (state.getFactionState().getTerritories() == null)
-            state.getFactionState().setTerritories(new ArrayList<>());
-        state.getFactionState().getTerritories().add(pname);
+        if (fs.getTerritories() == null)
+            fs.setTerritories(new ArrayList<>());
+        fs.getTerritories().add(pname);
+
+        // 检查是否消灭了NPC势力（领土全失→击败，使用合并后的hostile_npcs）
+        String defeatedNpc = null;
+        for (var he : gameData.getHostileNpcs().entrySet()) {
+            if (state.getDefeatedFactions().contains(he.getKey())) continue;
+            List<String> hTerrs = he.getValue().getTerritories();
+            if (hTerrs == null || hTerrs.isEmpty()) continue;
+            boolean allTaken = true;
+            for (String ht : hTerrs) {
+                if (!myTerritories.contains(ht) && !pname.equals(ht)) { allTaken = false; break; }
+            }
+            if (allTaken) { defeatedNpc = he.getKey(); break; }
+        }
+        if (defeatedNpc != null) {
+            state.getDefeatedFactions().add(defeatedNpc);
+            return "🏴 占领 " + pname + "，" + getNpcName(defeatedNpc) + " 覆灭！";
+        }
         return "🏴 占领 " + pname;
     }
 
@@ -204,12 +241,7 @@ public class GameEngine {
         // 2. 领土竞争 (0-30)
         if (pf.getRegion().equals(tf.getRegion())) threat += 30;
         else {
-            Map<String, List<String>> adj = Map.of(
-                    "northeast", List.of("huabei"), "huabei", List.of("northeast","southeast","xibei"),
-                    "southeast", List.of("huabei","lingnan"), "lingnan", List.of("southeast","southwest","nanyang"),
-                    "southwest", List.of("lingnan","xibei"), "xibei", List.of("huabei","southwest"),
-                    "nanyang", List.of("southeast","lingnan"));
-            if (adj.getOrDefault(pf.getRegion(), List.of()).contains(tf.getRegion())) threat += 15;
+            if (REGION_ADJACENCY.getOrDefault(pf.getRegion(), List.of()).contains(tf.getRegion())) threat += 15;
         }
 
         // 3. 战争/关系历史 (0-20)
@@ -548,14 +580,23 @@ public class GameEngine {
                 .sum();
     }
 
-    /** 计算回合收入 */
+    /** 计算回合收入（税率驱动） */
     public int calcIncome(FactionState fs) {
         Map<String, Object> eco = aggregateTerritoryEconomy(fs);
         int commerce = (int) eco.getOrDefault("commerce", 0);
         int agriculture = (int) eco.getOrDefault("agriculture", 0);
         int industry = (int) eco.getOrDefault("industry", 0);
         int economy = fs.getStats().getEconomy();
-        return (int)(commerce * 1.5 + agriculture * 0.8) + economy / 8 + industry / 10;
+
+        // 税基 = 领土产出 × 系数
+        double agriBase = agriculture * 0.8;
+        double commBase = commerce * 1.5;
+
+        // 实际税收 = 税基 × 税率%
+        double agriTax = agriBase * (fs.getAgriTaxRate() / 100.0);
+        double commTax = commBase * (fs.getCommerceTaxRate() / 100.0);
+
+        return (int)(agriTax + commTax) + economy / 8 + industry / 10;
     }
 
     // ═══════════════════════════════════════════ 状态初始化 ═══════════════════════════════════════════
@@ -597,6 +638,19 @@ public class GameEngine {
         fs.setUnitPrefix(deriveUnitPrefix(faction.getName()));
 
         state.setFactionState(fs);
+
+        // 初始化AI势力（所有非玩家势力）
+        for (var fe : gameData.getFactions().entrySet()) {
+            String fid = fe.getKey();
+            if (fid.equals(factionId)) continue;
+            FactionDefinition fdef = fe.getValue();
+            AiFactionData ad = new AiFactionData();
+            ad.setTerritories(new ArrayList<>(fdef.getInitialTerritory()));
+            ad.setRegion(fdef.getRegion());
+            // FactionState 由 AiFactionService.initialize() 在首次回合推进时创建
+            state.getAiFactions().put(fid, ad);
+        }
+
         return state;
     }
 
@@ -661,7 +715,7 @@ public class GameEngine {
     }
 
     /** 从势力名推断番号前缀 */
-    private String deriveUnitPrefix(String name) {
+    public String deriveUnitPrefix(String name) {
         if (name.length() <= 4) return name;
         // 简单截取前3-4字
         return name.substring(0, Math.min(4, name.length()));
@@ -687,29 +741,31 @@ public class GameEngine {
 
     // ═══════════════════════════════════════════ 外交/区域/战术辅助 ═══════════════════════════════════════════
 
-    /** 检查势力所在区域是否已统一（该区无其他存活的势力） */
+    /** 检查势力所在区域是否已统一（该区无其他存活的势力，含合并后的NPC） */
     public boolean isRegionUnified(GameState state, String factionId) {
         var faction = getFaction(factionId).orElse(null);
         if (faction == null) return false;
         String region = faction.getRegion();
-        // 检查所有势力（可玩+NPC+hostile NPC）
         for (var fe : gameData.getFactions().entrySet()) {
             String fid = fe.getKey();
             if (fid.equals(factionId)) continue;
             if (state.getDefeatedFactions().contains(fid)) continue;
             if (region.equals(fe.getValue().getRegion())) return false;
         }
-        for (var ne : gameData.getNpcFactions().entrySet()) {
-            String nid = ne.getKey();
-            if (state.getDefeatedFactions().contains(nid)) continue;
-            if (region.equals(ne.getValue().getRegion())) return false;
-        }
         for (var he : gameData.getHostileNpcs().entrySet()) {
             String hid = he.getKey();
             if (state.getDefeatedFactions().contains(hid)) continue;
-            if (region.equals(he.getValue().getRegion())) return false;
+            String hr = he.getValue().getRegion();
+            if (hr != null && region.equals(hr)) return false;
         }
         return true;
+    }
+
+    /** 获取NPC名称 */
+    private String getNpcName(String npcId) {
+        var hn = gameData.getHostileNpcs().get(npcId);
+        if (hn != null) return hn.getName();
+        return npcId;
     }
 
     /** 检查两势力间是否有互不侵犯协议 */

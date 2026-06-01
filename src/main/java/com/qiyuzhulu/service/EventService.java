@@ -36,11 +36,6 @@ public class EventService {
                     Map.of("name","维护传统","effect",Map.of("ideology",-3,"diplomacy",5,"military",2),"msg","传统派获胜，社会趋于稳定。"))
     );
 
-    /** 列强映射 */
-    private static final Map<String, String> FOREIGN_POWERS = Map.of(
-            "northeast","日本","huabei","日本","xibei","俄国",
-            "southwest","英国","lingnan","法国","nanyang","英国","southeast","美国");
-
     public EventService(GameDataRepo gameData, GameEngine engine) {
         this.gameData = gameData;
         this.engine = engine;
@@ -78,8 +73,8 @@ public class EventService {
         FactionState fs = state.getFactionState();
         List<String> results = new ArrayList<>();
 
-        // 30%概率触发随机事件
-        if (rng.nextDouble() < 0.30) {
+        // 45%概率触发随机事件
+        if (rng.nextDouble() < 0.45) {
             Map<String, Object> evt = events.get(rng.nextInt(events.size()));
             applyEffects(fs.getStats(), (Map<String, Object>) evt.get("effect"));
             String tag = isPositive(evt) ? "🍀" : "⚠";
@@ -260,7 +255,7 @@ public class EventService {
                 }
                 case "foreign_intervention" -> {
                     if (rng.nextDouble() < 0.12) {
-                        context.put("foreign_power", FOREIGN_POWERS.getOrDefault(playerRegion, "列强"));
+                        context.put("foreign_power", GameEngine.FOREIGN_POWERS.getOrDefault(playerRegion, "列强"));
                         shouldTrigger = true;
                     }
                 }
@@ -280,12 +275,7 @@ public class EventService {
                 case "revolutionary_wave" -> {
                     int minIdeology = ((Number) conditions.getOrDefault("min_ideology", 80)).intValue();
                     if (s.getIdeology() >= minIdeology) {
-                        Map<String, List<String>> adj = Map.of(
-                                "northeast", List.of("huabei"), "huabei", List.of("northeast","southeast","xibei"),
-                                "southeast", List.of("huabei","lingnan"), "lingnan", List.of("southeast","southwest","nanyang"),
-                                "southwest", List.of("lingnan","xibei"), "xibei", List.of("huabei","southwest"),
-                                "nanyang", List.of("southeast","lingnan"));
-                        List<String> neighbors = adj.getOrDefault(playerRegion, List.of("邻区"));
+                        List<String> neighbors = GameEngine.REGION_ADJACENCY.getOrDefault(playerRegion, List.of("邻区"));
                         context.put("spread_region", GameEngine.REGION_NAMES.getOrDefault(neighbors.get(rng.nextInt(neighbors.size())), "邻区"));
                         shouldTrigger = true;
                     }

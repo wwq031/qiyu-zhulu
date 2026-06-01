@@ -212,11 +212,13 @@ function showBattleInfoPopup(camp) {
   html += `<div style="display:flex;gap:12px;margin-bottom:10px;">`;
   html += `<div style="flex:1;background:rgba(200,80,60,0.1);border:1px solid rgba(200,80,60,0.3);padding:8px;border-radius:4px;">`;
   html += `<div style="color:#e05555;font-weight:bold;font-size:0.85em;">⚔ ${escapeHtml(camp.attacker_name)}（攻）</div>`;
-  html += `<div style="font-size:0.75em;color:var(--text-dim);">${camp.attacker_units.length}支部队</div>`;
+  const atkUnits = camp.attacker_units || [];
+  const defUnits = camp.defender_units || [];
+  html += `<div style="font-size:0.75em;color:var(--text-dim);">${atkUnits.length}支部队</div>`;
   html += `</div>`;
   html += `<div style="flex:1;background:rgba(80,140,200,0.1);border:1px solid rgba(80,140,200,0.3);padding:8px;border-radius:4px;">`;
   html += `<div style="color:#5b9bd5;font-weight:bold;font-size:0.85em;">🛡 ${escapeHtml(camp.defender_name)}（守）</div>`;
-  html += `<div style="font-size:0.75em;color:var(--text-dim);">${camp.defender_units.length}支部队</div>`;
+  html += `<div style="font-size:0.75em;color:var(--text-dim);">${defUnits.length}支部队</div>`;
   html += `</div></div>`;
 
   // 部队战术列表
@@ -274,8 +276,9 @@ function showBattleInfoPopup(camp) {
     html += `<div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end;align-items:center;">`;
     html += `<span id="btac-msg" style="color:var(--green);font-size:0.8em;flex:1;"></span>`;
     if (playerUnits.length) {
-      html += `<button onclick="submitBattleTactics('${camp.id}', this)" style="background:var(--gold);color:#000;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-weight:bold;font-family:var(--font);font-size:0.85em;">应用战术调整</button>`;
+      html += `<button onclick="submitBattleTactics('${camp.id}', this)" style="background:var(--gold);color:#000;border:none;padding:6px 14px;border-radius:4px;cursor:pointer;font-weight:bold;font-family:var(--font);font-size:0.85em;">⚙ 战术</button>`;
     }
+    html += `<button onclick="submitReinforce('${camp.id}')" style="background:#1a3a2a;color:var(--green);border:1px solid var(--green);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:var(--font);font-size:0.85em;">📨 增援</button>`;
     html += `<button onclick="submitRetreat('${camp.id}')" style="background:#3a1a1a;color:var(--red);border:1px solid var(--red);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:var(--font);font-size:0.85em;">🏳 撤退</button>`;
     html += `</div>`;
   }
@@ -352,6 +355,25 @@ async function submitRetreat(campaignId) {
   } catch(e) {
     alert('撤退失败: 网络错误');
   }
+}
+
+// 战役增援
+async function submitReinforce(campaignId) {
+  try {
+    const resp = await fetch('/api/campaign/reinforce', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ campaign_id: campaignId }),
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      dismissEventPopup();
+      refreshState();
+      showEventPopup('📨 增援', data.message || '增援已派出', false);
+    } else {
+      alert('增援失败: ' + (data.error || '未知错误'));
+    }
+  } catch(e) { alert('增援失败: 网络错误'); }
 }
 
 // ── 事件链抉择弹窗 ──

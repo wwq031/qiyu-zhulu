@@ -13,6 +13,10 @@ public class FactionState {
     private String name;                        // 势力显示名
     private Stats stats;                        // 六围+海军
     private int treasury;                       // 国库
+    @JsonProperty("agri_tax_rate")
+    private int agriTaxRate = 20;               // 农业税率 0-100
+    @JsonProperty("commerce_tax_rate")
+    private int commerceTaxRate = 20;           // 商业税率 0-100
     @JsonProperty("population_support")
     private int populationSupport;              // 民心 0-100
     private int corruption;                     // 腐败度 0-100
@@ -59,6 +63,11 @@ public class FactionState {
 
     public int getTreasury() { return treasury; }
     public void setTreasury(int v) { this.treasury = v; }
+
+    public int getAgriTaxRate() { return agriTaxRate; }
+    public void setAgriTaxRate(int v) { this.agriTaxRate = Math.max(0, Math.min(100, v)); }
+    public int getCommerceTaxRate() { return commerceTaxRate; }
+    public void setCommerceTaxRate(int v) { this.commerceTaxRate = Math.max(0, Math.min(100, v)); }
 
     public int getPopulationSupport() { return populationSupport; }
     public void setPopulationSupport(int v) { this.populationSupport = v; }

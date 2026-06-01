@@ -47,7 +47,7 @@ async function checkConnection() {
         const cfgData = await apiGet('/api/config');
         if (cfgData && cfgData.config) {
           const provider = cfgData.config.provider || 'local';
-          const modeNames = {local:'本地模板',deepseek:'DeepSeek',openai:'OpenAI',anthropic:'Claude'};
+          const modeNames = window._AI_MODES;
           const el = document.getElementById('ai-mode');
           if (el) {
             el.textContent = modeNames[provider] || provider;
@@ -73,16 +73,17 @@ async function checkConnection() {
 function updateConnection(ok) {
   const el = document.getElementById('connection');
   if (el) { el.className = ok ? 'on' : 'off'; el.textContent = ok ? '● 已连接' : '● 未连接'; }
-  const dot = document.getElementById('home-dot');
-  const txt = document.getElementById('home-conn-text');
-  if (dot) { dot.className = 'dot ' + (ok ? 'on' : 'off'); }
-  if (txt) { txt.textContent = ok ? '服务器已连接' : '未连接 — 请启动 python server.py'; }
+  var dot = document.getElementById('home-dot');
+  var txt = document.getElementById('home-conn-text');
+  if (dot) dot.className = 'dot ' + (ok ? 'on' : 'off');
+  if (txt) txt.textContent = ok ? '服务器已连接' : '未连接 — 请启动 python server.py';
 }
 
 // ── 渲染函数 ────────────────────────────────────────────────
 function renderAll(data) {
   gameState = data;
   if (!data || data.error) return;
+  clearEventPopups(); // 清空上次残留的弹窗队列
 
   // 合并自定义战术到全局战术定义（供所有下拉框使用）
   if (data.custom_tactics) {
@@ -96,16 +97,17 @@ function renderAll(data) {
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('game-view').style.display = 'flex';
 
-  // 顶栏更新
-  document.getElementById('tb-faction').textContent = data.faction || '';
-  document.getElementById('tb-turn').textContent = 'Turn ' + (data.turn||0);
-  document.getElementById('tb-date').textContent = data.date || '';
-  document.getElementById('tb-phase').textContent = data.phase_name || '';
-  document.getElementById('tb-gold').textContent = '💰' + (data.treasury||0);
-  document.getElementById('tb-corruption').textContent = '🦠' + (data.corruption||0) + '%';
-  document.getElementById('tb-support').textContent = '❤️' + (data.population_support||0) + '%';
-  document.getElementById('tb-ap').textContent = 'AP:' + (data.action_points||0);
-  document.getElementById('status-text').textContent = '就绪';
+  // 顶栏更新（v2.2新版可能无此元素，加保护）
+  var el;
+  el=document.getElementById('tb-faction'); if(el)el.textContent = data.faction || '';
+  el=document.getElementById('tb-turn'); if(el)el.textContent = 'Turn ' + (data.turn||0);
+  el=document.getElementById('tb-date'); if(el)el.textContent = data.date || '';
+  el=document.getElementById('tb-phase'); if(el)el.textContent = data.phase_name || '';
+  el=document.getElementById('tb-gold'); if(el)el.textContent = '💰' + (data.treasury||0);
+  el=document.getElementById('tb-corruption'); if(el)el.textContent = '🦠' + (data.corruption||0) + '%';
+  el=document.getElementById('tb-support'); if(el)el.textContent = '❤️' + (data.population_support||0) + '%';
+  el=document.getElementById('tb-ap'); if(el)el.textContent = 'AP:' + (data.action_points||0);
+  el=document.getElementById('status-text'); if(el)el.textContent = '就绪';
 
   // AI叙事弹出
   if (data.narrative) showEventPopup('📜 AI GM 裁决', data.narrative, false);
@@ -119,24 +121,12 @@ function renderAll(data) {
     addLogEntry(`📜 ${data.narrative}`);
   }
 
-  // 自由行动执行结果
+  // 自由行动执行结果（→日志）
   if (data.action_results && data.action_results.length) {
-    const arDiv = document.createElement('div');
-    arDiv.style.cssText = 'margin:8px 0;padding:8px;background:#1a3a2a;border-left:3px solid var(--green);border-radius:3px;';
-    arDiv.innerHTML = '<div style="color:var(--green);font-weight:bold;margin-bottom:4px;">✅ 已执行操作</div>';
-    data.action_results.forEach(r => {
-      arDiv.innerHTML += `<div style="color:var(--text);font-size:0.85em;line-height:1.5;">${escapeHtml(String(r))}</div>`;
-    });
-    panel.appendChild(arDiv);
+    data.action_results.forEach(function(r) { addLogEntry('✅ ' + String(r)); });
   }
   if (data.action_errors && data.action_errors.length) {
-    const aeDiv = document.createElement('div');
-    aeDiv.style.cssText = 'margin:8px 0;padding:8px;background:#3a1a1a;border-left:3px solid var(--red);border-radius:3px;';
-    aeDiv.innerHTML = '<div style="color:var(--red);font-weight:bold;margin-bottom:4px;">⚠ 操作失败</div>';
-    data.action_errors.forEach(e => {
-      aeDiv.innerHTML += `<div style="color:var(--text-dim);font-size:0.85em;line-height:1.5;">${escapeHtml(String(e))}</div>`;
-    });
-    panel.appendChild(aeDiv);
+    data.action_errors.forEach(function(e) { addLogEntry('⚠ ' + String(e)); });
   }
 
   // 势力覆灭/投降事件 → 弹窗（以被消灭势力为主语）
@@ -151,11 +141,11 @@ function renderAll(data) {
     if (typeof mapInitialized !== 'undefined' && mapInitialized) refreshMapOwnership();
   }
 
-  // 回合事件 → 弹窗通知
+  // 回合事件 → 仅日志，不弹窗
   if (data.turn_events && data.turn_events.length) {
-    data.turn_events.forEach(ev => {
-      const evStr = typeof ev === 'string' ? ev : (ev.text || ev.desc || ev.body || ev.title || '');
-      if (evStr) showEventPopup('📋 回合事件', evStr, false);
+    data.turn_events.forEach(function(ev) {
+      var evStr = typeof ev === 'string' ? ev : (ev.text || ev.desc || ev.body || ev.title || '');
+      if (evStr) addLogEntry(evStr);
     });
   }
 
@@ -170,7 +160,7 @@ function renderAll(data) {
       if (ep.effects) {
         let eff = '';
         for (const [k,v] of Object.entries(ep.effects)) {
-          const icons = {industry:'🏭',agriculture:'🌾',military:'⚔',economy:'💰',ideology:'📖',diplomacy:'🌐',naval_power:'⚓'};
+          const icons = window._STAT_ICONS;
           eff += (v>=0?'+':'')+v+icons[k]+' ';
         }
         html += `<div style="color:var(--green);font-size:0.85em;margin-top:4px;">[${eff.trim()}]</div>`;
@@ -194,20 +184,14 @@ function renderAll(data) {
     });
   }
 
-  // 天下传闻
+  // 天下传闻（→日志）
   if (data.rumors && data.rumors.length) {
-    const rmDiv = document.createElement('div');
-    rmDiv.style.cssText = 'margin:8px 0;padding:8px;background:var(--panel2);border-left:3px solid var(--cyan);border-radius:3px;';
-    rmDiv.innerHTML = '<div style="color:var(--cyan);font-weight:bold;margin-bottom:4px;">📡 天下传闻</div>';
-    data.rumors.forEach(r => {
-      rmDiv.innerHTML += `<div style="color:var(--text-dim);font-size:0.9em;">—— ${r}</div>`;
-    });
-    panel.appendChild(rmDiv);
+    data.rumors.forEach(function(r) { addLogEntry('📡 ' + r); });
   }
 
   // 游戏结束
   if (data.game_over) {
-    panel.innerHTML += '\n<span style="color:var(--red)">⚡ 势力覆灭 — 游戏结束</span>';
+    addLogEntry('⚡ 势力覆灭 — 游戏结束');
   }
 
   // 子菜单渲染
@@ -246,15 +230,8 @@ function renderAll(data) {
     }
   }
   if (gmHasMap || (typeof mapInitialized !== 'undefined' && mapInitialized)) {
-    // 只在领土变更时全量刷新，其余情况只增量更新动态元素
-    const newSig = (data.territories || []).sort().join(',');
-    if (newSig !== _lastTerritorySig) {
-      _lastTerritorySig = newSig;
-      refreshMapOwnership();
-    } else if (typeof mapInitialized !== 'undefined' && mapInitialized && leafletMap) {
-      // 轻量增量更新：只刷新驻军和战役标记
-      refreshDynamicMarkers(data);
-    }
+    // 始终全量刷新地图（/api/map 含全部势力部队，/api/state 只有玩家部队）
+    refreshMapOwnership();
   }
 }
 
@@ -310,7 +287,7 @@ function renderInfoBar(data) {
     let effStr = '';
     if (ns.effects) {
       for (const [k,v] of Object.entries(ns.effects)) {
-        const icons = {industry:'🏭',agriculture:'🌾',military:'⚔',economy:'💰',ideology:'📖',diplomacy:'🌐',naval_power:'⚓'};
+        const icons = window._STAT_ICONS;
         effStr += (v>=0?'+':'')+v+icons[k]+' ';
       }
     }
@@ -377,7 +354,7 @@ async function quickStart() {
 
 async function showFactionDossier() {
   document.getElementById('faction-dossier-modal').classList.add('show');
-  const content = document.getElementById('faction-dossier-content');
+  const content = document.getElementById('dossier-content');
   content.innerHTML = '<span class="dim">加载中...</span>';
 
   // 并行加载势力和区域数据
@@ -438,14 +415,29 @@ async function showFactionDossier() {
 
 function showRulesModal() {
   document.getElementById('rules-modal').classList.add('show');
+  var el = document.querySelector('#rules-modal .rules-text');
+  if (el && !el.innerHTML.trim()) {
+    el.innerHTML = '<div style="line-height:1.8;color:var(--text-dim);">\
+<p><b style="color:var(--gold)">五阶段</b>: 帝国余晖 → 大崩溃 → 区域统一战 → 七强并立 → 天下归一</p>\
+<p><b style="color:var(--gold)">六围属性</b>: 🏭工业 🌾农业 ⚔军事 💰经济 📖思想 🌐外交</p>\
+<p><b style="color:var(--gold)">行动点(AP)</b>: 每回合3点，行动消耗1点</p>\
+<p><b style="color:var(--gold)">胜利条件</b>: 消灭所有势力统一七域</p>\
+<p><b style="color:var(--gold)">军事</b>: 训练部队→移动→发动战役。骑兵速度2步，步兵1步，铁路加速。</p>\
+<p><b style="color:var(--gold)">内政</b>: 建设工厂/军校/水利提升属性，调整税率平衡收入与民心。</p>\
+<p><b style="color:var(--gold)">外交</b>: 互不侵犯/结盟/贸易协定/宣战/和谈。</p>\
+<p><b style="color:var(--gold)">战役</b>: 选部队→选战术→每回合一轮。可增援/换战术/撤退。</p>\
+</div>';
+  }
 }
 
 function showTutorial() {
-  document.getElementById('tutorial-modal').classList.add('show');
+  var el = document.getElementById('tutorial-modal');
+  if (el) el.classList.add('show');
 }
 
 let eventPopupQueue = [];
 let eventPopupActive = false;
+function clearEventPopups() { eventPopupQueue = []; eventPopupActive = false; var ov=document.getElementById('event-popup-overlay'); if(ov)ov.classList.remove('show'); }
 function fmtTactics(tacticsDict) {
   if (!tacticsDict || typeof tacticsDict !== 'object') return '?';
   const vals = Object.values(tacticsDict);
@@ -493,12 +485,13 @@ document.addEventListener('click', function(e) {
 function openDept(type) {
   var panel = document.getElementById('dept-panel');
   var content = document.getElementById('dept-content');
+  if (typeof hideSubmenu === 'function') hideSubmenu();
   panel.classList.add('open');
   content.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:20px;">加载中...</div>';
 
   // 根据类型发送对应 action 获取菜单数据
   var actionMap = {
-    military: '1', domestic: '3', diplomacy: '3', intel: '4',
+    military: '1', domestic: '2', diplomacy: '3', intel: '4',
     build: '2', tech: '8', resolutions: '7'
   };
   var action = actionMap[type] || '1';
@@ -533,11 +526,45 @@ function renderDeptContent(type, data) {
       break;
     case 'domestic':
       var t = data.treasury || 0; var s = data.stats || {};
-      html += '<div class="submenu-target">国库: 💰' + t + ' | 民心: ❤️' + (data.population_support||0) + '% | 腐败: 🦠' + (data.corruption||0) + '%</div>';
-      html += '<div style="font-size:0.82em;color:var(--text-dim);margin:4px 0;">';
-      html += '🏭' + (s.industry||0) + ' 🌾' + (s.agriculture||0) + ' ⚔' + (s.military||0) + ' 💰' + (s.economy||0) + ' 📖' + (s.ideology||0) + ' 🌐' + (s.diplomacy||0);
+      html += '<div class="submenu-target" style="margin-bottom:8px;">国库: 💰' + t + ' | 民心: ❤️' + (data.population_support||0) + '% | 腐败: 🦠' + (data.corruption||0) + '%</div>';
+      // 六维图
+      var statDefs = [
+        {key:'industry',name:'工业',icon:'🏭',color:'#e67e22'},
+        {key:'agriculture',name:'农业',icon:'🌾',color:'#4caf50'},
+        {key:'military',name:'军事',icon:'⚔',color:'#e74c3c'},
+        {key:'economy',name:'经济',icon:'💰',color:'#f1c40f'},
+        {key:'ideology',name:'思想',icon:'📖',color:'#9b59b6'},
+        {key:'diplomacy',name:'外交',icon:'🌐',color:'#3498db'}
+      ];
+      html += '<div class="stat-bars" style="margin:8px 0;">';
+      statDefs.forEach(function(d) {
+        var v = s[d.key] || 0;
+        var pct = Math.min(100, v);
+        html += '<div style="display:flex;align-items:center;gap:6px;margin:3px 0;font-size:0.78em;">';
+        html += '<span style="width:36px;text-align:right;color:var(--text-dim);">' + d.icon + '</span>';
+        html += '<span style="width:24px;color:var(--text-dim);">' + d.name + '</span>';
+        html += '<div style="flex:1;height:12px;background:var(--bg);border-radius:6px;overflow:hidden;">';
+        html += '<div style="width:' + pct + '%;height:100%;background:' + d.color + ';border-radius:6px;transition:width 0.3s;"></div>';
+        html += '</div>';
+        html += '<span style="width:24px;text-align:right;font-weight:bold;color:' + d.color + ';">' + v + '</span>';
+        html += '</div>';
+      });
       html += '</div>';
       html += '<div class="submenu-item" onclick="sendAction(\'9\')"><span class="icon">🛡</span>反腐行动 (20💰, -5~15腐败)</div>';
+      // 税率拉条
+      var agriRate = data.agri_tax_rate != null ? data.agri_tax_rate : 20;
+      var commRate = data.commerce_tax_rate != null ? data.commerce_tax_rate : 20;
+      var projIncome = data.data ? data.data.projected_income : '?';
+      html += '<div class="tax-panel">';
+      html += '<div class="tax-header">💰 税率调整 <span style="font-size:0.7em;color:var(--text-dim)">预计收入:' + projIncome + '</span></div>';
+      html += '<div class="tax-row"><span class="tax-label">🌾 农业税</span>';
+      html += '<input type="range" min="0" max="100" value="' + agriRate + '" step="5" class="tax-slider" oninput="var v=this.value;var el=document.getElementById(\'d-agri-val\');if(el)el.textContent=v+\'%\';" onchange="setTaxRateCommit(\'agri\', this.value)">';
+      html += '<span class="tax-val" id="d-agri-val">' + agriRate + '%</span></div>';
+      html += '<div class="tax-row"><span class="tax-label">🏪 商业税</span>';
+      html += '<input type="range" min="0" max="100" value="' + commRate + '" step="5" class="tax-slider" oninput="var v=this.value;var el=document.getElementById(\'d-comm-val\');if(el)el.textContent=v+\'%\';" onchange="setTaxRateCommit(\'commerce\', this.value)">';
+      html += '<span class="tax-val" id="d-comm-val">' + commRate + '%</span></div>';
+      html += '<div class="tax-hint">⚠ 税率&gt;30%影响民心 | &gt;70%损害工农</div>';
+      html += '</div>';
       html += '<hr><div class="section-title">自定义指令</div>';
       html += '<div style="margin-top:4px;"><input id="quick-order" style="width:100%;padding:6px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:3px;" placeholder="输入自由指令..."><button class="btn btn-small" style="margin-top:4px;width:100%;" onclick="var o=document.getElementById(\'quick-order\').value;if(o){document.getElementById(\'custom-input\').value=o;sendCustomOrder();closeDept();}">✧ 执行</button></div>';
       break;
@@ -584,6 +611,24 @@ function renderDeptContent(type, data) {
       html += '<p style="color:var(--text-dim)">' + JSON.stringify(data.output || '无数据') + '</p>';
   }
   content.innerHTML = html;
+}
+
+// ── 税率调整 ────────────────────────────────────────────────
+function setTaxRate(type, value) {
+  var el = document.getElementById('tax-' + type + '-val');
+  if (el) el.textContent = value + '%';
+}
+
+function setTaxRateCommit(type, value) {
+  apiPost('/api/action', {action: '2.tax.' + type + '.' + value}).then(function(data) {
+    if (data.error) { statusText('错误: ' + data.error); return; }
+    renderAll(data);
+    // 如果部门面板开着，刷新它
+    var panel = document.getElementById('dept-panel');
+    if (panel && panel.classList.contains('open')) {
+      openDept('domestic');
+    }
+  });
 }
 
 // ── 启动 ──────────────────────────────────────────────────

@@ -75,7 +75,21 @@ public class CampaignService {
         for (EnemyProvince e : enemies) {
             if (provincePid.equals(e.getPid())) { enemyInfo = e; break; }
         }
-        if (enemyInfo == null) return GameUtils.mapOf("ok", false, "message", "该省不是有效的攻击目标");
+        if (enemyInfo == null) {
+            // 回退：检查是否为NPC地块
+            String pname = engine.getProvince(provincePid).getName();
+            if (pname != null) {
+                for (var ne : engine.getGameData().getHostileNpcs().entrySet()) {
+                    if (ne.getValue().getTerritories() != null && ne.getValue().getTerritories().contains(pname)) {
+                        enemyInfo = new EnemyProvince(provincePid, pname, engine.getProvince(provincePid).getTerrain(),
+                                engine.getProvince(provincePid).getType(), ne.getValue().getName(), ne.getKey(), "npc", false);
+                        break;
+                    }
+                }
+            }
+            if (enemyInfo == null)
+                return GameUtils.mapOf("ok", false, "message", "该省不是有效的攻击目标");
+        }
 
         // 跨区/互不侵犯检查
         if ("faction".equals(enemyInfo.getOwnerType())) {
@@ -135,9 +149,32 @@ public class CampaignService {
             attackerTactics.put(u.getName(), allTactics.containsKey(tactic) ? tactic : "assault");
         }
 
-        // 生成防御部队
+        // NPC地块无真实驻军 → 直接占领
         String enemyFid = enemyInfo.getOwnerFid();
         String enemyType = enemyInfo.getOwnerType();
+        if ("npc".equals(enemyType) || "npc_faction".equals(enemyType)) {
+            // 检查是否有真实AI部队在此
+            boolean hasRealDefenders = false;
+            for (var ae : state.getAiFactions().entrySet()) {
+                FactionState afs = ae.getValue().getFactionState();
+                if (afs != null && afs.getUnits() != null) {
+                    for (Unit u : afs.getUnits()) {
+                        if (u.isActive() && provincePid.equals(engine.resolvePositionToPid(u.getPosition()))) {
+                            hasRealDefenders = true; break;
+                        }
+                    }
+                }
+                if (hasRealDefenders) break;
+            }
+            if (!hasRealDefenders) {
+                // 直接占领
+                String pname = engine.getProvince(provincePid).getName();
+                fs.getTerritories().add(pname);
+                state.setActionPoints(Math.max(0, state.getActionPoints() - 1));
+                return GameUtils.mapOf("ok", true, "message", "🏴 兵不血刃占领 " + pname + "（无敌军驻守）");
+            }
+        }
+
         String terrain = enemyInfo.getTerrain();
         List<Unit> defending = generateEnemyGarrison(state, provincePid,
                 "npc".equals(enemyType) || "npc_faction".equals(enemyType) ? null : enemyFid);
@@ -330,17 +367,21 @@ public class CampaignService {
 
             boolean provinceFell = false, battleEndedByWipe = false;
 
-            if (activeDefenders.isEmpty()) {
+            if (activeAttackers.isEmpty() && activeDefenders.isEmpty()) {
+                // 双方都打光了 → 攻方勉强占领
                 provinceFell = true; battleEndedByWipe = true;
-                camp.setStatus("attacker_occupied"); roundMsg += " 🏴 守方溃散，占领！";
+                camp.setStatus("attacker_occupied"); roundMsg += " 🏴 双方力竭，攻方占领！";
             } else if (activeAttackers.isEmpty()) {
                 battleEndedByWipe = true;
                 camp.setStatus("defender_held"); roundMsg += " 🛡 攻方溃散，守方固守！";
-            } else if ("annihilate".equals(outcome)) {
+            } else if (activeDefenders.isEmpty() && camp.getRound() >= 2) {
+                provinceFell = true; battleEndedByWipe = true;
+                camp.setStatus("attacker_occupied"); roundMsg += " 🏴 守方溃散，占领！";
+            } else if ("annihilate".equals(outcome) && camp.getRound() >= 2 && rng.nextDouble() < 0.5) {
                 provinceFell = true; camp.setStatus("attacker_occupied");
-            } else if ("decisive_win".equals(outcome) && camp.getRound() >= 2 && rng.nextDouble() < 0.6) {
+            } else if ("decisive_win".equals(outcome) && camp.getRound() >= 3 && rng.nextDouble() < 0.4) {
                 provinceFell = true; camp.setStatus("attacker_occupied");
-            } else if ("costly_win".equals(outcome) && camp.getRound() >= 3 && rng.nextDouble() < 0.3) {
+            } else if ("costly_win".equals(outcome) && camp.getRound() >= 4 && rng.nextDouble() < 0.25) {
                 provinceFell = true; camp.setStatus("attacker_occupied");
             }
             if (provinceFell) roundMsg += " 🏴 占领！";
@@ -722,17 +763,17 @@ public class CampaignService {
                 if (!of.getRegion().equals(myRegion) && !engine.isRegionUnified(state, state.getPlayerFactionId()))
                     continue;
                 if (engine.hasNonAggression(state, state.getPlayerFactionId(), ofid)) continue;
-                // 相邻检查
+                // 距离检查放宽到5跳（西部地区稀疏）
                 Object[] distResult = engine.getDistance(myPid, pid);
                 int dist = distResult[0] != null ? ((Number) distResult[0]).intValue() : 999;
-                if (dist > 3) continue;
+                if (dist > 5) continue;
 
                 enemies.add(new EnemyProvince(pid, pname, p.getTerrain(), p.getType(),
                         owner, ofid, "faction", false));
             }
         }
 
-        // NPC领地（同区域）— 排除已被玩家占领的
+        // NPC领地（同区域hostile）— 排除已被玩家占领的
         Map<String, NpcDefinition> npcs = engine.getGameData().getHostileNpcs();
         if (npcs != null) {
             for (var entry : npcs.entrySet()) {

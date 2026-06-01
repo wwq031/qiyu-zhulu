@@ -12,6 +12,7 @@ function hideSubmenu() {
 
 function renderSubmenu(resultType, data) {
   const sm = document.getElementById('submenu-panel');
+  if (!sm) return;
   sm.classList.add('show');
   currentMenuType = resultType;
 
@@ -258,6 +259,21 @@ function renderDomesticMenu(data) {
   }
 
   let html = '<h3>🏗 内政建设</h3>';
+
+  // ── 税率拉条 ──
+  var agriRate = (data && data.agri_tax_rate != null) ? data.agri_tax_rate : 20;
+  var commRate = (data && data.commerce_tax_rate != null) ? data.commerce_tax_rate : 20;
+  html += '<div class="tax-panel">';
+  html += '<div class="tax-header">💰 税率调整 <span style="font-size:0.7em;color:var(--text-dim)">（不消耗AP）</span></div>';
+  html += '<div class="tax-row"><span class="tax-label">🌾 农业税</span>';
+  html += '<input type="range" min="0" max="100" value="' + agriRate + '" step="5" class="tax-slider" oninput="setTaxRate(\'agri\', this.value)" onchange="setTaxRateCommit(\'agri\', this.value)">';
+  html += '<span class="tax-val" id="tax-agri-val">' + agriRate + '%</span></div>';
+  html += '<div class="tax-row"><span class="tax-label">🏪 商业税</span>';
+  html += '<input type="range" min="0" max="100" value="' + commRate + '" step="5" class="tax-slider" oninput="setTaxRate(\'commerce\', this.value)" onchange="setTaxRateCommit(\'commerce\', this.value)">';
+  html += '<span class="tax-val" id="tax-comm-val">' + commRate + '%</span></div>';
+  html += '<div class="tax-hint">⚠ 税率&gt;30%影响民心 | &gt;70%损害工农</div>';
+  html += '</div>';
+
   html += `<div class="submenu-target-count">${builds.length} 个建设项目</div>`;
 
   for (let i = 0; i < builds.length; i++) {
@@ -960,22 +976,6 @@ function renderRetreatMenu(data) {
   }
 
   html += `<div class="submenu-tactics"><span onclick="sendAction('1.4')" style="cursor:pointer;color:var(--text-dim);">← 返回军事行动</span></div>`;
-  sm.innerHTML = html;
-}
-
-// ── 大国博弈（阶段四）───────────────────────────────────────
-function renderSuperpowerMenu(data) {
-  const sm = document.getElementById('submenu-panel');
-  const options = data.options || [];
-
-  let html = '<h3>🌍 大国博弈</h3>';
-  for (const opt of options) {
-    html += `<div class="submenu-item" onclick="sendAction('${opt.id}')">
-      <span class="sm-idx">[${opt.id}]</span>
-      <span class="sm-name">${opt.name}</span>
-      <span class="sm-info">${opt.desc}</span>
-    </div>`;
-  }
   sm.innerHTML = html;
 }
 

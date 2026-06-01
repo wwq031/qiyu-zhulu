@@ -124,6 +124,20 @@ public class StateController {
             resp.put("data", civil.getDomesticMenu(game));
             return resp;
         }
+        // 税率调整 2.tax.{agri|commerce}.{value}
+        if (action.startsWith("2.tax.")) {
+            String[] parts = action.split("\\.");
+            if (parts.length == 4) {
+                String taxType = parts[2];
+                int value = Integer.parseInt(parts[3]);
+                Map<String, Object> result = civil.setTaxRate(game, taxType, value);
+                resp = buildPanelResponse();
+                resp.put("result_type", "domestic_menu");
+                resp.put("data", civil.getDomesticMenu(game));
+                resp.put("output", result.get("message"));
+                return resp;
+            }
+        }
         // 内政建设 2.1-2.11
         if (action.matches("2\\.\\d+")) {
             String locPid = body.get("location_pid") != null ? body.get("location_pid").toString() : null;
@@ -328,6 +342,14 @@ public class StateController {
             return resp;
         }
 
+        // 设计局 — 主菜单 1.5
+        if ("1.5".equals(action)) {
+            resp = buildPanelResponse();
+            resp.put("result_type", "design_bureau");
+            resp.put("data", Map.of("custom_tactics", game.getCustomTactics() != null ? game.getCustomTactics().keySet() : List.of(),
+                    "custom_unit_types", game.getCustomUnitTypes() != null ? game.getCustomUnitTypes().keySet() : List.of()));
+            return resp;
+        }
         // 设计局 — 自定义战术 1.5.1
         if ("1.5.1".equals(action)) {
             @SuppressWarnings("unchecked")
@@ -467,6 +489,8 @@ public class StateController {
         resp.put("national_spirit", engine.getNationalSpirit(faction));
         resp.put("stats", fs.getStats());
         resp.put("treasury", fs.getTreasury());
+        resp.put("agri_tax_rate", fs.getAgriTaxRate());
+        resp.put("commerce_tax_rate", fs.getCommerceTaxRate());
         resp.put("population_support", fs.getPopulationSupport());
         resp.put("corruption", fs.getCorruption());
         resp.put("active_wars", g.getActiveWars());
@@ -497,6 +521,8 @@ public class StateController {
                 ui.put("status", u.getStatus());
                 ui.put("supply", u.getSupply());
                 ui.put("index", fs.getUnits().indexOf(u));
+                ui.put("is_player", true);
+                ui.put("faction_name", fs.getName());
                 unitList.add(ui);
             }
             garrisons.put(entry.getKey(), unitList);
@@ -520,6 +546,21 @@ public class StateController {
                 ci.put("defender_tactics", c.getDefenderTactics());
                 ci.put("is_player_attacker", g.getPlayerFactionId().equals(c.getAttackerFaction()));
                 ci.put("is_player_defender", g.getPlayerFactionId().equals(c.getDefenderFaction()));
+                // 部队详情（供战斗弹窗显示）
+                Map<String,String> atkTac = c.getAttackerTactics() != null ? c.getAttackerTactics() : Map.of();
+                List<Map<String,Object>> atkUnits = new ArrayList<>();
+                if (c.getAttackerCache() != null) for (Unit u : c.getAttackerCache())
+                    atkUnits.add(Map.of("name",u.getName(),"type",u.getType(),"strength",u.getStrength(),
+                            "tactic",atkTac.getOrDefault(u.getName(),"assault")));
+                ci.put("attacker_units", atkUnits);
+                Map<String,String> defTac = c.getDefenderTactics() != null ? c.getDefenderTactics() : Map.of();
+                List<Map<String,Object>> defUnits = new ArrayList<>();
+                if (c.getDefenderCache() != null) for (Unit u : c.getDefenderCache())
+                    defUnits.add(Map.of("name",u.getName(),"type",u.getType(),"strength",u.getStrength(),
+                            "tactic",defTac.getOrDefault(u.getName(),"fortify")));
+                ci.put("defender_units", defUnits);
+                // 增援队列
+                ci.put("reinforcement_queue", c.getReinforcementQueue() != null ? c.getReinforcementQueue() : List.of());
                 camps.add(ci);
             }
         }

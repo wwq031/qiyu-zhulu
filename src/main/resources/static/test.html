@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>七域逐鹿 · 前端测试</title>
+<style>
+:root{--bg:#111922;--panel:#1a2535;--panel2:#1e2d3d;--text:#c8d6e5;--text-dim:#6b7d8e;--gold:#d4a853;--gold-dim:#a08030;--green:#4caf50;--red:#e05555;--cyan:#4db8b8;--border:#2a3a4a;--font:'Microsoft YaHei',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;height:100vh}
+#sidebar{width:320px;background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:12px;flex-shrink:0}
+#sidebar h3{color:var(--gold);font-size:0.9em;margin:12px 0 6px}
+#sidebar button{display:block;width:100%;margin:3px 0;padding:6px 10px;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:3px;cursor:pointer;font-size:0.8em;text-align:left}
+#sidebar button:hover{border-color:var(--gold-dim)}
+#sidebar button.pass{color:var(--green)}
+#sidebar button.fail{color:var(--red)}
+#main{flex:1;display:flex;flex-direction:column}
+#log{flex:1;overflow-y:auto;padding:12px;font-family:Consolas,monospace;font-size:0.82em;line-height:1.6}
+#log .info{color:var(--text-dim)}
+#log .ok{color:var(--green)}
+#log .err{color:var(--red)}
+#log .warn{color:var(--gold)}
+#status{background:var(--panel);border-top:1px solid var(--border);padding:8px 12px;font-size:0.8em;color:var(--text-dim)}
+</style></head>
+<body>
+<div id="sidebar">
+  <h3>🧪 API 模拟测试</h3>
+  <button onclick="testApi('state')">📊 GET /api/state</button>
+  <button onclick="testApi('map')">🗺 GET /api/map</button>
+  <button onclick="testNewGame()">🎮 POST /api/new-game</button>
+  <button onclick="testAction('2')">🏛 Action: 政府菜单</button>
+  <button onclick="testAction('3')">🌐 Action: 外交菜单</button>
+  <button onclick="testAction('1')">⚔ Action: 军事菜单</button>
+  <button onclick="testEndTurn()">⏭ Action: 结束回合</button>
+  <button onclick="testTaxRate()">💰 调税率 50%</button>
+
+  <h3>🔍 渲染测试</h3>
+  <button onclick="testRenderAll()">🔄 renderAll()</button>
+  <button onclick="testHideSubmenu()">❌ hideSubmenu()</button>
+  <button onclick="testGarrisonUpdate()">📍 _updateGarrisonLayer()</button>
+  <button onclick="testCapitalLabels()">★ _updateCapitalLabels()</button>
+  <button onclick="testEventPopup()">📋 showEventPopup()</button>
+  <button onclick="testCampaignPopup()">⚔ showCampaignPopup()</button>
+
+  <h3>🐛 DOM 检查</h3>
+  <button onclick="checkElements()">🔍 检查关键元素</button>
+  <button onclick="checkGlobals()">🌐 检查全局变量</button>
+  <button onclick="checkCSS()">🎨 检查CSS加载</button>
+  <button onclick="clearLog()">🧹 清空日志</button>
+</div>
+<div id="main">
+  <div id="log"><div class="info">🟢 前端测试工具就绪。点击左侧按钮开始测试。</div></div>
+  <div id="status">等待测试...</div>
+</div>
+
+<script>var API='http://localhost:5000';window.API=API;</script>
+<script src="/static/vendor/leaflet/leaflet.js"></script>
+<script src="/static/js/utils.js"></script>
+<script src="/static/js/app.js"></script>
+<script src="/static/js/map.js"></script>
+<script src="/static/js/map-commands.js"></script>
+<script src="/static/js/popups.js"></script>
+<script src="/static/js/menus.js"></script>
+
+<script>
+// ── 日志工具 ──
+function log(msg, type) { type=type||'info'; var d=document.getElementById('log'); d.innerHTML+='<div class="'+type+'">'+msg+'</div>'; d.scrollTop=d.scrollHeight; }
+function ok(msg){log('✅ '+msg,'ok')}
+function err(msg){log('❌ '+msg,'err')}
+function warn(msg){log('⚠ '+msg,'warn')}
+function info(msg){log(msg,'info')}
+function clearLog(){document.getElementById('log').innerHTML='';}
+function status(s){document.getElementById('status').textContent=s}
+
+// ── API 测试 ──
+async function testApi(endpoint) {
+  info('--- GET /api/'+endpoint+' ---');
+  status('请求中...');
+  try {
+    var resp = await fetch(API+'/api/'+endpoint);
+    var data = await resp.json();
+    if (data.error) { err('API error: '+data.error); return; }
+    var keys = Object.keys(data);
+    ok('响应成功: '+keys.length+'个字段');
+    info('  关键字段: '+keys.filter(k=>['turn','faction','treasury','garrisons','city_store','total_provinces'].includes(k)).join(', '));
+    status('✅ /api/'+endpoint+' 正常');
+  } catch(e) { err('请求失败: '+e.message); status('❌ 失败'); }
+}
+
+async function testNewGame() {
+  info('--- POST /api/new-game ---');
+  status('创建游戏中...');
+  try {
+    var resp = await fetch(API+'/api/new-game',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({faction_id:'fengtian_border',policies:[]})});
+    var data = await resp.json();
+    if (data.message) ok('创建成功: '+data.message);
+    else err('创建失败: '+JSON.stringify(data));
+    status('✅ 新游戏就绪');
+  } catch(e) { err('失败: '+e.message); }
+}
+
+async function testAction(act) {
+  info('--- Action: '+act+' ---');
+  status('执行action '+act+'...');
+  try {
+    var resp = await fetch(API+'/api/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:act})});
+    var data = await resp.json();
+    if (data.error && data.error!=='无存档') ok('result_type: '+data.result_type+' output: '+(data.output||'').substring(0,60));
+    else if (data.result_type) ok('result_type: '+data.result_type);
+    else err('未预期响应: '+JSON.stringify(data).substring(0,80));
+    status('✅ action '+act+' 完成');
+  } catch(e) { err('失败: '+e.message); }
+}
+
+async function testEndTurn() {
+  info('--- End Turn ---');
+  try {
+    var resp = await fetch(API+'/api/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'E'})});
+    var data = await resp.json();
+    var events = data.turn_events || [];
+    var camps = data.campaign_results || [];
+    ok('Turn '+data.turn+' | '+events.length+'事件 | '+camps.length+'战役结果');
+    status('✅ 回合结束');
+  } catch(e) { err('失败: '+e.message); }
+}
+
+async function testTaxRate() {
+  info('--- Tax 50% ---');
+  try {
+    var resp = await fetch(API+'/api/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'2.tax.agri.50'})});
+    var data = await resp.json();
+    ok('输出: '+(data.output||'?'));
+    status('✅ 税率已调整');
+  } catch(e) { err('失败: '+e.message); }
+}
+
+// ── 渲染测试 ──
+function testRenderAll() {
+  info('--- renderAll() ---');
+  if (typeof renderAll !== 'function') { err('renderAll 未定义!'); return; }
+  if (!gameState) { warn('gameState 为空，先创建游戏'); return; }
+  try {
+    renderAll(gameState);
+    ok('renderAll 执行完成');
+    status('✅ renderAll 完成');
+  } catch(e) { err('renderAll 崩溃: '+e.message); status('❌ 崩溃'); }
+}
+
+function testHideSubmenu() {
+  info('--- hideSubmenu() ---');
+  if (typeof hideSubmenu !== 'function') { err('hideSubmenu 未定义!'); return; }
+  try { hideSubmenu(); ok('执行完成'); } catch(e) { err('崩溃: '+e.message); }
+}
+
+function testGarrisonUpdate() {
+  info('--- _updateGarrisonLayer() ---');
+  if (typeof _updateGarrisonLayer !== 'function') { err('_updateGarrisonLayer 未定义!'); return; }
+  if (!gameState || !gameState.garrisons) { warn('无驻军数据'); return; }
+  try {
+    _updateGarrisonLayer(gameState.garrisons);
+    ok('驻军更新完成');
+  } catch(e) { err('崩溃: '+e.message); }
+}
+
+function testCapitalLabels() {
+  info('--- _updateCapitalLabels() ---');
+  if (typeof _updateCapitalLabels !== 'function') { err('_updateCapitalLabels 未定义!'); return; }
+  try {
+    _updateCapitalLabels({});
+    ok('执行完成');
+  } catch(e) { err('崩溃: '+e.message); }
+}
+
+function testEventPopup() {
+  info('--- showEventPopup() ---');
+  if (typeof showEventPopup !== 'function') { err('showEventPopup 未定义!'); return; }
+  try {
+    showEventPopup('测试标题','这是一条测试事件消息',false);
+    ok('事件入队，检查弹窗');
+  } catch(e) { err('崩溃: '+e.message); }
+}
+
+function testCampaignPopup() {
+  info('--- showCampaignPopup() ---');
+  if (typeof showCampaignPopup !== 'function') { err('showCampaignPopup 未定义!'); return; }
+  try {
+    var mockCr = {
+      id:'test-1', province_name:'阜新', outcome:'decisive_win', outcome_cn:'大胜',
+      round:2, ratio:1.5, atk_casualties:10, def_casualties:45,
+      attacker_name:'奉天边防军', defender_name:'呼伦贝尔蒙旗军',
+      is_player_attacker:true, province_fell:true, honor_available:true, honor_cost:5,
+      attacker_units:[{name:'步1',type:'infantry',strength:90}],
+      defender_units:[{name:'蒙旗1',type:'infantry',strength:10}]
+    };
+    showCampaignPopup(mockCr);
+    ok('战役弹窗入队');
+  } catch(e) { err('崩溃: '+e.message); }
+}
+
+// ── DOM 检查 ──
+function checkElements() {
+  info('--- 关键元素检查 ---');
+  var ids = ['game-view','game-map','side-menu','dept-panel','dept-content',
+             'submenu-panel','event-popup-overlay','event-popup-title','event-popup-body',
+             'event-log','custom-bar','status-text','sel-info','home-view'];
+  var okc=0, errc=0;
+  ids.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { okc++; } else { err('缺失: #'+id); errc++; }
+  });
+  if (errc===0) ok('全部 '+okc+' 个关键元素存在');
+  else warn(okc+'/'+(okc+errc)+' 存在，'+errc+' 缺失');
+}
+
+function checkGlobals() {
+  info('--- 全局变量 ---');
+  var vars = ['leafletMap','mapInitialized','gameState','moveMode','garrisonMarkers',
+              'mapProvinceData','ownedBy','selectedUnitIndices','unitCache','_capitalLabels'];
+  vars.forEach(function(v) {
+    var val = window[v];
+    var type = val === null ? 'null' : val === undefined ? 'undefined' : typeof val === 'object' ? (Array.isArray(val)?'array['+val.length+']':'object{'+Object.keys(val||{}).length+'}') : typeof val;
+    info('  '+v+': '+type);
+  });
+}
+
+function checkCSS() {
+  info('--- CSS 加载 ---');
+  var links = document.querySelectorAll('link[rel="stylesheet"]');
+  if (links.length === 0) { warn('无外部CSS'); return; }
+  links.forEach(function(l) { info('  '+l.href.split('/').pop()); });
+  ok(links.length+' 个CSS文件');
+}
+
+// 页面初始化
+info('🟢 测试工具加载完成');
+info('  先点 "🎮 POST /api/new-game" 创建游戏');
+info('  再点其他按钮测试各功能');
+checkElements();
+checkGlobals();
+</script>
+</body>
+</html>

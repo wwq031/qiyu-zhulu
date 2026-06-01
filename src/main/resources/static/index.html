@@ -40,6 +40,23 @@
     <span id="status-text">就绪</span>
   </div>
   <div id="dept-panel"><span id="dept-close" onclick="closeDept()">✕</span><div id="dept-content"></div></div>
+  <div id="submenu-panel"></div>
+  <div id="sel-info"></div>
+  <div id="event-log-panel">
+    <div id="event-log-header" onclick="var el=document.getElementById('event-log');el.style.display=el.style.display==='none'?'block':'none'">📋 事件日志 ▾</div>
+    <div id="event-log"><span class="dim">—</span></div>
+  </div>
+  <div id="custom-bar">
+    <span style="color:var(--gold);font-size:1.1em;">✧</span>
+    <input id="custom-input" type="text" placeholder="输入自由指令..."
+           onkeydown="if(event.key==='Enter')sendCustomOrder()">
+    <select id="custom-mode-select" onchange="updateCustomMode()">
+      <option value="auto">🤖 AI</option>
+      <option value="sandbox">🧪 沙盒</option>
+      <option value="manual">📝 手动</option>
+    </select>
+    <button id="custom-send" onclick="sendCustomOrder()">执行</button>
+  </div>
 </div>
 
 <!-- ═══════════════════ 首页 ═══════════════════ -->
@@ -67,23 +84,78 @@
 <div id="faction-dossier-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('faction-dossier-modal')">✕</span><h3>势力图鉴</h3><div id="dossier-content"></div></div></div>
 <div id="rules-modal" class="modal-overlay"><div class="modal-content narrow"><span class="modal-close" onclick="closeModal('rules-modal')">✕</span><h3>规则速览</h3><div class="rules-text"></div></div></div>
 <div id="map-modal" class="modal-overlay fullscreen"><div class="modal-content map-full"><span class="modal-close" onclick="closeMapModal()">✕</span><div id="map-container" style="width:100%;height:100%;"></div></div></div>
-<div id="event-popup-overlay" class="event-popup-overlay"><div class="event-popup"><div class="event-popup-body"></div><button class="btn btn-gold" onclick="dismissEventPopup()">确定</button></div></div>
+<div id="event-popup-overlay" class="event-popup-overlay"><div class="event-popup"><div id="event-popup-title" style="color:var(--gold);font-weight:bold;margin-bottom:8px;"></div><div id="event-popup-body"></div><button class="btn btn-gold" onclick="dismissEventPopup()">确定</button></div></div>
 <div id="settings-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('settings-modal')">✕</span><h3>⚙ API 配置</h3><div id="settings-body"></div></div></div>
-<div id="sel-info"></div>
 
-<!-- ═══════════════════ 自由指令栏 ═══════════════════ -->
-<div id="custom-bar">
-  <span style="color:var(--gold);font-size:1.1em;">✧</span>
-  <input id="custom-input" type="text" placeholder="输入自由指令... 如: 派间谍去南京刺探军情"
-         onkeydown="if(event.key==='Enter')sendCustomOrder()">
-  <select id="custom-mode-select" onchange="updateCustomMode()">
-    <option value="auto">🤖 AI 裁决</option>
-    <option value="sandbox">🧪 沙盒模式</option>
-    <option value="manual">📝 手动裁决</option>
-  </select>
-  <button id="custom-send" onclick="sendCustomOrder()">执行</button>
+<!-- ═══════════════════ 测试面板 (` 键呼出) ═══════════════════ -->
+<div id="test-panel" style="display:none;position:fixed;top:0;right:0;width:380px;height:100vh;background:var(--panel);border-left:2px solid var(--gold);z-index:9999;overflow-y:auto;padding:12px;font-size:0.8em;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <b style="color:var(--gold)">🧪 测试面板</b>
+    <button onclick="document.getElementById('test-panel').style.display='none'" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1.2em;">✕</button>
+  </div>
+  <div id="test-results" style="font-family:Consolas,monospace;font-size:0.78em;line-height:1.5;max-height:50vh;overflow-y:auto;background:var(--bg);padding:8px;border-radius:4px;margin-bottom:8px;">
+    <span style="color:var(--text-dim)">按下方按钮开始测试...</span>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:4px;">
+    <button onclick="testPanel('checkDom')" style="padding:4px 8px;font-size:0.7em;">🔍 DOM</button>
+    <button onclick="testPanel('checkGlobals')" style="padding:4px 8px;font-size:0.7em;">🌐 全局</button>
+    <button onclick="testPanel('state')" style="padding:4px 8px;font-size:0.7em;">📊 State</button>
+    <button onclick="testPanel('map')" style="padding:4px 8px;font-size:0.7em;">🗺 Map</button>
+    <button onclick="testPanel('renderAll')" style="padding:4px 8px;font-size:0.7em;">🔄 Render</button>
+    <button onclick="testPanel('popup')" style="padding:4px 8px;font-size:0.7em;">📋 Popup</button>
+    <button onclick="testPanel('campaign')" style="padding:4px 8px;font-size:0.7em;">⚔ 战役弹窗</button>
+    <button onclick="testPanel('garrison')" style="padding:4px 8px;font-size:0.7em;">📍 驻军</button>
+    <button onclick="testPanel('move')" style="padding:4px 8px;font-size:0.7em;">🚚 移动测试</button>
+    <button onclick="testPanel('attack')" style="padding:4px 8px;font-size:0.7em;">⚔ 攻击测试</button>
+    <button onclick="document.getElementById('test-results').innerHTML=''">🧹 清空</button>
+  </div>
 </div>
-
+<script>
+document.addEventListener('keydown',function(e){if(e.key==='`'){var p=document.getElementById('test-panel');p.style.display=p.style.display==='none'?'block':'none';}});
+function tlog(msg,c){c=c||'#888';var r=document.getElementById('test-results');r.innerHTML+='<div style="color:'+c+'">'+msg+'</div>';r.scrollTop=r.scrollHeight;}
+function tfn(msg,fn){try{fn();tlog('✅ '+msg,'#4caf50')}catch(e){tlog('❌ '+msg+': '+e.message,'#e05555')}}
+function testPanel(what){
+  var r=document.getElementById('test-results'); r.innerHTML='';
+  tlog('--- '+what+' ---','#d4a853');
+  if(what==='checkDom'){
+    ['game-view','game-map','side-menu','dept-panel','dept-content','submenu-panel','event-popup-overlay','event-popup-title','event-popup-body','event-log','custom-bar','status-text','sel-info'].forEach(function(id){document.getElementById(id)?tlog('  ✅ #'+id,'#4caf50'):tlog('  ❌ #'+id+' 缺失','#e05555')});
+  }else if(what==='checkGlobals'){
+    ['leafletMap','mapInitialized','gameState','moveMode','garrisonMarkers','ownedBy'].forEach(function(v){var val=window[v];tlog('  '+v+': '+(val===undefined?'undefined':val===null?'null':typeof val==='object'?Object.keys(val||{}).length+' keys':typeof val),'#888')});
+  }else if(what==='state'){
+    fetch(window.API+'/api/state').then(function(r){return r.json()}).then(function(d){if(d.error){tlog('  ❌ '+d.error,'#e05555')}else{tlog('  ✅ '+d.faction+' Turn'+d.turn+' 国库'+d.treasury,'#4caf50')}}).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }else if(what==='map'){
+    fetch(window.API+'/api/map').then(function(r){return r.json()}).then(function(d){var g=d.garrisons||{};var cs=d.city_store||[];var owned=cs.filter(function(c){return c.owner_name}).length;tlog('  ✅ '+d.total_provinces+'省 '+Object.keys(g).length+'驻军点 '+owned+'有主','#4caf50')}).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }else if(what==='renderAll'){
+    if(!window.gameState){tlog('  ❌ gameState为空','#e05555');return}
+    tfn('renderAll()',function(){window.renderAll(window.gameState)});
+  }else if(what==='popup'){
+    tfn('showEventPopup',function(){window.showEventPopup('测试','<b>测试事件</b>: 这是一条测试',true)});
+  }else if(what==='campaign'){
+    tfn('showCampaignPopup',function(){window.showCampaignPopup({id:'test',province_name:'阜新',outcome:'decisive_win',outcome_cn:'大胜',round:2,ratio:1.5,atk_casualties:10,def_casualties:45,attacker_name:'奉天边防军',defender_name:'呼伦贝尔蒙旗军',is_player_attacker:true,province_fell:true,honor_available:false,attacker_units:[],defender_units:[]})});
+  }else if(what==='garrison'){
+    var g = (window.gameState||{}).garrisons || {};
+    tlog('  驻军数据: '+Object.keys(g).length+'处','#888');
+    tfn('_updateGarrisonLayer',function(){if(typeof _updateGarrisonLayer==='function'){_updateGarrisonLayer(g);tlog('  更新完成','#4caf50')}else{tlog('  _updateGarrisonLayer 未定义','#e05555')}});
+  }else if(what==='move'){
+    fetch(window.API+'/api/map/reachable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit_indices:[0]})}).then(function(r){return r.json()}).then(function(d){
+      if(d.reachable){tlog('  ✅ 可达'+d.reachable.length+'省 unit='+d.unit_name+' @ '+d.unit_position,'#4caf50')
+      }else{tlog('  ❌ '+JSON.stringify(d).substring(0,80),'#e05555')}
+    }).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }else if(what==='attack'){
+    fetch(window.API+'/api/map/reachable',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit_indices:[0]})}).then(function(r){return r.json()}).then(function(d){
+      var enemies=(d.reachable||[]).filter(function(x){return x.is_enemy});
+      tlog('  敌方省份: '+enemies.length+'个','#888');
+      if(enemies.length>0){
+        tlog('  尝试攻击: '+enemies[0].name,'#888');
+        return fetch(window.API+'/api/map/attack',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({unit_indices:[0],dest_pid:enemies[0].pid})}).then(function(r){return r.json()});
+      }
+    }).then(function(d){
+      if(d&&d.message)tlog('  ✅ '+d.message,'#4caf50');
+      else if(d&&d.error)tlog('  ⚠ '+d.error,'#d4a853');
+    }).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }
+}
+</script>
 <!-- ═══════════════════ 脚本 ═══════════════════ -->
 <script src="/static/vendor/leaflet/leaflet.js"></script>
 <script src="/static/js/utils.js"></script>

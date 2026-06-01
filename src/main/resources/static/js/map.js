@@ -61,8 +61,9 @@ function closeMapModal() {
 function moveMapToGameView() {
   if (leafletMap && leafletMap._container) {
     var gm = document.getElementById('game-map');
-    if (gm && leafletMap._container.parentElement !== gm) {
-      gm.appendChild(leafletMap._container);
+    if (gm && !gm.contains(leafletMap._container)) {
+      // 避免循环：container已含gm，或container就是gm
+      try { gm.appendChild(leafletMap._container); } catch(e) {}
       setTimeout(function() { leafletMap.invalidateSize(); }, 100);
     }
   }
@@ -195,9 +196,8 @@ function updateFactionLabelVisibility() {
         if (!marker._cityCount) return;
         const n = marker._cityCount;
         let show;
-        if (n <= 2) show = zoom >= 6;       // 1-2城：zoom ≥ 6
-        else if (n <= 5) show = zoom >= 5;  // 3-5城：zoom ≥ 5
-        else show = true;                    // 6+城：始终显示
+        if (n <= 2) show = zoom >= 5;       // 1-2城：zoom ≥ 5
+        else show = true;                    // 其余：始终显示
         marker.setOpacity(show ? 1 : 0);
       });
     }
@@ -625,61 +625,107 @@ async function initLeafletMap(containerId) {
 }
 
 // ── 轻量增量刷新：仅更新驻军和战役标记（不重绘领土填色）──
+var _capitalLabels = {}; // pid → marker
+
+function _updateCapitalLabels(capitalPids) {
+  if (!capitalLabelLayer) return;
+  var newPids = new Set(Object.keys(capitalPids));
+  // 删旧的
+  for (var pid in _capitalLabels) {
+    if (!newPids.has(pid)) {
+      capitalLabelLayer.removeLayer(_capitalLabels[pid]);
+      delete _capitalLabels[pid];
+    }
+  }
+  // 新增
+  for (var pid in capitalPids) {
+    if (_capitalLabels[pid]) continue;
+    var cap = capitalPids[pid];
+    var p = mapProvinceData[pid];
+    if (!p || p.lat == null || p.lng == null) continue;
+    var labelColor = cap.isPlayer ? '#ffffff' : '#f0d060';
+    var labelName = p.name || cap.name;
+    var icon = L.divIcon({
+      className: 'capital-label-icon',
+      html: `<div style="white-space:nowrap;font-size:11px;font-weight:bold;color:${labelColor};text-shadow:0 0 5px rgba(0,0,0,0.95),0 0 2px #000,0 1px 2px rgba(0,0,0,0.9);font-family:var(--font);letter-spacing:1.5px;pointer-events:none;">★${labelName}</div>`,
+      iconSize: [1, 1], iconAnchor: [0, -8],
+    });
+    _capitalLabels[pid] = L.marker([p.lat, p.lng], { icon:icon, interactive:false, keyboard:false, zIndexOffset:1000 }).addTo(capitalLabelLayer);
+  }
+}
+
+// ── 增量标记更新工具 ──────────────────────────────────────────
+function _garrisonIcon(count, isPlayer) {
+  const w = count >= 100 ? 32 : count >= 10 ? 26 : count >= 5 ? 22 : 18;
+  const h = count >= 100 ? 18 : count >= 10 ? 16 : count >= 5 ? 14 : 12;
+  const fs = count >= 100 ? 9 : count >= 10 ? 8 : 7;
+  const bc = isPlayer ? '#5f5' : '#f55';
+  const tc = isPlayer ? '#afa' : '#faa';
+  const bg = isPlayer ? 'rgba(30,80,30,0.85)' : 'rgba(80,20,20,0.85)';
+  return L.divIcon({
+    html: `<div style="width:${w}px;height:${h}px;background:${bg};border:1.5px solid ${bc};border-radius:4px;text-align:center;line-height:${h}px;font-size:${fs}px;font-weight:bold;color:${tc};cursor:pointer;font-family:var(--font);letter-spacing:0.5px;">⚔${count}</div>`,
+    className: 'garr-icon', iconSize: [w, h], iconAnchor: [w/2, h/2],
+  });
+}
+
+function _updateGarrisonLayer(garrisons) {
+  if (!garrisonLayer) return;
+  if (!garrisons || !Object.keys(garrisons).length) return;
+  var newPids = new Set(Object.keys(garrisons));
+  for (var pid in garrisonMarkers) {
+    if (!newPids.has(pid)) {
+      garrisonLayer.removeLayer(garrisonMarkers[pid]);
+      delete garrisonMarkers[pid];
+    }
+  }
+  // 新增或更新
+  Object.keys(garrisons).forEach(function(pid) {
+    var units = garrisons[pid];
+    var p = mapProvinceData[pid];
+    if (!p || p.lat == null || p.lng == null || !units || !units.length) return;
+    var isPlayer = units.some(function(u) { return u.is_player; });
+    var count = units.length;
+    var existing = garrisonMarkers[pid];
+    if (existing && existing._data && existing._data.count === count && existing._data.isPlayer === isPlayer) return;
+    if (existing) garrisonLayer.removeLayer(existing);
+    var icon = _garrisonIcon(count, isPlayer);
+    var m = L.marker([p.lat, p.lng], { icon:icon, interactive:true, keyboard:false }).addTo(garrisonLayer);
+    garrisonMarkers[pid] = m;
+    m._data = { pid:pid, units:units, isPlayer:isPlayer, count:count };
+    m._icon.style.pointerEvents = 'auto';
+    var gDistrict = p.district ? p.district + ' · ' : '';
+    var factionLabel = (units[0] && units[0].faction_name) ? units[0].faction_name : (isPlayer ? '我方' : '敌军');
+    m.bindTooltip('<b>' + gDistrict + p.name + '</b> · <span style="color:' + (isPlayer?'var(--green)':'var(--red)') + '">' + factionLabel + '</span> · ' + count + '支部队<br>' + units.slice(0,5).map(function(u){return u.name;}).join('<br>') + (count>5?'<br>+'+ (count-5):''), { direction:'top', offset:[0, -Math.max(12, count>=100?9:count>=10?8:7)/2-4] });
+    m.on('click', function(e) {
+      L.DomEvent.stopPropagation(e);
+      var d = this._data;
+      if (!d) return;
+      if (e.originalEvent.shiftKey) {
+        if (moveMode) exitCommandMode();
+        toggleUnitSelection(d.pid, d.units, this);
+        updateSelectionUI();
+      } else if (d.isPlayer) {
+        if (moveMode && moveMode.unitPid === d.pid) exitCommandMode();
+        else if (!moveMode) showUnitSelectionPopup(d.pid, d.units, this);
+      } else {
+        showGarrisonPopup(d.pid, d.units, d.isPlayer);
+      }
+    });
+    m.on('contextmenu', function(e) {
+      L.DomEvent.stopPropagation(e);
+      window._mapCtxMenuDone();
+      if (moveMode) { exitCommandMode(); statusText('已取消命令模式'); return; }
+      var d = this._data;
+      if (d) showProvinceDetail(d.pid);
+    });
+  });
+}
+
 async function refreshDynamicMarkers(data) {
   if (!mapInitialized || !leafletMap) return;
   try {
-    // 更新驻军标记
-    const garrisons = data.garrisons || {};
-    if (garrisonLayer) {
-      garrisonLayer.clearLayers();
-      garrisonMarkers = {};
-      clearUnitSelection();
-      for (const [pid, units] of Object.entries(garrisons)) {
-        const p = mapProvinceData[pid];
-        if (!p || p.lat == null || p.lng == null) continue;
-        if (!units || !units.length) continue;
-        const owner = ownedBy[pid];
-        const isPlayer = owner && owner.isPlayer;
-        const borderColor = isPlayer ? '#5f5' : '#f55';
-        const textColor = isPlayer ? '#afa' : '#faa';
-        const count = units.length;
-        const w = count >= 100 ? 32 : count >= 10 ? 26 : count >= 5 ? 22 : 18;
-        const h = count >= 100 ? 18 : count >= 10 ? 16 : count >= 5 ? 14 : 12;
-        const fontSize = count >= 100 ? 9 : count >= 10 ? 8 : 7;
-        const icon = L.divIcon({
-          html: `<div style="width:${w}px;height:${h}px;background:${isPlayer?'rgba(30,80,30,0.85)':'rgba(80,20,20,0.85)'};border:1.5px solid ${borderColor};border-radius:4px;text-align:center;line-height:${h}px;font-size:${fontSize}px;font-weight:bold;color:${textColor};cursor:pointer;font-family:var(--font);letter-spacing:0.5px;">⚔${count}</div>`,
-          className: '', iconSize: [w, h], iconAnchor: [w/2, h/2],
-        });
-        const gMarker = L.marker([p.lat, p.lng], { icon, interactive: true, keyboard: false }).addTo(garrisonLayer);
-        garrisonMarkers[pid] = gMarker;
-        gMarker._garrisonData = { pid, units, isPlayer };
-        const gDistrict = p.district ? p.district + ' · ' : '';
-        gMarker.bindTooltip(`<b>${gDistrict}${p.name}</b> · ${count}支部队<br>${units.slice(0,5).map(u=>u.name).join('<br>')}${count>5?'<br>+'+ (count-5):''}`, {
-          direction: 'top', offset: [0, -h/2-4],
-        });
-        gMarker.on('click', (e) => {
-          L.DomEvent.stopPropagation(e);
-          if (e.originalEvent.shiftKey) {
-            if (moveMode) { exitCommandMode(); }
-            toggleUnitSelection(pid, units, gMarker);
-            updateSelectionUI();
-          } else if (isPlayer) {
-            if (moveMode && moveMode.unitPid === pid) {
-              exitCommandMode();
-            } else if (!moveMode) {
-              showUnitSelectionPopup(pid, units, gMarker);
-            }
-          } else {
-            showGarrisonPopup(pid, units, isPlayer);
-          }
-        });
-        gMarker.on('contextmenu', () => {
-          window._mapCtxMenuDone();
-          if (moveMode) { exitCommandMode(); statusText('已取消命令模式'); return; }
-          showProvinceDetail(pid);
-        });
-      }
-    }
+    // 增量更新驻军标记
+    _updateGarrisonLayer(data.garrisons || {});
     // 更新战役标记
     const activeCampaigns = data.active_campaigns || [];
     if (battleLayer) {
@@ -859,83 +905,10 @@ async function applyOwnership(data) {
         </div>${ownerHtml}${garrHtml}
       </div>`);
   }
-  // ── 首都名称标签 ──
-  let capLabelsRendered = 0;
-  if (capitalLabelLayer) {
-    capitalLabelLayer.clearLayers();
-    console.log('[applyOwnership] rendering capitals, capitalPids:', Object.keys(capitalPids).length);
-    for (const [pid, cap] of Object.entries(capitalPids)) {
-      const p = mapProvinceData[pid];
-      if (!p || p.lat == null || p.lng == null) continue;
-      const labelColor = cap.isPlayer ? '#ffffff' : '#f0d060';
-      const labelName = p.name || cap.name;
-      const icon = L.divIcon({
-        className: 'capital-label-icon',
-        html: `<div style="white-space:nowrap;font-size:11px;font-weight:bold;color:${labelColor};text-shadow:0 0 5px rgba(0,0,0,0.95),0 0 2px #000,0 1px 2px rgba(0,0,0,0.9);font-family:var(--font);letter-spacing:1.5px;pointer-events:none;">★${labelName}</div>`,
-        iconSize: [1, 1], iconAnchor: [0, -8],
-      });
-      L.marker([p.lat, p.lng], { icon, interactive: false, keyboard: false, zIndexOffset: 1000 }).addTo(capitalLabelLayer);
-      capLabelsRendered++;
-    }
-    console.log('[applyOwnership] capital labels rendered:', capLabelsRendered);
-  } else { console.log('[applyOwnership] capitalLabelLayer MISSING'); }
-  // ── 驻军标记 ──
-  if (garrisonLayer) {
-    garrisonLayer.clearLayers();
-    garrisonMarkers = {};
-    clearUnitSelection();
-    for (const [pid, units] of Object.entries(garrisons)) {
-      const p = mapProvinceData[pid];
-      if (!p || p.lat == null || p.lng == null) continue;
-      if (!units || !units.length) continue;
-
-      const owner = ownedBy[pid];
-      const isPlayer = owner && owner.isPlayer;
-      const borderColor = isPlayer ? '#5f5' : '#f55';
-      const textColor = isPlayer ? '#afa' : '#faa';
-      const count = units.length;
-      const w = count >= 100 ? 32 : count >= 10 ? 26 : count >= 5 ? 22 : 18;
-      const h = count >= 100 ? 18 : count >= 10 ? 16 : count >= 5 ? 14 : 12;
-      const fontSize = count >= 100 ? 9 : count >= 10 ? 8 : 7;
-
-      const icon = L.divIcon({
-        html: `<div style="width:${w}px;height:${h}px;background:${isPlayer?'rgba(30,80,30,0.85)':'rgba(80,20,20,0.85)'};border:1.5px solid ${borderColor};border-radius:4px;text-align:center;line-height:${h}px;font-size:${fontSize}px;font-weight:bold;color:${textColor};cursor:pointer;font-family:var(--font);letter-spacing:0.5px;">⚔${count}</div>`,
-        className: '', iconSize: [w, h], iconAnchor: [w/2, h/2],
-      });
-      const gMarker = L.marker([p.lat, p.lng], { icon, interactive: true, keyboard: false }).addTo(garrisonLayer);
-      garrisonMarkers[pid] = gMarker;
-      gMarker._garrisonData = { pid, units, isPlayer };
-
-      const gDistrict = p.district ? p.district + ' · ' : '';
-      gMarker.bindTooltip(`<b>${gDistrict}${p.name}</b> · ${count}支部队<br>${units.slice(0,5).map(u=>u.name).join('<br>')}${count>5?'<br>+'+ (count-5):''}`, {
-        direction: 'top', offset: [0, -h/2-4],
-      });
-
-      // Click: 己方部队→部队选择弹窗，Shift=多选，敌方=弹窗
-      gMarker.on('click', (e) => {
-        L.DomEvent.stopPropagation(e);
-        if (e.originalEvent.shiftKey) {
-          if (moveMode) { exitCommandMode(); }
-          toggleUnitSelection(pid, units, gMarker);
-          updateSelectionUI();
-        } else if (isPlayer) {
-          if (moveMode && moveMode.unitPid === pid) {
-            exitCommandMode();
-          } else if (!moveMode) {
-            showUnitSelectionPopup(pid, units, gMarker);
-          }
-        } else {
-          showGarrisonPopup(pid, units, isPlayer);
-        }
-      });
-
-      gMarker.on('contextmenu', () => {
-        window._mapCtxMenuDone();
-        if (moveMode) { exitCommandMode(); statusText('已取消命令模式'); return; }
-        showProvinceDetail(pid);
-      });
-    }
-  }
+  // ── 首都名称标签（增量更新）──
+  _updateCapitalLabels(capitalPids);
+  // ── 驻军标记（增量更新）──
+  _updateGarrisonLayer(garrisons);
 
   // ── 战役战斗标记 ──
   if (battleLayer) battleLayer.clearLayers();
@@ -1020,22 +993,31 @@ function updateFactionBoundaries(data) {
   }
 }
 
-// ── 驻军弹窗（含命令按钮）──
+// ── 驻军弹窗（含归属、兵力详情、命令按钮）──
 function showGarrisonPopup(pid, units, isPlayer) {
   const p = mapProvinceData[pid];
   if (!p || p.lat == null || p.lng == null) return;
-  let html = `<div style="font-family:var(--font);min-width:180px;max-width:260px;">
-    <h4 style="color:var(--gold);margin:0 0 4px;">${p.name}</h4>
-    <div style="font-size:0.85em;color:var(--text-dim);margin-bottom:6px;">${units.length}支部队驻守</div>`;
-  units.slice(0, 8).forEach(u => {
-    html += `<div style="font-size:0.8em;padding:1px 0;color:var(--text);">${u.name || u.type || '?'}</div>`;
+  var factionName = (units[0] && units[0].faction_name) ? units[0].faction_name : (isPlayer ? '我方' : '敌军');
+  var totalAtk = 0, totalDef = 0, totalStr = 0;
+  units.forEach(function(u) { totalAtk += (u.attack||0); totalDef += (u.defense||0); totalStr += (u.strength||0); });
+  let html = `<div style="font-family:var(--font);min-width:200px;max-width:280px;">`;
+  html += `<h4 style="color:var(--gold);margin:0 0 2px;">${p.name}</h4>`;
+  html += `<div style="font-size:0.8em;color:${isPlayer?'var(--green)':'var(--red)'};margin-bottom:4px;">`;
+  html += (isPlayer ? '🟢 ' : '🔴 ') + factionName + ' · ' + units.length + '支部队</div>';
+  html += `<div style="font-size:0.75em;color:var(--text-dim);margin-bottom:4px;">合计 ⚔${totalAtk} 🛡${totalDef} ❤${totalStr}</div>`;
+  html += `<div style="border-top:1px solid var(--border);margin:4px 0;padding-top:4px;">`;
+  units.slice(0, 6).forEach(function(u) {
+    html += `<div style="font-size:0.78em;padding:1px 0;color:var(--text);display:flex;justify-content:space-between;">`;
+    html += `<span>${u.name || u.type || '?'}</span>`;
+    html += `<span style="color:var(--text-dim);font-size:0.9em;">⚔${u.attack||0} 🛡${u.defense||0} ❤${u.strength||0}%</span>`;
+    html += `</div>`;
   });
-  if (units.length > 8) html += `<div style="font-size:0.75em;color:var(--text-dim);">+${units.length-8} 更多...</div>`;
+  if (units.length > 6) html += `<div style="font-size:0.72em;color:var(--text-dim);">+${units.length-6} 更多...</div>`;
+  html += `</div>`;
 
   if (isPlayer) {
     html += `<div style="margin-top:6px;border-top:1px solid var(--border);padding-top:4px;">`;
     html += `<button onclick="enterCommandMode('${pid}')" style="background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);padding:2px 10px;border-radius:3px;cursor:pointer;font-family:var(--font);font-size:0.8em;">⚔ 命令</button>`;
-    html += ` <span style="font-size:0.72em;color:var(--text-dim);">点击目标→移动/攻击 | 右键取消</span>`;
     html += `</div>`;
   }
   html += `</div>`;
@@ -1156,7 +1138,7 @@ async function batchAttackSelected() {
 
 // ── 部队选择弹窗（点击驻军标记）──────────────────
 function showUnitSelectionPopup(pid, units, marker) {
-  leafletMap.closePopup();
+  try { if (leafletMap) leafletMap.closePopup(); } catch(e) {}
   const p = mapProvinceData[pid];
   const pname = p ? p.name : pid;
 
@@ -1223,16 +1205,15 @@ function popupSelectAll(indices, select) {
 }
 
 function popupMoveSelected(pid, allIndices) {
-  leafletMap.closePopup();
-  // 默认勾选当前省份全部部队
-  allIndices.forEach(i => selectedUnitIndices.add(i));
+  try { if (leafletMap) leafletMap.closePopup(); } catch(e) {}
+  allIndices.forEach(function(i) { selectedUnitIndices.add(i); });
   updateSelectionUI();
   enterCommandMode(pid, [...selectedUnitIndices]);
 }
 
 function popupAttackSelected(pid, allIndices) {
-  leafletMap.closePopup();
-  allIndices.forEach(i => selectedUnitIndices.add(i));
+  try { if (leafletMap) leafletMap.closePopup(); } catch(e) {}
+  allIndices.forEach(function(i) { selectedUnitIndices.add(i); });
   updateSelectionUI();
   enterCommandMode(pid, [...selectedUnitIndices], 'attack');
 }
@@ -1283,7 +1264,7 @@ function initBoxSelect(container) {
       const cx = iconRect.left + iconRect.width / 2 - mapRect.left;
       const cy = iconRect.top + iconRect.height / 2 - mapRect.top;
       if (cx >= minX && cx <= maxX && cy >= minY && cy <= maxY) {
-        const data = marker._garrisonData;
+        const data = marker._data;
         if (data && data.isPlayer) {
           toggleUnitSelection(pid, data.units, marker);
         }

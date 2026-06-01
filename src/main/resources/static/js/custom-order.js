@@ -1,8 +1,6 @@
 // 七域逐鹿 · Web Client
 // 自由指令 — AI 裁决 + 手动裁决 + 沙盒模式
 
-var customMode = 'auto';
-
 async function sendCustomOrder() {
   var input = document.getElementById('custom-input');
   var order = input.value.trim();

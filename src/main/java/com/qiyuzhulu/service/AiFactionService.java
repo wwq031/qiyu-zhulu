@@ -48,7 +48,7 @@ public class AiFactionService {
             fs.setMilitaryTech(1);
             fs.setArmy(new HashMap<>(Map.of("infantry",0,"cavalry",0,"artillery",0,"engineer",0,"naval",0)));
             fs.setUnitSerial(new HashMap<>(Map.of("total",0,"infantry",0,"cavalry",0,"artillery",0,"engineer",0,"naval",0)));
-            fs.setUnitPrefix(deriveAiPrefix(faction.getName()));
+            fs.setUnitPrefix(engine.deriveUnitPrefix(faction.getName()));
 
             // 国家精神
             NationalSpirit spirit = engine.getNationalSpirit(faction);
@@ -416,13 +416,11 @@ public class AiFactionService {
                 }
                 if (enemyFid == null) continue;
 
-                // 跨区限制
+                // 跨区限制：直接用省份区域比较
                 var aiFaction = engine.getFaction(fid).orElse(null);
-                if (aiFaction != null && !enemyFid.equals(state.getPlayerFactionId())) {
-                    var enemyFaction = engine.getFaction(enemyFid).orElse(null);
-                    if (enemyFaction != null && !aiFaction.getRegion().equals(enemyFaction.getRegion())) {
-                        if (!engine.isRegionUnified(state, fid)) continue;
-                    }
+                if (aiFaction != null && nbData.getRegion() != null
+                        && !aiFaction.getRegion().equals(nbData.getRegion())) {
+                    if (!engine.isRegionUnified(state, fid)) continue;
                 }
                 // NAP检查
                 if (engine.hasNonAggression(state, fid, enemyFid)) continue;
@@ -590,11 +588,6 @@ public class AiFactionService {
             if (aiDesc.isEmpty()) aiDesc = faction.getAi() != null ? faction.getAi() : "";
         }
         return AiPersonality.infer(aiDesc);
-    }
-
-    private String deriveAiPrefix(String name) {
-        if (name.length() <= 4) return name;
-        return name.substring(0, Math.min(4, name.length()));
     }
 
     private String nameToPid(String name) {

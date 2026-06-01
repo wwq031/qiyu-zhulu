@@ -2,6 +2,8 @@ package com.qiyuzhulu.service;
 
 import com.qiyuzhulu.model.*;
 import com.qiyuzhulu.repo.GameDataRepo;
+import static com.qiyuzhulu.service.GameUtils.mapOf;
+import static com.qiyuzhulu.service.GameUtils.mapOfS;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,17 +19,6 @@ public class DiplomacyService {
     private final GameEngine engine;
     private final GameDataRepo gameData;
     private final Random rng = new Random();
-
-    /** 邻接区域 */
-    private static final Map<String, List<String>> ADJACENT_REGIONS = Map.of(
-            "northeast", List.of("huabei"),
-            "huabei", List.of("northeast", "southeast", "xibei"),
-            "southeast", List.of("huabei", "lingnan"),
-            "lingnan", List.of("southeast", "southwest", "nanyang"),
-            "southwest", List.of("lingnan", "xibei"),
-            "xibei", List.of("huabei", "southwest"),
-            "nanyang", List.of("southeast", "lingnan")
-    );
 
     public DiplomacyService(GameEngine engine, GameDataRepo gameData) {
         this.engine = engine;
@@ -248,7 +239,7 @@ public class DiplomacyService {
     /** 侦察：返回目标势力的情报报告 */
     public Map<String, Object> intelScout(GameState state, FactionState fs, Stats s, String fid) {
         String playerRegion = engine.getFaction(fid).map(FactionDefinition::getRegion).orElse("");
-        List<String> validRegions = new ArrayList<>(ADJACENT_REGIONS.getOrDefault(playerRegion, List.of()));
+        List<String> validRegions = new ArrayList<>(GameEngine.REGION_ADJACENCY.getOrDefault(playerRegion, List.of()));
         validRegions.add(playerRegion);
 
         // 找同区敌对势力
@@ -324,7 +315,7 @@ public class DiplomacyService {
 
     private Map<String, Object> intelNeighbor(GameState state, FactionState fs, Stats s, String fid) {
         String playerRegion = engine.getFaction(fid).map(FactionDefinition::getRegion).orElse("");
-        List<String> adj = ADJACENT_REGIONS.getOrDefault(playerRegion, List.of());
+        List<String> adj = GameEngine.REGION_ADJACENCY.getOrDefault(playerRegion, List.of());
         List<Map<String, Object>> regionReports = new ArrayList<>();
 
         for (String rid : adj) {
@@ -507,15 +498,4 @@ public class DiplomacyService {
         if (tracker != null) tracker.put(key, ((Number) tracker.getOrDefault(key, 0)).intValue() + 1);
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> mapOf(Object... kv) {
-        Map<String, Object> m = new LinkedHashMap<>();
-        for (int i = 0; i < kv.length; i += 2) m.put((String) kv[i], kv[i + 1]);
-        return m;
-    }
-    private static Map<String, String> mapOfS(String... kv) {
-        Map<String, String> m = new LinkedHashMap<>();
-        for (int i = 0; i < kv.length; i += 2) m.put(kv[i], kv[i + 1]);
-        return m;
-    }
 }

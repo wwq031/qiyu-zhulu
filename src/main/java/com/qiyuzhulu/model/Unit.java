@@ -2,7 +2,9 @@ package com.qiyuzhulu.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 部队。
@@ -120,5 +122,20 @@ public class Unit {
     /** 是否在战役中 */
     public boolean isInCampaign() {
         return campaignId != null && !campaignId.isEmpty();
+    }
+
+    /** 转为前端用的简略Map */
+    public Map<String, Object> toMap(boolean isPlayer, String factionName, int index) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("name", name);
+        m.put("type", type);
+        m.put("attack", attack);
+        m.put("defense", defense);
+        m.put("morale", morale);
+        m.put("strength", strength);
+        m.put("index", index);
+        m.put("is_player", isPlayer);
+        m.put("faction_name", factionName);
+        return m;
     }
 }

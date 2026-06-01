@@ -99,25 +99,79 @@ public class CampaignController {
     public Map<String, Object> reachable(@RequestBody Map<String, Object> body) {
         GameState game = stateCtrl.getGame();
         if (game == null) return Map.of("error", "无存档");
-        String pos = engine.resolvePositionToPid((String) body.get("position"));
         FactionState fs = game.getFactionState();
 
-        // 获取部队速度
+        // 确定起始位置、速度、部队信息
+        String pos = null;
         int baseSpeed = 1;
-        Object idxObj = body.get("unit_index");
-        if (idxObj instanceof Number) {
-            int idx = ((Number) idxObj).intValue();
-            if (idx >= 0 && idx < fs.getUnits().size())
-                baseSpeed = fs.getUnits().get(idx).getSpeed();
+        String unitName = "";
+        List<Integer> unitIndices = new ArrayList<>();
+        List<Map<String, Object>> localUnits = new ArrayList<>();
+        // 1) unit_indices（复数，前端传的）
+        Object indicesObj = body.get("unit_indices");
+        if (indicesObj instanceof List && !((List<?>) indicesObj).isEmpty()) {
+            for (Object o : (List<?>) indicesObj) {
+                int idx = ((Number) o).intValue();
+                if (idx >= 0 && idx < fs.getUnits().size()) {
+                    unitIndices.add(idx);
+                    Unit u = fs.getUnits().get(idx);
+                    if (pos == null) {
+                        pos = engine.resolvePositionToPid(u.getPosition());
+                        baseSpeed = u.getSpeed();
+                        unitName = u.getName();
+                    }
+                }
+            }
         }
-        int effectiveSpeed = engine.hasRailway(pos) ? baseSpeed * 2 : baseSpeed;
+        // 2) unit_index（单数）
+        if (pos == null) {
+            Object idxObj = body.get("unit_index");
+            if (idxObj instanceof Number) {
+                int idx = ((Number) idxObj).intValue();
+                if (idx >= 0 && idx < fs.getUnits().size()) {
+                    unitIndices.add(idx);
+                    Unit u = fs.getUnits().get(idx);
+                    pos = engine.resolvePositionToPid(u.getPosition());
+                    baseSpeed = u.getSpeed();
+                    unitName = u.getName();
+                }
+            }
+        }
+        // 3) position（直接指定）
+        if (pos == null) {
+            pos = engine.resolvePositionToPid((String) body.get("position"));
+            if (pos != null) {
+                // 收集该位置所有玩家部队
+                for (int i = 0; i < fs.getUnits().size(); i++) {
+                    Unit u = fs.getUnits().get(i);
+                    if (pos.equals(engine.resolvePositionToPid(u.getPosition()))) {
+                        unitIndices.add(i);
+                        if (unitName.isEmpty()) { unitName = u.getName(); baseSpeed = u.getSpeed(); }
+                    }
+                }
+            }
+        }
+        // 4) 回退
+        if (pos == null) pos = "beijing";
+        // 构建 local_units 列表
+        for (int i = 0; i < fs.getUnits().size(); i++) {
+            Unit u = fs.getUnits().get(i);
+            if (pos.equals(engine.resolvePositionToPid(u.getPosition())) && u.isActive()) {
+                localUnits.add(Map.of("name", u.getName(), "type", u.getType(),
+                        "attack", u.getAttack(), "defense", u.getDefense(),
+                        "strength", u.getStrength(), "morale", u.getMorale(),
+                        "index", i, "icon", "🗡"));
+            }
+        }
+
+        int effectiveSpeed = engine.hasRailway(pos) ? baseSpeed * 2 : Math.max(2, baseSpeed);
 
         // BFS
         List<Map<String, Object>> reachable = new ArrayList<>();
         Set<String> visited = new HashSet<>();
         visited.add(pos);
         Queue<Object[]> queue = new LinkedList<>();
-        queue.add(new Object[]{pos, new ArrayList<>(List.of(pos)), 1, engine.hasRailway(pos)});
+        queue.add(new Object[]{pos, new ArrayList<>(List.of(pos)), 0, engine.hasRailway(pos)});
 
         while (!queue.isEmpty()) {
             Object[] item = queue.poll();
@@ -131,10 +185,8 @@ public class CampaignController {
 
             for (var nbEntry : p.getConnections().entrySet()) {
                 String nbPid = nbEntry.getKey();
-                int nbDistRaw = nbEntry.getValue();
                 boolean nbRail = engine.hasRailway(nbPid);
-                int nbDist = (onRail && nbRail) ? Math.max(1, nbDistRaw / 2) : nbDistRaw;
-                int totalDist = dist + nbDist - 1;
+                int totalDist = dist + 1; // 每跳固定+1步
                 if (!visited.contains(nbPid)) {
                     visited.add(nbPid);
                     Province nb = engine.getProvince(nbPid);
@@ -148,12 +200,13 @@ public class CampaignController {
                                 "is_enemy", !fs.getTerritories().contains(nb.getName()),
                                 "enemy_fid", ""));
                         if (totalDist < effectiveSpeed)
-                            queue.add(new Object[]{nbPid, newPath, totalDist + 1, nbRail});
+                            queue.add(new Object[]{nbPid, newPath, totalDist, nbRail});
                     }
                 }
             }
         }
-        return Map.of("reachable", reachable, "unit_position", pos);
+        return Map.of("reachable", reachable, "unit_position", pos,
+                "unit_name", unitName, "unit_indices", unitIndices, "local_units", localUnits);
     }
 
     /** POST /api/map/move — 移动部队 */

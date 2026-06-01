@@ -145,13 +145,49 @@ public class TurnAdvanceService {
             fs.setTreasury(0);
         }
 
-        // 6b. 自动占领（检查部队当前位置的无主地块）
+        // 税收副作用（高税率影响民心和工农）
+        int agriRate = fs.getAgriTaxRate();
+        int commRate = fs.getCommerceTaxRate();
+        if (agriRate > 30 && rng.nextInt(3) == 0) {
+            int drop = agriRate > 70 ? 3 : agriRate > 50 ? 2 : 1;
+            fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() - drop, 0, 100));
+            events.add("⚠ 重税盘剥(" + agriRate + "%)使农民怨声载道，民心-" + drop);
+        }
+        if (commRate > 30 && rng.nextInt(3) == 0) {
+            int drop = commRate > 70 ? 2 : 1;
+            fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() - drop, 0, 100));
+            events.add("⚠ 商业重税(" + commRate + "%)使商贾不满，民心-" + drop);
+        }
+        if (agriRate > 70 && rng.nextInt(5) == 0) {
+            fs.getStats().set("agriculture", GameEngine.clamp(fs.getStats().getAgriculture() - 1, 0, 100));
+            events.add("🌾 苛税之下农田抛荒，农业-1");
+        }
+        if (commRate > 70 && rng.nextInt(5) == 0) {
+            fs.getStats().set("industry", GameEngine.clamp(fs.getStats().getIndustry() - 1, 0, 100));
+            events.add("🏭 重税逼迫工厂停工，工业-1");
+        }
+
+        // 6b. 玩家自动占领
         for (Unit u : fs.getUnits()) {
             if (!u.isActive() || "fighting".equals(u.getStatus())) continue;
             String pid = engine.resolvePositionToPid(u.getPosition());
             if (pid != null) {
                 String claimMsg = engine.autoClaimArrival(state, u, pid);
                 if (claimMsg != null) events.add(claimMsg);
+            }
+        }
+
+        // AI自动占领
+        for (var ae : state.getAiFactions().entrySet()) {
+            FactionState afs = ae.getValue().getFactionState();
+            if (afs == null || afs.getUnits() == null) continue;
+            for (Unit u : afs.getUnits()) {
+                if (!u.isActive() || "fighting".equals(u.getStatus())) continue;
+                String pid = engine.resolvePositionToPid(u.getPosition());
+                if (pid != null) {
+                    String claimMsg = engine.autoClaimArrival(state, ae.getKey(), afs, u, pid);
+                    if (claimMsg != null) events.add("🤖 " + afs.getName() + "：" + claimMsg);
+                }
             }
         }
 
@@ -471,7 +507,7 @@ public class TurnAdvanceService {
                     for (Map<String, Object> evt : timeline) {
                         if (((Number) evt.get("turn")).intValue() == turn) {
                             String rname = GameEngine.REGION_NAMES.getOrDefault(rid, rid);
-                            rumors.add(rname + "：" + evt.get("narrative"));
+                            rumors.add("📡 " + rname + "：" + evt.get("narrative"));
                         }
                     }
                 }
@@ -480,13 +516,13 @@ public class TurnAdvanceService {
         List<Map<String, Object>> crossEvents = (List<Map<String, Object>>) bg.get("cross_region_events");
         if (crossEvents != null) {
             for (Map<String, Object> evt : crossEvents) {
-                if (((Number) evt.get("turn")).intValue() == turn) rumors.add((String) evt.get("narrative"));
+                if (((Number) evt.get("turn")).intValue() == turn) rumors.add("📡 " + evt.get("narrative"));
             }
         }
         List<Map<String, Object>> foreignEvents = (List<Map<String, Object>>) bg.get("foreign_interventions");
         if (foreignEvents != null) {
             for (Map<String, Object> evt : foreignEvents) {
-                if (((Number) evt.get("turn")).intValue() == turn) rumors.add((String) evt.get("narrative"));
+                if (((Number) evt.get("turn")).intValue() == turn) rumors.add("📡 " + evt.get("narrative"));
             }
         }
 
@@ -516,19 +552,14 @@ public class TurnAdvanceService {
         }
 
         // 邻区边境威胁
-        Map<String, List<String>> adj = Map.of(
-                "northeast", List.of("huabei"), "huabei", List.of("northeast","southeast","xibei"),
-                "southeast", List.of("huabei","lingnan"), "lingnan", List.of("southeast","southwest","nanyang"),
-                "southwest", List.of("lingnan","xibei"), "xibei", List.of("huabei","southwest"),
-                "nanyang", List.of("southeast","lingnan"));
-        List<String> neighbors = adj.getOrDefault(playerRegion, List.of());
+        List<String> neighbors = GameEngine.REGION_ADJACENCY.getOrDefault(playerRegion, List.of());
         List<Object[]> threats = candidates.stream()
                 .filter(c -> neighbors.contains((String) c[2]) && (int) c[4] >= 35).toList();
         if (!threats.isEmpty() && rng.nextDouble() < 0.6) {
             Object[] t = threats.get(rng.nextInt(threats.size()));
             String rname = GameEngine.REGION_NAMES.getOrDefault((String) t[2], "邻区");
             List<String> terrs = (List<String>) t[3];
-            rumors.add(rname + "：" + t[1] + "在" + (terrs.isEmpty() ? "边境" : terrs.get(0)) + "集结约" + ((int) t[4] / 5) + "个团，边境局势趋紧。");
+            rumors.add("📡 " + rname + "：" + t[1] + "在" + (terrs.isEmpty() ? "边境" : terrs.get(0)) + "集结约" + ((int) t[4] / 5) + "个团，边境局势趋紧。");
         }
 
         // 扩张动态
@@ -538,12 +569,12 @@ public class TurnAdvanceService {
             Object[] e = expanding.get(rng.nextInt(expanding.size()));
             String rname = GameEngine.REGION_NAMES.getOrDefault((String) e[2], "某区");
             List<String> terrs = (List<String>) e[3];
-            rumors.add(rname + "：" + e[1] + "已控制" + terrs.size() + "处领地，势力持续膨胀。");
+            rumors.add("📡 " + rname + "：" + e[1] + "已控制" + terrs.size() + "处领地，势力持续膨胀。");
         }
 
         if (rumors.isEmpty()) {
-            rumors.add("各方势力按兵不动，暗流涌动。" );
-            rumors.add("列强使馆区内灯火通明，密使往来不断。");
+            rumors.add("📡 各方势力按兵不动，暗流涌动。");
+            rumors.add("📡 列强使馆区内灯火通明，密使往来不断。");
         }
         return rumors.subList(0, Math.min(2, rumors.size()));
     }
@@ -620,10 +651,9 @@ public class TurnAdvanceService {
         }
 
         // 列强干涉
-        Map<String, String> fpMap = Map.of("northeast","日本","huabei","日本","xibei","俄国","southwest","英国","lingnan","法国","nanyang","英国","southeast","美国");
         for (String rid : GameEngine.REGION_IDS) {
             if (rid.equals(playerRegion)) continue;
-            String power = fpMap.get(rid);
+            String power = GameEngine.FOREIGN_POWERS.get(rid);
             if (power != null && rng.nextDouble() < 0.35) {
                 int t = rng.nextInt(11) + 5;
                 foreignEvents.add(Map.of("turn", t, "power", power, "narrative", power + "以护侨为名向" + GameEngine.REGION_NAMES.getOrDefault(rid, rid) + "增兵，干涉风险上升。"));

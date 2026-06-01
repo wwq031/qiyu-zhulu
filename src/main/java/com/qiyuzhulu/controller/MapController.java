@@ -24,6 +24,21 @@ public class MapController {
     private static final Map<String, String> REGION_NAMES = Map.of(
             "northeast","东北","huabei","华北","southeast","东南","southwest","西南",
             "lingnan","岭南","nanyang","南洋","xibei","西北","central","中枢");
+    /** NPC颜色调色板 */
+    private static final String[] NPC_COLORS = {
+        "#a855f7","#13eb6e","#39c556","#1da447","#39c5af",
+        "#e67e22","#e74c3c","#9b59b6","#3498db","#1abc9c",
+        "#f39c12","#c0392b","#8e44ad","#2980b9","#16a085",
+        "#d35400","#7f8c8d","#2ecc71","#e91e63","#00bcd4",
+        "#ff5722","#795548","#607d8b","#ff9800","#4caf50",
+        "#2196f3","#9c27b0","#f44336","#009688","#673ab7"
+    };
+    /** 根据名字hash取NPC颜色 */
+    private static String npcColor(String name) {
+        int h = name.hashCode();
+        return NPC_COLORS[Math.abs(h) % NPC_COLORS.length];
+    }
+
     private static final Map<String, String> REGION_TERRAIN = Map.of(
             "northeast","平原·森林","huabei","平原·山地","southeast","水网·丘陵",
             "southwest","山地·高原","lingnan","丘陵·海岸","nanyang","海洋·岛屿",
@@ -148,18 +163,88 @@ public class MapController {
                 }
             }
             ownership.put("ai", aiList);
+
+            // NPC势力也加入ownership（友好NPC + hostile NPC）
+            // NPC到ownership
+            Map<String, NpcDefinition> allNpcs = engine.getGameData().getHostileNpcs();
+            if (allNpcs != null) {
+                for (var ne : allNpcs.entrySet()) {
+                    if (game.getDefeatedFactions().contains(ne.getKey())) continue;
+                    NpcDefinition ndata = ne.getValue();
+                    if (ndata.getTerritories() == null) continue;
+                    List<String> npcPids = new ArrayList<>();
+                    for (String t : ndata.getTerritories()) {
+                        String pid = nameToPid.get(t);
+                        if (pid != null) npcPids.add(pid);
+                    }
+                    if (!npcPids.isEmpty()) {
+                        String nColor = ndata.getColor() != null ? ndata.getColor() : npcColor(ndata.getName());
+                        aiList.add(Map.of(
+                                "faction_id", ne.getKey(), "name", ndata.getName(),
+                                "region", ndata.getRegion() != null ? ndata.getRegion() : "",
+                                "color", nColor, "territory_pids", npcPids));
+                    }
+                }
+            }
             result.put("ownership", ownership);
 
             // 驻军 — key 用 PID（非中文名，前端用 PID 索引 mapProvinceData）
             Map<String, List<Map<String, Object>>> garrisons = new LinkedHashMap<>();
+            // 玩家部队
             for (Unit u : pfs.getUnits()) {
                 if (u.getPosition() != null) {
                     String posPid = engine.resolvePositionToPid(u.getPosition());
-                    garrisons.computeIfAbsent(posPid, k -> new ArrayList<>()).add(Map.of(
-                            "name", u.getName(), "type", u.getType(),
-                            "attack", u.getAttack(), "defense", u.getDefense(),
-                            "morale", u.getMorale(), "strength", u.getStrength(),
-                            "index", pfs.getUnits().indexOf(u)));
+                    garrisons.computeIfAbsent(posPid, k -> new ArrayList<>())
+                            .add(u.toMap(true, pfs.getName(), pfs.getUnits().indexOf(u)));
+                }
+            }
+            // AI势力部队
+            for (var ae : game.getAiFactions().entrySet()) {
+                if (game.getDefeatedFactions().contains(ae.getKey())) continue;
+                FactionState afs = ae.getValue().getFactionState();
+                if (afs == null || afs.getUnits() == null) continue;
+                for (Unit u : afs.getUnits()) {
+                    if (!u.isActive()) continue;
+                    if (u.getPosition() != null) {
+                        String posPid = engine.resolvePositionToPid(u.getPosition());
+                        garrisons.computeIfAbsent(posPid, k -> new ArrayList<>())
+                                .add(u.toMap(false, afs.getName(), afs.getUnits().indexOf(u)));
+                    }
+                }
+            }
+            // NPC驻军（统一后的hostile_npcs）
+            Map<String, NpcDefinition> npcDefs = engine.getGameData().getHostileNpcs();
+            if (npcDefs != null) {
+                for (var ne : npcDefs.entrySet()) {
+                    if (game.getDefeatedFactions().contains(ne.getKey())) continue;
+                    NpcDefinition ndef = ne.getValue();
+                    List<String> terrs = ndef.getTerritories();
+                    if (terrs == null || terrs.isEmpty()) continue;
+                    String capPid = nameToPid.get(terrs.get(0));
+                    if (capPid == null) continue;
+                    List<Map<String, Object>> npcUnits = new ArrayList<>();
+                    List<String> fnames = ndef.getForceNames();
+                    if (fnames != null && !fnames.isEmpty()) {
+                        for (int i = 0; i < Math.min(fnames.size(), 2); i++) {
+                            npcUnits.add(Map.of(
+                                    "name", fnames.get(i), "type", engine.inferUnitType(fnames.get(i)),
+                                    "attack", 7, "defense", 5, "morale", 45, "strength", 70,
+                                    "index", i, "is_player", false, "faction_name", ndef.getName()));
+                        }
+                    } else {
+                        String forceDesc = ndef.getForces() != null ? ndef.getForces() : "守备队";
+                        String[] parts = forceDesc.split("[+、,，]");
+                        int showCount = Math.min(parts.length, 2);
+                        for (int i = 0; i < showCount; i++) {
+                            String fname = parts[i].trim();
+                            if (fname.length() > 20) fname = fname.substring(0, 20);
+                            npcUnits.add(Map.of(
+                                    "name", fname, "type", engine.inferUnitType(fname),
+                                    "attack", 7, "defense", 5, "morale", 45, "strength", 70,
+                                    "index", i, "is_player", false, "faction_name", ndef.getName()));
+                        }
+                    }
+                    garrisons.computeIfAbsent(capPid, k -> new ArrayList<>()).addAll(npcUnits);
                 }
             }
             result.put("garrisons", garrisons);
@@ -215,17 +300,18 @@ public class MapController {
                     }
                 }
             }
-            // NPC static territories
+            // NPC领土（合并后的hostile_npcs，含完整领土+颜色）
             Map<String, NpcDefinition> npcs = engine.getGameData().getHostileNpcs();
             if (npcs != null) {
                 for (var ne : npcs.entrySet()) {
                     if (game.getDefeatedFactions().contains(ne.getKey())) continue;
                     NpcDefinition ndata = ne.getValue();
                     if (ndata.getTerritories() == null) continue;
+                    String nColor = ndata.getColor() != null ? ndata.getColor() : npcColor(ndata.getName());
                     for (String t : ndata.getTerritories()) {
                         String pid = nameToPid.get(t);
                         if (pid != null && !pidOwner.containsKey(pid)) {
-                            pidOwner.put(pid, GameUtils.mapOf("owner_name", ndata.getName(), "owner_color", "#8426d8", "is_player", false));
+                            pidOwner.put(pid, GameUtils.mapOf("owner_name", ndata.getName(), "owner_color", nColor, "is_player", false));
                             pidOwnerName.put(pid, ndata.getName());
                         }
                     }
@@ -265,21 +351,32 @@ public class MapController {
                         capitals.put(ae.getKey(), Map.of("pid", capPid, "name", cap, "is_player", false));
                 }
             }
-            // NPC capitals（hostile_npcs 的首个领土）
+            // NPC capitals — 动态：跳过已被占领的领土，取第一个剩余领土
+            Set<String> allOccupiedNames = new HashSet<>();
+            allOccupiedNames.addAll(pfs.getTerritories());
+            for (var ae : game.getAiFactions().entrySet()) {
+                FactionState afs = ae.getValue().getFactionState();
+                if (afs != null && afs.getTerritories() != null)
+                    allOccupiedNames.addAll(afs.getTerritories());
+            }
             Map<String, NpcDefinition> npcs = engine.getGameData().getHostileNpcs();
             if (npcs != null) {
                 for (var ne : npcs.entrySet()) {
                     if (game.getDefeatedFactions().contains(ne.getKey())) continue;
                     NpcDefinition ndata = ne.getValue();
-                    if (ndata.getTerritories() != null && !ndata.getTerritories().isEmpty()) {
-                        String cap = ndata.getTerritories().get(0);
-                        String capPid = nameToPid.get(cap);
-                        if (capPid != null && !capitals.containsKey(ne.getKey()))
-                            capitals.put(ne.getKey(), Map.of("pid", capPid, "name", cap, "is_player", false));
+                    if (ndata.getTerritories() == null || ndata.getTerritories().isEmpty()) continue;
+                    // 动态首都：跳过已被占领的，取第一个剩余领土
+                    String cap = null;
+                    for (String t : ndata.getTerritories()) {
+                        if (!allOccupiedNames.contains(t)) { cap = t; break; }
                     }
+                    if (cap == null) continue; // 全部被占
+                    String capPid = nameToPid.get(cap);
+                    if (capPid != null)
+                        capitals.put(ne.getKey(), Map.of("pid", capPid, "name", cap, "is_player", false));
                 }
             }
-            // 28势力 capitals（从game_data静态数据）
+            // 28势力 capitals（从game_data静态数据回退）
             Map<String, FactionDefinition> allFactions = engine.getGameData().getFactions();
             if (allFactions != null) {
                 for (var fe : allFactions.entrySet()) {
@@ -342,6 +439,27 @@ public class MapController {
         result.put("city_store", cityStore);
         result.put("capitals", capitals);
         result.put("faction_boundaries", Map.of("type", "FeatureCollection", "features", List.of()));
+
+        // 进行中战役（前端战斗标记用）
+        List<Map<String, Object>> activeCampaigns = new ArrayList<>();
+        if (game != null) {
+            for (Campaign c : game.getActiveCampaigns()) {
+                if ("ongoing".equals(c.getStatus())) {
+                    Map<String, Object> ci = new LinkedHashMap<>();
+                    ci.put("id", c.getId());
+                    ci.put("province", c.getProvince());
+                    ci.put("province_name", c.getProvinceName());
+                    ci.put("round", c.getRound());
+                    ci.put("max_rounds", c.getMaxRounds());
+                    ci.put("attacker_name", c.getAttackerName());
+                    ci.put("defender_name", c.getDefenderName());
+                    ci.put("is_player_attacker", game.getPlayerFactionId().equals(c.getAttackerFaction()));
+                    ci.put("is_player_defender", game.getPlayerFactionId().equals(c.getDefenderFaction()));
+                    activeCampaigns.add(ci);
+                }
+            }
+        }
+        result.put("active_campaigns", activeCampaigns);
 
         return result;
     }

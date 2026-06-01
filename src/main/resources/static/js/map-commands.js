@@ -2,8 +2,9 @@
 
 // ── 地图命令模式（移动+攻击）──
 async function enterCommandMode(pid, selectedIndices, actionType) {
-  if (!movePathLayer) return;
+  if (!movePathLayer) { statusText('⚠ 地图未就绪，请稍后再试'); return; }
   exitCommandMode();
+  statusText('⏳ 计算可达范围...');
 
   try {
     const reqBody = selectedIndices && selectedIndices.length
@@ -15,7 +16,8 @@ async function enterCommandMode(pid, selectedIndices, actionType) {
       body: JSON.stringify(reqBody)
     });
     const reachData = await reachResp.json();
-    if (!reachData.reachable) { statusText('该位置无可调动部队'); return; }
+    if (reachData.error) { statusText('⚠ ' + reachData.error); return; }
+    if (!reachData.reachable || !reachData.reachable.length) { statusText('⚠ 该位置无可调动部队'); return; }
 
     const allUnitIndices = reachData.unit_indices || [reachData.unit_index];
     moveMode = {
@@ -27,17 +29,7 @@ async function enterCommandMode(pid, selectedIndices, actionType) {
       selectedUnitIndices: selectedIndices ? [...selectedIndices] : [...allUnitIndices],
     };
 
-    // 如果指定了actionType，预选第一个可达敌对省份进入攻击模式
-    if (actionType === 'attack') {
-      const enemyDest = reachData.reachable.find(d => d.is_enemy);
-      if (enemyDest) {
-        moveMode.actionType = 'attack';
-        moveMode.selectedDest = enemyDest;
-        // 延迟显示攻击确认弹窗
-        setTimeout(() => showAttackDest(enemyDest), 100);
-        return;
-      }
-    }
+    moveMode.actionType = actionType || 'move';
 
     // 高亮可达省份（绿=友好/中立, 红=敌对）
     moveHighlightLayer.clearLayers();
@@ -89,7 +81,7 @@ function showMoveDest(dest) {
     L.circleMarker(coords[coords.length-1], { radius: 6, color: '#80c878', weight: 2.5, fillColor: '#80c878', fillOpacity: 0.3 }).addTo(movePathLayer);
   }
 
-  const wpStr = dest.waypoints.length ? ' 途经: ' + dest.waypoints.join(' → ') : '';
+  const wpStr = (dest.waypoints && dest.waypoints.length) ? ' 途经: ' + dest.waypoints.join(' → ') : '';
   const html = `<div style="font-family:var(--font);min-width:180px;">
     <h4 style="color:var(--gold);margin:0;">🚚 行军至 ${dest.name}</h4>
     <div style="font-size:0.85em;color:var(--text-dim);margin:4px 0;">距离: ${dest.distance}步${wpStr}</div>
@@ -215,6 +207,6 @@ function exitCommandMode() {
   moveMode = null;
   if (moveHighlightLayer) moveHighlightLayer.clearLayers();
   if (movePathLayer) movePathLayer.clearLayers();
-  leafletMap.closePopup();
+  try { if (leafletMap) leafletMap.closePopup(); } catch(e) {}
 }
 

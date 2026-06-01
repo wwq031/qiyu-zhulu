@@ -128,6 +128,30 @@ public class CivilService {
         data.put("construction", true);
         data.put("items", listConstruction());
         data.put("queue_len", state.getConstructionQueue().size());
+        FactionState fs = state.getFactionState();
+        data.put("agri_tax_rate", fs.getAgriTaxRate());
+        data.put("commerce_tax_rate", fs.getCommerceTaxRate());
+        data.put("treasury", fs.getTreasury());
+        data.put("population_support", fs.getPopulationSupport());
+        Map<String, Object> eco = engine.aggregateTerritoryEconomy(fs);
+        int commerce = (int) eco.getOrDefault("commerce", 0);
+        int agriculture = (int) eco.getOrDefault("agriculture", 0);
+        int projIncome = engine.calcIncome(fs);
+        data.put("projected_income", projIncome);
+        data.put("total_maintenance", engine.calcTotalMaintenance(fs));
         return data;
+    }
+
+    /** 设置税率 */
+    public Map<String, Object> setTaxRate(GameState state, String taxType, int value) {
+        FactionState fs = state.getFactionState();
+        int clamped = GameEngine.clamp(value, 0, 100);
+        switch (taxType) {
+            case "agri" -> fs.setAgriTaxRate(clamped);
+            case "commerce" -> fs.setCommerceTaxRate(clamped);
+            default -> { return Map.of("ok", false, "message", "未知税种: " + taxType); }
+        }
+        String label = "agri".equals(taxType) ? "农业税" : "商业税";
+        return Map.of("ok", true, "message", "📊 " + label + "已调整为 " + clamped + "%");
     }
 }

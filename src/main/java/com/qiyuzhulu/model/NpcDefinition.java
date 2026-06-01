@@ -12,8 +12,10 @@ public class NpcDefinition {
     private String id;           // JSON key, e.g. "heihe_daoyin"
     private String name;         // 显示名, e.g. "黑河道尹公署"
     private String region;       // 所属大区
+    private String color;        // 势力颜色（从npc_factions合并）
     private Stats stats;         // 六围属性
     private String forces;       // 武装力量描述字符串
+    private List<String> forceNames; // 部队名列表（从npc_factions合并）
     private String ai;           // AI行为描述
 
     @JsonProperty("territories")
@@ -35,8 +37,14 @@ public class NpcDefinition {
     public Stats getStats() { return stats; }
     public void setStats(Stats v) { this.stats = v; }
 
+    public String getColor() { return color; }
+    public void setColor(String v) { this.color = v; }
+
     public String getForces() { return forces; }
     public void setForces(String v) { this.forces = v; }
+
+    public List<String> getForceNames() { return forceNames; }
+    public void setForceNames(List<String> v) { this.forceNames = v; }
 
     public String getAi() { return ai; }
     public void setAi(String v) { this.ai = v; }

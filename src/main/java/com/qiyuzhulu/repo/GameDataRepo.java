@@ -48,6 +48,43 @@ public class GameDataRepo {
         factions = parseFactions("factions");
         npcFactions = parseFactions("npc_factions");
         hostileNpcs = parseNpcDefinitions("hostile_npcs");
+
+        // ── 合并npc_factions数据到hostile_npcs（按名字匹配）──
+        for (var nfe : npcFactions.entrySet()) {
+            FactionDefinition nf = nfe.getValue();
+            // 在hostile_npcs中按名字找匹配
+            NpcDefinition matched = null;
+            for (var hn : hostileNpcs.entrySet()) {
+                if (nf.getName().equals(hn.getValue().getName())) {
+                    matched = hn.getValue(); break;
+                }
+            }
+            if (matched != null) {
+                // 补充颜色
+                if (matched.getColor() == null && nf.getColor() != null)
+                    matched.setColor(nf.getColor());
+                // 补充部队名列表
+                if ((matched.getForceNames() == null || matched.getForceNames().isEmpty())
+                        && nf.getInitialForces() != null && !nf.getInitialForces().isEmpty())
+                    matched.setForceNames(nf.getInitialForces());
+                // 如果npc_factions的领土更完整，用它
+                if (nf.getInitialTerritory() != null && !nf.getInitialTerritory().isEmpty()
+                        && (matched.getTerritories() == null || nf.getInitialTerritory().size() > matched.getTerritories().size()))
+                    matched.setTerritories(nf.getInitialTerritory());
+            } else {
+                // npc_factions独占的NPC，创建NpcDefinition条目
+                NpcDefinition nd = new NpcDefinition();
+                nd.setId(nfe.getKey());
+                nd.setName(nf.getName());
+                nd.setRegion(nf.getRegion());
+                nd.setColor(nf.getColor());
+                nd.setTerritories(nf.getInitialTerritory());
+                nd.setForceNames(nf.getInitialForces());
+                nd.setStats(nf.getStats());
+                hostileNpcs.put(nfe.getKey(), nd);
+            }
+        }
+
         regions = parseMapMap("regions");
 
         @SuppressWarnings("unchecked")

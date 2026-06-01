@@ -3,7 +3,8 @@
 // ── 新游戏 ──────────────────────────────────────────────────
 async function showNewGameModal() {
   document.getElementById('newgame-modal').classList.add('show');
-  document.getElementById('start-game-btn').disabled = true;
+  var startBtn = document.getElementById('start-game-btn');
+  if (startBtn) startBtn.disabled = true;
   selectedFactionId = null;
 
   // 并行加载势力和区域数据
