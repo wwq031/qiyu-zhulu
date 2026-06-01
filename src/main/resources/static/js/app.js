@@ -162,7 +162,7 @@ function renderAll(data) {
       addLogEntry(evText);
     });
     // 领土变动后强制刷新地图
-    if (mapInitialized) refreshMapOwnership();
+    if (typeof mapInitialized !== 'undefined' && mapInitialized) refreshMapOwnership();
   }
 
   // 回合事件 → 弹窗通知
@@ -248,18 +248,24 @@ function renderAll(data) {
   document.getElementById('status-text').textContent =
     `回合${data.turn||0} · ${data.faction||'?'}`;
 
-  // 嵌入地图：确保 game-map 中总有地图（与首页模态框独立）
+  // 嵌入地图：确保 game-map 中总有地图
   const gmDiv = document.getElementById('game-map');
   const gmHasMap = gmDiv && gmDiv.querySelector('.leaflet-container');
   if (!gmHasMap) {
-    initLeafletMap('game-map');
-  } else {
+    if (typeof mapInitialized !== 'undefined' && mapInitialized) {
+      // map 已在模态框中初始化，移动到 game-view
+      if (typeof moveMapToGameView === 'function') moveMapToGameView();
+    } else if (typeof initLeafletMap === 'function') {
+      initLeafletMap('game-map');
+    }
+  }
+  if (gmHasMap || (typeof mapInitialized !== 'undefined' && mapInitialized)) {
     // 只在领土变更时全量刷新，其余情况只增量更新动态元素
     const newSig = (data.territories || []).sort().join(',');
     if (newSig !== _lastTerritorySig) {
       _lastTerritorySig = newSig;
       refreshMapOwnership();
-    } else if (mapInitialized && leafletMap) {
+    } else if (typeof mapInitialized !== 'undefined' && mapInitialized && leafletMap) {
       // 轻量增量更新：只刷新驻军和战役标记
       refreshDynamicMarkers(data);
     }

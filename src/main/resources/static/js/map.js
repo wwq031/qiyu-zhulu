@@ -52,6 +52,20 @@ var TYPE_STYLES = {
 
 function closeMapModal() {
   document.getElementById('map-modal').classList.remove('show');
+  if (leafletMap && leafletMap._container) {
+    document.getElementById('game-map').appendChild(leafletMap._container);
+    setTimeout(() => leafletMap.invalidateSize(), 100);
+  }
+}
+
+function moveMapToGameView() {
+  if (leafletMap && leafletMap._container) {
+    var gm = document.getElementById('game-map');
+    if (gm && leafletMap._container.parentElement !== gm) {
+      gm.appendChild(leafletMap._container);
+      setTimeout(function() { leafletMap.invalidateSize(); }, 100);
+    }
+  }
 }
 
 function showMapModal() {
@@ -64,14 +78,17 @@ function showMapModal() {
       return;
     }
   }
-  // 首页：打开模态框
+  // 首页：打开模态框 — 始终初始化在 game-map，再移动到模态框
   document.getElementById('map-modal').classList.add('show');
   if (!mapInitialized) {
-    initLeafletMap('map-container');
-  } else {
-    refreshMapOwnership();
-    setTimeout(() => { if (leafletMap) leafletMap.invalidateSize(); }, 100);
+    initLeafletMap('game-map');
   }
+  // 把 map DOM 移到模态框容器
+  if (leafletMap && leafletMap._container) {
+    document.getElementById('map-container').appendChild(leafletMap._container);
+  }
+  setTimeout(() => { if (leafletMap) leafletMap.invalidateSize(); }, 200);
+  refreshMapOwnership();
 }
 
 
@@ -699,9 +716,11 @@ async function refreshMapOwnership() {
 }
 
 async function applyOwnership(data) {
+  console.log('[applyOwnership] called, data keys:', Object.keys(data));
   // 构建所有权映射
   ownedBy = {};
   const ownership = data.ownership;
+  console.log('[applyOwnership] ownership:', ownership ? 'present' : 'MISSING', 'player:', ownership?.player ? 'yes' : 'no', 'ai count:', ownership?.ai?.length || 0);
   if (ownership && ownership.player) {
     if (ownership.player) {
       for (const pid of (ownership.player.territory_pids || [])) {
@@ -718,7 +737,9 @@ async function applyOwnership(data) {
   // 更新cityStoreMap（来自服务端统一数据源）
   if (data.city_store && data.city_store.length > 0) {
     cityStoreMap = {};
-    for (const c of data.city_store) { cityStoreMap[c.name] = c; }
+    let ownedCount = 0;
+    for (const c of data.city_store) { cityStoreMap[c.name] = c; if (c.owner_name) ownedCount++; }
+    console.log('[applyOwnership] cityStoreMap rebuilt:', Object.keys(cityStoreMap).length, 'cities,', ownedCount, 'with owner');
   } else {
     // ── 旁观模式回退：调用专用旁观API获取完整数据 ──
     try {
@@ -751,6 +772,8 @@ async function applyOwnership(data) {
     } catch(e) { console.error('Spectator API fallback failed:', e); }
   }
   // 动态更新全部386市填色（cityStore→势力专属色）
+  console.log('[applyOwnership] cityFillLayers size:', Object.keys(cityFillLayers).length, 'cityStoreMap size:', Object.keys(cityStoreMap).length);
+  let fillUpdated = 0;
   try {
     for (const [name, layer] of Object.entries(cityFillLayers)) {
       const cs = cityStoreMap[name];
@@ -767,7 +790,9 @@ async function applyOwnership(data) {
       const ri = parseInt(fillColor.slice(1,3),16), gi = parseInt(fillColor.slice(3,5),16), bi = parseInt(fillColor.slice(5,7),16);
       const dc = '#' + [Math.round(ri*0.55), Math.round(gi*0.55), Math.round(bi*0.55)].map(v => v.toString(16).padStart(2,'0')).join('');
       layer.setStyle({ color: dc, weight: 2, opacity: 0.6, fillColor: fillColor, fillOpacity: fillOpacity });
+      fillUpdated++;
     }
+    console.log('[applyOwnership] fill colors updated:', fillUpdated);
   } catch(e) { console.error('City fill update failed:', e); }
 
   const garrisons = data.garrisons || {};
@@ -835,8 +860,10 @@ async function applyOwnership(data) {
       </div>`);
   }
   // ── 首都名称标签 ──
+  let capLabelsRendered = 0;
   if (capitalLabelLayer) {
     capitalLabelLayer.clearLayers();
+    console.log('[applyOwnership] rendering capitals, capitalPids:', Object.keys(capitalPids).length);
     for (const [pid, cap] of Object.entries(capitalPids)) {
       const p = mapProvinceData[pid];
       if (!p || p.lat == null || p.lng == null) continue;
@@ -848,8 +875,10 @@ async function applyOwnership(data) {
         iconSize: [1, 1], iconAnchor: [0, -8],
       });
       L.marker([p.lat, p.lng], { icon, interactive: false, keyboard: false, zIndexOffset: 1000 }).addTo(capitalLabelLayer);
+      capLabelsRendered++;
     }
-  }
+    console.log('[applyOwnership] capital labels rendered:', capLabelsRendered);
+  } else { console.log('[applyOwnership] capitalLabelLayer MISSING'); }
   // ── 驻军标记 ──
   if (garrisonLayer) {
     garrisonLayer.clearLayers();
@@ -934,7 +963,9 @@ async function applyOwnership(data) {
   }
 
   // ── 势力名称标签 ──
+  console.log('[applyOwnership] calling rebuildFactionLabels, cityStoreMap size:', Object.keys(cityStoreMap).length, 'capitalPids:', Object.keys(capitalPids).length, 'factionLabelLayer:', !!factionLabelLayer, 'capitalLabelLayer:', !!capitalLabelLayer);
   rebuildFactionLabels();
+  console.log('[applyOwnership] done');
 
   // ── 途中部队路径可视化 ──
   if (movePathLayer) movePathLayer.clearLayers();

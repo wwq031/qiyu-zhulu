@@ -150,11 +150,12 @@ public class MapController {
             ownership.put("ai", aiList);
             result.put("ownership", ownership);
 
-            // 驻军
+            // 驻军 — key 用 PID（非中文名，前端用 PID 索引 mapProvinceData）
             Map<String, List<Map<String, Object>>> garrisons = new LinkedHashMap<>();
             for (Unit u : pfs.getUnits()) {
                 if (u.getPosition() != null) {
-                    garrisons.computeIfAbsent(u.getPosition(), k -> new ArrayList<>()).add(Map.of(
+                    String posPid = engine.resolvePositionToPid(u.getPosition());
+                    garrisons.computeIfAbsent(posPid, k -> new ArrayList<>()).add(Map.of(
                             "name", u.getName(), "type", u.getType(),
                             "attack", u.getAttack(), "defense", u.getDefense(),
                             "morale", u.getMorale(), "strength", u.getStrength(),
@@ -250,10 +251,47 @@ public class MapController {
             }
             for (var ae : game.getAiFactions().entrySet()) {
                 FactionState afs = ae.getValue().getFactionState();
-                if (afs != null && afs.getCapital() != null && !afs.getCapital().isEmpty()) {
-                    String capPid = nameToPid.get(afs.getCapital());
+                String cap = (afs != null && afs.getCapital() != null && !afs.getCapital().isEmpty())
+                        ? afs.getCapital() : null;
+                if (cap == null) {
+                    // 回退：静态initial_territory的第一个城市
+                    FactionDefinition af = engine.getFaction(ae.getKey()).orElse(null);
+                    if (af != null && af.getInitialTerritory() != null && !af.getInitialTerritory().isEmpty())
+                        cap = af.getInitialTerritory().get(0);
+                }
+                if (cap != null) {
+                    String capPid = nameToPid.get(cap);
                     if (capPid != null)
-                        capitals.put(ae.getKey(), Map.of("pid", capPid, "name", afs.getCapital(), "is_player", false));
+                        capitals.put(ae.getKey(), Map.of("pid", capPid, "name", cap, "is_player", false));
+                }
+            }
+            // NPC capitals（hostile_npcs 的首个领土）
+            Map<String, NpcDefinition> npcs = engine.getGameData().getHostileNpcs();
+            if (npcs != null) {
+                for (var ne : npcs.entrySet()) {
+                    if (game.getDefeatedFactions().contains(ne.getKey())) continue;
+                    NpcDefinition ndata = ne.getValue();
+                    if (ndata.getTerritories() != null && !ndata.getTerritories().isEmpty()) {
+                        String cap = ndata.getTerritories().get(0);
+                        String capPid = nameToPid.get(cap);
+                        if (capPid != null && !capitals.containsKey(ne.getKey()))
+                            capitals.put(ne.getKey(), Map.of("pid", capPid, "name", cap, "is_player", false));
+                    }
+                }
+            }
+            // 28势力 capitals（从game_data静态数据）
+            Map<String, FactionDefinition> allFactions = engine.getGameData().getFactions();
+            if (allFactions != null) {
+                for (var fe : allFactions.entrySet()) {
+                    String fid = fe.getKey();
+                    if (capitals.containsKey(fid)) continue;
+                    FactionDefinition fdef = fe.getValue();
+                    if (fdef.getInitialTerritory() != null && !fdef.getInitialTerritory().isEmpty()) {
+                        String cap = fdef.getInitialTerritory().get(0);
+                        String capPid = nameToPid.get(cap);
+                        if (capPid != null)
+                            capitals.put(fid, Map.of("pid", capPid, "name", cap, "is_player", false));
+                    }
                 }
             }
         }
@@ -353,6 +391,18 @@ public class MapController {
                 return buildFactionInfo(ae.getKey(), afs, game);
             }
         }
+        // 回退：静态faction数据
+        for (var fe : engine.getGameData().getFactions().entrySet()) {
+            if (fe.getValue().getInitialTerritory().contains(p.getName())) {
+                return buildStaticFactionInfo(fe.getKey(), fe.getValue(), game);
+            }
+        }
+        // 回退：NPC
+        for (var ne : engine.getGameData().getHostileNpcs().entrySet()) {
+            if (ne.getValue().getTerritories() != null && ne.getValue().getTerritories().contains(p.getName())) {
+                return buildNpcInfo(ne.getKey(), ne.getValue(), game);
+            }
+        }
         return Map.of("error", "无主之地");
     }
 
@@ -360,6 +410,32 @@ public class MapController {
     @GetMapping("/spectator/map")
     public Map<String, Object> spectatorMap() {
         return getMap("1");
+    }
+
+    private Map<String, Object> buildStaticFactionInfo(String fid, FactionDefinition fdef, GameState game) {
+        Map<String, Object> info = new LinkedHashMap<>();
+        info.put("faction_id", fid);
+        info.put("is_player", fid.equals(game.getPlayerFactionId()));
+        info.put("name", fdef.getName());
+        info.put("stats", fdef.getStats());
+        info.put("territories", fdef.getInitialTerritory());
+        info.put("unit_count", fdef.getInitialForces().size());
+        info.put("total_strength", fdef.getInitialForces().size() * 60);
+        info.put("territory_count", fdef.getInitialTerritory().size());
+        return info;
+    }
+
+    private Map<String, Object> buildNpcInfo(String nid, NpcDefinition ndata, GameState game) {
+        Map<String, Object> info = new LinkedHashMap<>();
+        info.put("faction_id", nid);
+        info.put("is_player", false);
+        info.put("name", ndata.getName());
+        info.put("stats", ndata.getStats());
+        info.put("territories", ndata.getTerritories());
+        info.put("unit_count", 2);
+        info.put("total_strength", 120);
+        info.put("territory_count", ndata.getTerritories() != null ? ndata.getTerritories().size() : 0);
+        return info;
     }
 
     private Map<String, Object> buildFactionInfo(String fid, FactionState fs, GameState game) {
