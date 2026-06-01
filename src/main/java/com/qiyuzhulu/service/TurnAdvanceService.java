@@ -306,6 +306,11 @@ public class TurnAdvanceService {
         return completed;
     }
 
+    /** 立即结算训练队列（提前服役用） */
+    public List<String> flushTrainingQueue(GameState state) {
+        return processTrainingQueue(state);
+    }
+
     /** 推进训练队列，返回完成消息 */
     private List<String> processTrainingQueue(GameState state) {
         List<String> completed = new ArrayList<>();
@@ -348,8 +353,15 @@ public class TurnAdvanceService {
                             + typeName + "第" + serial.getOrDefault(unitType, 1) + ut.get("suffix");
 
                     Unit u = createUnit(unitName, unitType, item.getLocation(), atk, def, morale, exp);
-                    fs.getUnits().add(u);
-                    completed.add("✅ " + unitName + " 训练完成！部署于 " + item.getLocationName());
+                    // 提前服役惩罚
+                    if (item.isEarlyDeploy()) {
+                        u.setStrength((int)(100 * 0.6));
+                        u.setMorale(Math.max(10, u.getMorale() - 25));
+                        u.setExperience(Math.max(1, u.getExperience() - 15));
+                        completed.add("⚡ " + unitName + " 提前服役 @" + item.getLocationName() + "（兵力60% 士气-25 经验-15）");
+                    } else {
+                        completed.add("✅ " + unitName + " 训练完成！部署于 " + item.getLocationName());
+                    }
                 }
 
                 // 更新军力统计

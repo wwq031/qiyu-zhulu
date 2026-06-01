@@ -179,6 +179,25 @@ public class StateController {
             if (result.containsKey("type")) resp.put("intel_data", result);
             return resp;
         }
+        // 提前服役 1.1.early.{queueIndex}
+        if (action.startsWith("1.1.early.")) {
+            int qIdx = Integer.parseInt(action.substring("1.1.early.".length()));
+            var queue = game.getTrainingQueue();
+            if (qIdx < 0 || qIdx >= queue.size()) {
+                resp = buildPanelResponse(); resp.put("output", "无效训练项目"); return resp;
+            }
+            TrainingItem item = queue.get(qIdx);
+            item.setEarlyDeploy(true);
+            item.setTurnsLeft(0);
+            // 调用 turnAdvance 的方法结算训练队列
+            List<String> msgs = turnAdvance.flushTrainingQueue(game);
+            resp = buildPanelResponse();
+            resp.put("result_type", "ok");
+            resp.put("output", String.join("\n", msgs));
+            if (game.getActionPoints() > 0) game.setActionPoints(game.getActionPoints() - 1);
+            return resp;
+        }
+
         // 训练具体兵种 1.1.{type}
         if (action.startsWith("1.1.")) {
             String[] parts = action.split("\\.");
