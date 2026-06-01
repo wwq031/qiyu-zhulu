@@ -71,6 +71,19 @@
 <div id="settings-modal" class="modal-overlay"><div class="modal-content"><span class="modal-close" onclick="closeModal('settings-modal')">✕</span><h3>⚙ API 配置</h3><div id="settings-body"></div></div></div>
 <div id="sel-info"></div>
 
+<!-- ═══════════════════ 自由指令栏 ═══════════════════ -->
+<div id="custom-bar">
+  <span style="color:var(--gold);font-size:1.1em;">✧</span>
+  <input id="custom-input" type="text" placeholder="输入自由指令... 如: 派间谍去南京刺探军情"
+         onkeydown="if(event.key==='Enter')sendCustomOrder()">
+  <select id="custom-mode-select" onchange="updateCustomMode()">
+    <option value="auto">🤖 AI 裁决</option>
+    <option value="sandbox">🧪 沙盒模式</option>
+    <option value="manual">📝 手动裁决</option>
+  </select>
+  <button id="custom-send" onclick="sendCustomOrder()">执行</button>
+</div>
+
 <!-- ═══════════════════ 脚本 ═══════════════════ -->
 <script src="/static/vendor/leaflet/leaflet.js"></script>
 <script src="/static/js/utils.js"></script>
