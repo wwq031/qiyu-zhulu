@@ -2,9 +2,9 @@
 
 // ── 子菜单渲染 ──────────────────────────────────────────────
 function hideSubmenu() {
-  const sm = document.getElementById('submenu-panel');
-  sm.classList.remove('show');
-  sm.innerHTML = '';
+  var sm = document.getElementById('submenu-panel');
+  if (sm) { sm.classList.remove('show'); sm.innerHTML = ''; }
+  if (typeof closeDept === 'function') closeDept();
   currentMenuType = null;
   selectedDiploTarget = null;
   diploTargets = [];

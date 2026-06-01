@@ -217,8 +217,8 @@ function renderAll(data) {
     hideSubmenu();
   }
 
-  // 阶段按钮
-  const phaseBtns = document.getElementById('phase-btns');
+  // 阶段按钮（新版无此元素，跳过）
+  var phaseBtns = document.getElementById('phase-btns');
   if (phaseBtns) {
     let pbHtml = '';
     if (data.phase >= 4) {
