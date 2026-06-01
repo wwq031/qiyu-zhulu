@@ -98,9 +98,20 @@ public class TurnAdvanceService {
             }
         }
 
-        // 6. 收入 & 维持费
-        int income = engine.calcIncome(fs);
-        int maintenance = engine.calcTotalMaintenance(fs);
+        // 6. 腐败度增长
+        int corruption = fs.getCorruption();
+        int corrGrowth = rng.nextInt(3) + 1; // +1~3
+        if (fs.getTreasury() > 500) corrGrowth += 1;
+        int lastTurnTerrs = fs.getTerritories() != null ? fs.getTerritories().size() : 0;
+        // 检查扩张速度（简化：单回合+3省）
+        corrGrowth += 0; // 需要上回合领土记录，先跳过
+        fs.setCorruption(GameEngine.clamp(corruption + corrGrowth, 0, 100));
+
+        // 6b. 收入 & 维持费（腐败修正）
+        double corrTaxMult = corruption > 70 ? 0.80 : corruption > 50 ? 0.90 : corruption > 30 ? 0.90 : 1.0;
+        double corrMaintMult = corruption > 90 ? 1.20 : corruption > 50 ? 1.15 : 1.0;
+        int income = (int)(engine.calcIncome(fs) * corrTaxMult);
+        int maintenance = (int)(engine.calcTotalMaintenance(fs) * corrMaintMult);
         // 贸易协定收入
         int tradeIncome = 0;
         for (var dr : state.getDiplomaticRelations().entrySet()) {
@@ -112,6 +123,12 @@ public class TurnAdvanceService {
             }
         }
         fs.setTreasury(fs.getTreasury() + income - maintenance + tradeIncome);
+        if (corruption > 30) events.add("⚠ 腐败度" + corruption + "%，税收效率下降，建设成本上升");
+        if (corruption > 90 && rng.nextDouble() < 0.15 && fs.getActiveUnits().size() > 0) {
+            Unit u = fs.getActiveUnits().get(rng.nextInt(fs.getActiveUnits().size()));
+            u.setStatus("annihilated");
+            events.add("🔴 腐败横行！" + u.getName() + " 因克扣粮饷发生哗变！");
+        }
         if (tradeIncome > 0) events.add("📈 贸易协定本回合带来" + tradeIncome + "💰收入");
 
         // 赤字惩罚

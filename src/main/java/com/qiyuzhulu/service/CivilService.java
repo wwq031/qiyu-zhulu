@@ -87,6 +87,12 @@ public class CivilService {
             else if (effectiveInd >= 5) costEco = (int)(costEco * 0.85);
         }
 
+        // 腐败度加成
+        int corruption = fs.getCorruption();
+        if (corruption > 70) costEco = (int)(costEco * 1.50);
+        else if (corruption > 50) costEco = (int)(costEco * 1.30);
+        else if (corruption > 30) costEco = (int)(costEco * 1.15);
+
         if (fs.getTreasury() < costEco) {
             result.put("ok", false);
             result.put("message", "国库不足！需要 " + costEco + "💰，当前 " + fs.getTreasury() + "💰");

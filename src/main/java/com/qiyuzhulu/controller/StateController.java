@@ -28,6 +28,7 @@ public class StateController {
 
     /** 当前游戏状态（全局单例，对应Python GAME变量） */
     private GameState game;
+    private final java.util.Random rng = new java.util.Random();
 
     public StateController(GameEngine engine, PanelRenderer renderer,
                            TurnAdvanceService turnAdvance, MilitaryService military,
@@ -350,6 +351,22 @@ public class StateController {
             return resp;
         }
 
+        // 反腐行动 9
+        if ("9".equals(action)) {
+            int cost = 20;
+            if (game.getFactionState().getTreasury() < cost) {
+                resp = buildPanelResponse(); resp.put("output", "国库不足（需" + cost + "💰）"); return resp;
+            }
+            int reduction = rng.nextInt(11) + 5; // 5-15
+            game.getFactionState().setTreasury(game.getFactionState().getTreasury() - cost);
+            game.getFactionState().setCorruption(Math.max(0, game.getFactionState().getCorruption() - reduction));
+            game.setActionPoints(Math.max(0, ap - 1));
+            resp = buildPanelResponse();
+            resp.put("result_type", "ok");
+            resp.put("output", "🛡 反腐行动完成：腐败度-" + reduction + "（消耗" + cost + "💰）");
+            return resp;
+        }
+
         // 默认
         game.setActionPoints(ap - 1);
         resp = buildPanelResponse();
@@ -451,6 +468,7 @@ public class StateController {
         resp.put("stats", fs.getStats());
         resp.put("treasury", fs.getTreasury());
         resp.put("population_support", fs.getPopulationSupport());
+        resp.put("corruption", fs.getCorruption());
         resp.put("active_wars", g.getActiveWars());
         resp.put("action_points", g.getActionPoints());
         resp.put("ap_max", g.getApMax());

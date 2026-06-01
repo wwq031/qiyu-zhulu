@@ -15,6 +15,7 @@ public class FactionState {
     private int treasury;                       // 国库
     @JsonProperty("population_support")
     private int populationSupport;              // 民心 0-100
+    private int corruption;                     // 腐败度 0-100
     @JsonProperty("military_tech")
     private int militaryTech;                   // 军事科技等级 1-10
     private String capital;                     // 首都省份名
@@ -61,6 +62,8 @@ public class FactionState {
 
     public int getPopulationSupport() { return populationSupport; }
     public void setPopulationSupport(int v) { this.populationSupport = v; }
+    public int getCorruption() { return corruption; }
+    public void setCorruption(int v) { this.corruption = v; }
 
     public int getMilitaryTech() { return militaryTech; }
     public void setMilitaryTech(int v) { this.militaryTech = v; }
