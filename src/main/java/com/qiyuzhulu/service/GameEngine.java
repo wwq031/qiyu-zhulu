@@ -57,6 +57,17 @@ public class GameEngine {
 
     /** 区域→列强映射 */
     /** 区域邻接表 */
+    /** Phase 1 七份御前奏折元数据（国魂数据在 game_data.json → memorial_spirits） */
+    public static final Map<String, Map<String, Object>> MEMORIALS = Map.of(
+        "northeast", Map.of("name","盛京将军 赵尔巽","title","日俄觊觎边境，请拨军费加强边防","desc","日俄自旅顺战后各踞南满北满，铁丝网已划至奉天城外三十里。臣请拨国帑四十万两，于长春—奉天—锦州一线修筑炮台兵站。若不设防，不出三年辽东恐非我有。","region","northeast","cost",40),
+        "huabei", Map.of("name","直隶总督 袁世凯","title","黄河汛期将至，请拨银修缮堤防","desc","黄河自铜瓦厢改道已逾半纪，豫鲁两省年年漫决。本年春雨过量，河堤报险三十七处。请拨帑银三十五万两修堤疏漕，并可保京师至德州铁路路基。","region","huabei","cost",35),
+        "southwest", Map.of("name","云贵总督 锡良","title","边陲土司叛乱，请准改土归流","desc","川滇黔交界土司七十二寨，自光绪末已抗粮抗税十二载。法人自滇越铁路北窥，暗输军火予土司。臣请行改土归流，设县置吏，但需饷银三十万两及练勇八千。","region","southwest","cost",30),
+        "southeast", Map.of("name","两江总督 张人骏","title","革命党煽动商埠，请派兵弹压","desc","上海租界革命报纸已增至九种，同盟会密使自东京南洋潜入，联络会党、策反新军。去岁徐锡麟案震惊朝野。臣请密派缇骑赴沪宁汉三镇搜捕党人，需密费三十五万两。","region","southeast","cost",35),
+        "lingnan", Map.of("name","两广总督 岑春煊","title","法属越境侵扰，请编新军固防","desc","法属安南驻军去岁越境十二次，测绘广西边境地图。琼崖海面法舰游弋不断。臣请编练新式边防军三协，购德国快炮二十四门，需饷三十万两。","region","lingnan","cost",30),
+        "nanyang", Map.of("name","闽浙总督 松寿","title","海盗猖獗侨民告急，请扩水师","desc","南洋侨商禀报，马六甲至吕宋海面海盗猖獗，去年劫掠华商货船六十一艘。英荷海军以护航为名扩大巡弋。臣请拨银三十五万两购置快轮十艘，编练南洋水师护侨营。","region","nanyang","cost",35),
+        "xibei", Map.of("name","陕甘总督 升允","title","沙俄渗透边疆，请设行省治理","desc","俄国自日俄战后全力东进，伊犁—喀什噶尔一线俄商队实为测绘队，已绘新疆详图七十六幅。外蒙王公暗通俄使。臣请筹设新疆行省衙门于迪化，调甘军两协驻防，需帑三十万两。","region","xibei","cost",30)
+    );
+
     public static final Map<String, List<String>> REGION_ADJACENCY = Map.of(
             "northeast", List.of("huabei"),
             "huabei", List.of("northeast","southeast","xibei"),
@@ -607,8 +618,9 @@ public class GameEngine {
                 .orElseThrow(() -> new IllegalArgumentException("势力不存在: " + factionId));
 
         GameState state = new GameState();
+        boolean isQuickStart = (policies != null && !policies.isEmpty());
         state.setVersion(7);
-        state.setPhase(2);
+        state.setPhase(isQuickStart ? 2 : 1); // 快速开局跳过帝国阶段
         state.setTurn(0);
         state.setGameDate("1910-03");
         state.setPlayerFactionId(factionId);
@@ -618,13 +630,23 @@ public class GameEngine {
 
         // 势力状态
         FactionState fs = new FactionState();
-        fs.setName(faction.getName());
+        fs.setName(isQuickStart ? faction.getName() : "大清帝国");
         fs.setStats(faction.getStats().copy());
-        fs.setTreasury(faction.getStats().getEconomy() * 2);
-        fs.setPopulationSupport(50);
+        fs.setTreasury(200 - (faction.getStats().getEconomy() / 3)); // 帝国余财
+        fs.setPopulationSupport(35); // Phase1 民心疲敝
+        fs.setCorruption(40);         // Phase1 腐败蔓延
         fs.setMilitaryTech(1);
         fs.setCapital(faction.getInitialTerritory().isEmpty() ? "" : faction.getInitialTerritory().get(0));
-        fs.setTerritories(new ArrayList<>(faction.getInitialTerritory()));
+        if (isQuickStart) {
+            fs.setTerritories(new ArrayList<>(faction.getInitialTerritory()));
+        } else {
+            // Phase 1: 全图统一帝国
+            fs.setTerritories(new ArrayList<>());
+            for (var pe : mapData.getAll().entrySet()) {
+                if (pe.getValue() != null && pe.getValue().getName() != null)
+                    fs.getTerritories().add(pe.getValue().getName());
+            }
+        }
         fs.setForces(new ArrayList<>(faction.getInitialForces()));
         fs.setEvolutionStage(0);
         fs.setUnitSerial(new HashMap<>(Map.of("total", 0)));
@@ -634,28 +656,114 @@ public class GameEngine {
         fs.setUnits(units);
         fs.setArmy(recountArmyFromUnits(units));
 
-        // 番号前缀
-        fs.setUnitPrefix(deriveUnitPrefix(faction.getName()));
+        // 番号前缀（Phase1帝国用大清，快速开局用势力名）
+        fs.setUnitPrefix(isQuickStart ? deriveUnitPrefix(faction.getName()) : "大清");
 
         state.setFactionState(fs);
 
-        // 初始化AI势力（所有非玩家势力）
-        for (var fe : gameData.getFactions().entrySet()) {
-            String fid = fe.getKey();
-            if (fid.equals(factionId)) continue;
-            FactionDefinition fdef = fe.getValue();
-            AiFactionData ad = new AiFactionData();
-            ad.setTerritories(new ArrayList<>(fdef.getInitialTerritory()));
-            ad.setRegion(fdef.getRegion());
-            // FactionState 由 AiFactionService.initialize() 在首次回合推进时创建
-            state.getAiFactions().put(fid, ad);
+        if (isQuickStart) {
+            // 快速开局：应用奏折效果 + 初始化AI势力
+            applyMemorialEffects(state);
+            for (var fe : gameData.getFactions().entrySet()) {
+                String fid = fe.getKey();
+                if (fid.equals(factionId)) continue;
+                FactionDefinition fdef = fe.getValue();
+                AiFactionData ad = new AiFactionData();
+                ad.setTerritories(new ArrayList<>(fdef.getInitialTerritory()));
+                ad.setRegion(fdef.getRegion());
+                state.getAiFactions().put(fid, ad);
+            }
+        } else {
+            // Phase 1: 帝国统一，所有领土归玩家，无AI势力
+            // 奏折队列（按回合分配）
+            List<String> queue = new ArrayList<>();
+            queue.add("northeast"); queue.add("xibei");         // Turn 1
+            queue.add("huabei");                                 // Turn 2
+            queue.add("southwest"); queue.add("southeast");     // Turn 3
+            queue.add("lingnan");                               // Turn 4
+            queue.add("nanyang");                               // Turn 5
+            // 紧急奏折池子随机打散
+            String[] emergency = {"flood","revolt","famine","foreign","treasury","warlord"};
+            var rng = new java.util.Random();
+            for (int i = 0; i < 4; i++) {
+                queue.add(emergency[rng.nextInt(emergency.length)]);
+            }
+            state.getCustomOrderFlags().addAll(queue); // 复用customOrderFlags暂存奏折队列
         }
 
         return state;
     }
 
+    /** 应用Phase1奏折效果到游戏状态（国魂数据从 game_data.json:memorial_spirits 读取） */
+    @SuppressWarnings("unchecked")
+    public void applyMemorialEffects(GameState state) {
+        List<String> policies = state.getPhase1Policies();
+        if (policies == null || policies.isEmpty()) return;
+
+        FactionState fs = state.getFactionState();
+        Map<String, NationalSpirit> pending = new LinkedHashMap<>();
+
+        // 读国魂数据
+        Map<String, Map<String, Object>> spiritData = (Map) gameData.getMemorialSpirits();
+        if (spiritData == null) return;
+
+        // 处理所有7个区域（批的用approve，驳的用reject）
+        for (String region : List.of("northeast","huabei","southwest","southeast","lingnan","nanyang","xibei")) {
+            boolean approved = policies.contains(region);
+            Map<String, Object> mem = MEMORIALS.get(region);
+            Map<String, Object> regionSpirits = (Map) spiritData.get(region);
+            if (mem == null || regionSpirits == null) continue;
+
+            // 读对应方向（approve/reject）
+            String direction = approved ? "approve" : "reject";
+            Map<String, Object> factionSpirits = (Map) regionSpirits.get(direction);
+            if (factionSpirits == null) continue;
+
+            // 全局效果：批→扣国库；驳→扣民心/加腐败/加崩溃
+            int cost = ((Number) mem.get("cost")).intValue();
+            if (approved) {
+                fs.setTreasury(Math.max(0, fs.getTreasury() - cost));
+            } else {
+                // 驳回惩罚（减半）
+                fs.setPopulationSupport(clamp(fs.getPopulationSupport() - 4));
+                fs.setCorruption(clamp(fs.getCorruption() + 3));
+            }
+
+            // 分配国魂给各势力
+            for (var entry : factionSpirits.entrySet()) {
+                String fid = entry.getKey();
+                Map<String, Object> spData = (Map) entry.getValue();
+                String sname = (String) spData.get("name");
+                Map<String, Integer> effects = spData.containsKey("effects")
+                        ? ((Map<String, Integer>) (Object) spData.get("effects")) : null;
+
+                // 有name→创建国魂；无name→只加属性
+                if (sname != null && !sname.isEmpty()) {
+                    NationalSpirit ns = new NationalSpirit();
+                    ns.setName(sname);
+                    ns.setDesc((String) spData.getOrDefault("desc", ""));
+                    ns.setEffects(effects);
+                    pending.put(fid, ns);
+                } else if (effects != null && fid.equals(state.getPlayerFactionId())) {
+                    for (var e : effects.entrySet())
+                        fs.getStats().add(e.getKey(), e.getValue());
+                }
+            }
+        }
+
+        state.setPendingSpirits(pending);
+        // 立即应用到玩家势力
+        NationalSpirit playerSpirit = pending.get(state.getPlayerFactionId());
+        if (playerSpirit != null) {
+            fs.setNationalSpirit(playerSpirit);
+            if (playerSpirit.getEffects() != null)
+                for (var e : playerSpirit.getEffects().entrySet())
+                    fs.getStats().add(e.getKey(), e.getValue());
+        }
+    }
+
     /** 从势力初始部队名生成Unit列表 */
-    private List<Unit> autoGenerateUnits(FactionDefinition faction) {
+    public List<Unit> autoGenerateUnits(FactionDefinition faction) {
         List<Unit> units = new ArrayList<>();
         Map<String, Integer> serial = new HashMap<>();
         serial.put("total", 0);

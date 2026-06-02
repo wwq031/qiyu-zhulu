@@ -33,9 +33,13 @@ public class GameDataRepo {
     private Map<String, Object> aiSystem;                   // AI系统配置
     private Map<String, Object> foreignPowers;              // 列强
     private Map<String, Object> statsSystem;                // 属性系统
+    private Map<String, Object> memorialSpirits;           // 奏折国魂（从game_data.json）
     private Map<String, Object> resolutions;                // 国策决议（从resolutions.json）
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper(
+            com.fasterxml.jackson.core.JsonFactory.builder()
+                .configure(com.fasterxml.jackson.core.json.JsonReadFeature.ALLOW_BACKSLASH_ESCAPING_ANY_CHARACTER, true)
+                .build());
 
     @PostConstruct
     public void load() throws IOException {
@@ -102,6 +106,7 @@ public class GameDataRepo {
         aiSystem = parseMap("ai_system");
         foreignPowers = parseMap("foreign_powers");
         statsSystem = parseMap("stats_system");
+        memorialSpirits = parseMap("memorial_spirits");
 
         // 加载 resolutions.json
         try {
@@ -167,6 +172,7 @@ public class GameDataRepo {
     public Map<String, Object> getForeignPowers() { return foreignPowers; }
     public Map<String, Object> getStatsSystem() { return statsSystem; }
     public Map<String, Object> getResolutions() { return resolutions; }
+    public Map<String, Object> getMemorialSpirits() { return memorialSpirits; }
     public Map<String, Object> getRaw() { return raw; }
 
     /** 根据ID获取势力定义（先查可玩势力，再查NPC） */

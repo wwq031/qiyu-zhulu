@@ -37,6 +37,7 @@ public class TurnAdvanceService {
      */
     public List<String> advance(GameState state) {
         List<String> events = new ArrayList<>();
+        int phase = state.getPhase();
 
         // 清除上回合临时数据
         state.getEventsThisTurn().clear();
@@ -208,21 +209,21 @@ public class TurnAdvanceService {
         // 7c. 世界传言
         events.addAll(generateRumors(state, fs));
 
-        // 7d. AI势力回合处理
-        List<String> aiResults = aiService.process(state);
+        // 7d. AI势力回合处理（Phase 1帝国阶段跳过）
+        List<String> aiResults = phase == 1 ? List.of() : aiService.process(state);
         events.addAll(aiResults);
 
-        // 7d. 随机事件
-        List<String> eventResults = eventService.trigger(state);
+        // 7d. 随机事件（Phase 1帝国阶段跳过）
+        List<String> eventResults = phase == 1 ? List.of() : eventService.trigger(state);
         events.addAll(eventResults);
 
-        // 7e. 史诗事件
-        List<Map<String, Object>> epicResults = eventService.checkEpic(state);
+        // 7e. 史诗事件（Phase 1帝国阶段跳过）
+        List<Map<String, Object>> epicResults = phase == 1 ? List.of() : eventService.checkEpic(state);
         state.getEpicEventsThisTurn().addAll(
                 epicResults.stream().map(e -> (String) e.getOrDefault("name", "")).toList());
 
-        // 7f. AI投降检查
-        for (var surr : engine.checkAiSurrender(state)) {
+        // 7f. AI投降检查（Phase 1跳过）
+        if (phase != 1) for (var surr : engine.checkAiSurrender(state)) {
             String fid = surr.get("fid");
             String atkFid = surr.get("attacker_fid");
             Map<String, Object> result = engine.executeSurrender(state, fid, atkFid);
@@ -261,8 +262,70 @@ public class TurnAdvanceService {
         }
 
         // 8. 阶段推进
-        int phase = state.getPhase();
-        if (phase == 2 && state.getTurn() >= 2) {
+        // Phase 1→2: 帝国崩溃检测
+        boolean collapsed = false;
+        if (phase == 1) {
+            int processed = 0;
+            for (String p : state.getPhase1Policies()) {
+                if (p.startsWith("_turn")) continue;
+                if (GameEngine.MEMORIALS.containsKey(p) || (p.startsWith("rej_") && GameEngine.MEMORIALS.containsKey(p.substring(4))))
+                    processed++;
+            }
+            // 队列中实际奏折总数
+            long totalMemorials = state.getCustomOrderFlags().stream()
+                    .filter(q -> GameEngine.MEMORIALS.containsKey(q)).count();
+            boolean allDone = processed >= totalMemorials && totalMemorials > 0;
+            boolean critical = (fs.getTreasury() < 30 || fs.getPopulationSupport() < 10 || fs.getCorruption() > 80) && processed >= 4;
+
+            if (allDone || critical) {
+                engine.applyMemorialEffects(state); // 应用国魂
+                // 初始化AI势力
+                for (var fe : engine.getGameData().getFactions().entrySet()) {
+                    String fid = fe.getKey();
+                    if (fid.equals(state.getPlayerFactionId())) continue;
+                    AiFactionData ad = new AiFactionData();
+                    ad.setTerritories(new ArrayList<>(fe.getValue().getInitialTerritory()));
+                    ad.setRegion(fe.getValue().getRegion());
+                    state.getAiFactions().put(fid, ad);
+                }
+                state.setPhase(2);
+                collapsed = true;
+                // 动态崩溃叙事
+                StringBuilder collapseMsg = new StringBuilder("⚡ 帝国崩塌！");
+                Map<String,String> nar = Map.of(
+                    "northeast","批：奉天防线得筑，然库银大损|驳：辽东防务尽弃，日俄乘虚而入",
+                    "huabei","批：黄河堤防暂固，河工贪腐丛生|驳：黄河决堤，豫鲁百万灾民流离",
+                    "southwest","批：改土归流诏下，土司被迫交权|驳：西南土司拒不受命，自行其政",
+                    "southeast","批：缇骑南下镇压，革命党转入地下|驳：革命星火燎原，沪宁汉三镇赤化",
+                    "lingnan","批：德制快炮运抵广州，边防暂固|驳：法属越境如入无人之境，边防虚设",
+                    "nanyang","批：十艘快轮编入水师，侨民暂安|驳：海盗猖獗，英荷借机扩大巡弋",
+                    "xibei","批：新疆行省设于迪化，甘军驻防|驳：沙俄测绘队遍布全疆，外蒙王公暗通俄使"
+                );
+                for (String pid : state.getPhase1Policies()) {
+                    if (pid.startsWith("_turn") || pid.startsWith("rej_")) continue;
+                    String[] parts = nar.getOrDefault(pid, "批：" + pid + "|驳：" + pid).split("\\|");
+                    collapseMsg.append(parts[0]).append("；");
+                }
+                for (String pid : state.getPhase1Policies()) {
+                    if (!pid.startsWith("rej_")) continue;
+                    String key = pid.substring(4);
+                    String[] parts = nar.getOrDefault(key, "批：" + key + "|驳：" + key).split("\\|");
+                    if (parts.length >= 2) collapseMsg.append(parts[1]).append("；");
+                }
+                if (fs.getTreasury() < 30) collapseMsg.append(" 库银见底。");
+                if (fs.getPopulationSupport() < 10) collapseMsg.append(" 民变蜂起。");
+                if (fs.getCorruption() > 80) collapseMsg.append(" 朝纲糜烂。");
+                collapseMsg.append(" 二十八路豪杰各据一方，帝国分崩离析！");
+                events.add(collapseMsg.toString());
+                // 收窄玩家领土到京师周边（等待势力选择）
+                List<String> core = new ArrayList<>();
+                core.add("北京"); core.add("天津"); core.add("通州"); core.add("保定"); core.add("张家口");
+                fs.setTerritories(core);
+                fs.setCapital("北京");
+            }
+        }
+
+        if (phase == 2 && !collapsed && state.getTurn() >= 2) {
             state.setPhase(3);
             events.add("📜 帝国正式崩溃！各地军阀进入区域统一战阶段。");
         } else if (phase == 3 && engine.isRegionUnified(state, state.getPlayerFactionId())) {

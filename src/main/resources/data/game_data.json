@@ -4659,5 +4659,343 @@
       ],
       "color": "#36962b"
     }
+  },
+  "memorial_spirits": {
+    "northeast": {
+      "approve": {
+        "fengtian_border": {
+          "name": "北疆砥柱",
+          "desc": "旧帝国的遗产：中枢最后时刻拨款四十万两筑造奉天防线。帝国虽崩，炮台犹在。奉天边防军继承此遗产，誓为北疆砥柱。",
+          "effects": {
+            "military": 6,
+            "industry": 4,
+            "population_support": 5
+          }
+        },
+        "northeast_reform": {
+          "effects": {
+            "military": 3
+          }
+        }
+      },
+      "reject": {
+        "fengtian_border": {
+          "name": "空饷之怨",
+          "desc": "中枢弃边，四十万两军费化为空饷。奉天边防军愤懑难平。",
+          "effects": {
+            "military": -5,
+            "population_support": -10
+          }
+        },
+        "manmeng_restoration": {
+          "name": "中枢弃边",
+          "desc": "朝廷不顾东北，满蒙唯有自立。帝国崩溃给了满蒙恢复会天赐良机。",
+          "effects": {
+            "military": 5,
+            "population_support": 10
+          }
+        },
+        "north_manchuria_red": {
+          "effects": {
+            "population_support": 8
+          }
+        },
+        "northeast_reform": {
+          "effects": {
+            "military": 3
+          }
+        }
+      }
+    },
+    "huabei": {
+      "approve": {
+        "capital_garrison": {
+          "name": "缮治河防",
+          "desc": "旧帝国的遗产：帝国覆灭前最后一批河工帑银拨下，黄河堤防得以修缮。京师拱卫军坐拥治河之资，京畿民心暂安。",
+          "effects": {
+            "economy": 6,
+            "agriculture": 4,
+            "population_support": 8
+          }
+        },
+        "northern_peasant": {
+          "effects": {
+            "economy": 3
+          }
+        }
+      },
+      "reject": {
+        "capital_garrison": {
+          "name": "河堤溃决",
+          "desc": "黄河失修，豫鲁两省尽成泽国。京师拱卫军威信扫地。",
+          "effects": {
+            "agriculture": -8,
+            "population_support": -15
+          }
+        },
+        "central_plains_nationalist": {
+          "name": "赈灾自救",
+          "desc": "朝廷不救，百姓自救。中原国民义勇军因赈灾而起，深得民心。",
+          "effects": {
+            "military": 4,
+            "population_support": 8
+          }
+        },
+        "imperial_guard": {
+          "effects": {
+            "population_support": -10
+          }
+        },
+        "northern_peasant": {
+          "effects": {
+            "agriculture": -5
+          }
+        }
+      }
+    },
+    "southwest": {
+      "approve": {
+        "chuanyu_border": {
+          "name": "改土归流",
+          "desc": "旧帝国的遗产：濒临崩溃的旧帝国最后颁布了改土归流诏令，七十二寨土司改设流官。川渝边防军继承前人遗策，誓以此号令一统西南。",
+          "effects": {
+            "diplomacy": 6,
+            "economy": 4,
+            "corruption": -5
+          }
+        },
+        "southwest_tusi": {
+          "name": "被迫同化",
+          "desc": "中枢改土归流令下，土司被迫交出治权。西南土司联军团结抗命，誓保祖制。",
+          "effects": {
+            "military": 5,
+            "ideology": 3
+          }
+        }
+      },
+      "reject": {
+        "chuanyu_border": {
+          "name": "政令不出省",
+          "desc": "改土归流未行，川渝边防军政令不出成都。",
+          "effects": {
+            "diplomacy": -5,
+            "corruption": 8
+          }
+        },
+        "southwest_tusi": {
+          "name": "朝廷弃权",
+          "desc": "中央不管，土司自治。帝国崩溃给了西南土司联军最大机遇。",
+          "effects": {
+            "military": 8,
+            "economy": 3,
+            "population_support": 10
+          }
+        },
+        "weizang_dharma": {
+          "effects": {
+            "population_support": 5
+          }
+        },
+        "dianxi_jingguo": {
+          "effects": {
+            "military": 3
+          }
+        }
+      }
+    },
+    "southeast": {
+      "approve": {
+        "jiangnan_patrol": {
+          "name": "铁腕肃清",
+          "desc": "旧帝国的遗产：帝国临终前派遣缇骑南下搜捕革命党，江南巡防军承继此铁腕之资，手握沪宁汉三镇密探网络。",
+          "effects": {
+            "military": 5,
+            "industry": 3,
+            "ideology": -5
+          }
+        },
+        "shanghai_workers": {
+          "effects": {
+            "ideology": -3
+          }
+        }
+      },
+      "reject": {
+        "jiangnan_patrol": {
+          "name": "革命燎原",
+          "desc": "镇压未行，革命星火已成燎原之势。江南巡防军四面楚歌。",
+          "effects": {
+            "military": -5,
+            "population_support": -10
+          }
+        },
+        "national_revolutionary": {
+          "name": "镇压未至",
+          "desc": "朝廷虚弱，革命趁势。国民革命军因帝国无力镇压而迅速壮大。",
+          "effects": {
+            "military": 8,
+            "ideology": 5,
+            "population_support": 8
+          }
+        },
+        "shanghai_merchant": {
+          "effects": {
+            "population_support": -5
+          }
+        },
+        "shanghai_workers": {
+          "effects": {
+            "ideology": 5
+          }
+        }
+      }
+    },
+    "lingnan": {
+      "approve": {
+        "yuegui_border": {
+          "name": "南疆新军",
+          "desc": "旧帝国的遗产：帝国最后一批德制快炮运抵广州，粤桂边防军接编新式边防三协，成为南疆最现代化的武装。",
+          "effects": {
+            "military": 8,
+            "industry": 2,
+            "population_support": 3
+          }
+        }
+      },
+      "reject": {
+        "yuegui_border": {
+          "name": "边防废弛",
+          "desc": "新军未编，粤桂边防形同虚设。",
+          "effects": {
+            "military": -5,
+            "diplomacy": -3
+          }
+        },
+        "zhongnan_liberation": {
+          "name": "御侮自保",
+          "desc": "朝廷弃边，民族自决。中南民族解放义勇军以御侮之名集结。",
+          "effects": {
+            "military": 6,
+            "population_support": 8
+          }
+        },
+        "southern_peasant_red": {
+          "effects": {
+            "military": 3
+          }
+        },
+        "zhongnan_democratic": {
+          "effects": {
+            "population_support": 5
+          }
+        }
+      }
+    },
+    "nanyang": {
+      "approve": {
+        "imperial_navy": {
+          "name": "南洋水师",
+          "desc": "旧帝国的遗产：帝国崩溃前夕，十艘快轮编入南洋水师护侨营。帝国海军镇守府继承此舰队，成为南洋唯一的海上力量。",
+          "effects": {
+            "naval_power": 10,
+            "economy": 4,
+            "population_support": 5
+          }
+        },
+        "overseas_chinese": {
+          "effects": {
+            "economy": 5
+          }
+        }
+      },
+      "reject": {
+        "imperial_navy": {
+          "name": "有海无防",
+          "desc": "舰队未建，帝国海军徒有其名。",
+          "effects": {
+            "naval_power": -8,
+            "economy": -5
+          }
+        },
+        "nanyang_guerrilla": {
+          "name": "海疆自守",
+          "desc": "朝廷无船，我们自己抢。南洋民族解放游击队以海盗船起家，自组海上武装。",
+          "effects": {
+            "naval_power": 5,
+            "military": 5
+          }
+        },
+        "overseas_chinese": {
+          "effects": {
+            "economy": -5
+          }
+        },
+        "nanyang_indigenous": {
+          "effects": {
+            "military": 3
+          }
+        }
+      }
+    },
+    "xibei": {
+      "approve": {
+        "xibei_border": {
+          "name": "设省安边",
+          "desc": "旧帝国的遗产：帝国临终前批准新疆设省，调甘军两协驻防迪化。西北边防军继承此戍边之志，誓守西域。",
+          "effects": {
+            "diplomacy": 5,
+            "military": 4,
+            "economy": 3,
+            "population_support": 2
+          }
+        },
+        "muslim_self_defense": {
+          "name": "改制的猜忌",
+          "desc": "汉人设省治理西域，回部王公疑惧交加。",
+          "effects": {
+            "ideology": -5,
+            "population_support": -3
+          }
+        },
+        "tianshan_jingan": {
+          "effects": {
+            "military": 3
+          }
+        },
+        "silk_road_guard": {
+          "effects": {
+            "economy": 5
+          }
+        }
+      },
+      "reject": {
+        "xibei_border": {
+          "name": "边政荒废",
+          "desc": "行省未设，西北边防无行政依托。",
+          "effects": {
+            "diplomacy": -5,
+            "military": -3
+          }
+        },
+        "muslim_self_defense": {
+          "name": "朝廷弃西北",
+          "desc": "汉人不管，回部自保。帝国崩溃给了西北穆斯林自卫军最大机遇。",
+          "effects": {
+            "military": 5,
+            "population_support": 10
+          }
+        },
+        "tianshan_jingan": {
+          "effects": {
+            "military": 3
+          }
+        },
+        "silk_road_guard": {
+          "effects": {
+            "economy": -5
+          }
+        }
+      }
+    }
   }
 }

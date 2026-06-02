@@ -81,6 +81,7 @@ function updateConnection(ok) {
 
 // ── 渲染函数 ────────────────────────────────────────────────
 function renderAll(data) {
+  var wasEmpire = (gameState && gameState.phase === 1); // 必须在 gameState=data 之前
   gameState = data;
   if (!data || data.error) return;
   clearEventPopups(); // 清空上次残留的弹窗队列
@@ -96,6 +97,34 @@ function renderAll(data) {
   // 切换到游戏视图
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('game-view').style.display = 'flex';
+
+  // Phase 1 帝国模式：奏折处理
+  if (data.phase === 1) {
+    var sm = document.getElementById('side-menu');
+    if (sm) sm.style.display = 'flex';
+    document.getElementById('status-text').textContent = '🏛 帝国余晖 · Turn ' + (data.turn||0) + ' · 输入 "E" 退朝';
+    var empStats = document.getElementById('empire-stats');
+    if (!empStats) {
+      empStats = document.createElement('div');
+      empStats.id = 'empire-stats';
+      empStats.style.cssText = 'position:absolute;top:8px;left:60px;z-index:1000;display:flex;gap:16px;background:rgba(17,25,34,0.9);border:1px solid var(--gold-dim);border-radius:6px;padding:6px 14px;font-size:0.85em;';
+      document.getElementById('map-wrapper').appendChild(empStats);
+    }
+    empStats.innerHTML = '<span style="color:var(--gold);">🏛 大清帝国</span> <span>💰' + (data.treasury||0) + '万两</span> <span>❤' + (data.population_support||0) + '</span> <span>🦠' + (data.corruption||0) + '</span>';
+    checkMemorial(800);
+  } else if (wasEmpire && data.phase >= 2) {
+    // Phase 1→2 崩溃！先弹叙事再选势力
+    var sm3 = document.getElementById('side-menu');
+    if (sm3) sm3.style.display = 'flex';
+    var es2 = document.getElementById('empire-stats');
+    if (es2) es2.remove();
+    showCollapseNarrative(data);
+  } else {
+    var sm4 = document.getElementById('side-menu');
+    if (sm4) sm4.style.display = 'flex';
+    var es3 = document.getElementById('empire-stats');
+    if (es3) es3.remove();
+  }
 
   // 顶栏更新（v2.2新版可能无此元素，加保护）
   var el;
@@ -565,6 +594,27 @@ function renderDeptContent(type, data) {
       html += '<span class="tax-val" id="d-comm-val">' + commRate + '%</span></div>';
       html += '<div class="tax-hint">⚠ 税率&gt;30%影响民心 | &gt;70%损害工农</div>';
       html += '</div>';
+      // 国魂
+      var ns = data.national_spirit;
+      if (ns && ns.name && ns.name !== '暂无国魂') {
+        html += '<div class="tax-panel" style="border-color:var(--gold);">';
+        html += '<div class="tax-header">⚜ ' + ns.name + '</div>';
+        html += '<div style="font-size:0.78em;color:var(--text-dim);line-height:1.5;">' + (ns.desc||'') + '</div>';
+        if (ns.effects) {
+          html += '<div style="font-size:0.75em;color:var(--gold-dim);margin-top:4px;">';
+          for (var ek in ns.effects) {
+            var v = ns.effects[ek];
+            var icon = window._STAT_ICONS[ek] || ek;
+            html += (v>0?'+':'') + v + icon + ' ';
+          }
+          html += '</div>';
+        }
+        html += '</div>';
+      }
+      // Phase1 奏折记录
+      var policies = data.policies || [];
+      var memNames = {'northeast':'东北边防','huabei':'华北治河','southwest':'西南改土归流','southeast':'东南镇压','lingnan':'岭南新军','nanyang':'南洋水师','xibei':'西北设省'};
+      html += '<div style="font-size:0.72em;color:var(--text-dim);margin:4px 0;">📜 奏折: ' + (policies.length ? policies.map(function(p){return memNames[p]||p;}).join('、') : '无（快速开局随机分配）') + '</div>';
       html += '<hr><div class="section-title">自定义指令</div>';
       html += '<div style="margin-top:4px;"><input id="quick-order" style="width:100%;padding:6px;background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:3px;" placeholder="输入自由指令..."><button class="btn btn-small" style="margin-top:4px;width:100%;" onclick="var o=document.getElementById(\'quick-order\').value;if(o){document.getElementById(\'custom-input\').value=o;sendCustomOrder();closeDept();}">✧ 执行</button></div>';
       break;
@@ -628,6 +678,221 @@ function setTaxRateCommit(type, value) {
     if (panel && panel.classList.contains('open')) {
       openDept('domestic');
     }
+  });
+}
+
+// ═══════════════════ Phase 1 御前奏折 ═══════════════════
+var _memQueue = [];     // 待处理的奏折队列
+var _memProcessed = 0;  // 已处理数
+var _memTotal = 0;      // 总数
+var _collapseFactions = {}; // 崩溃后可选势力
+
+function checkMemorial(delay) {
+  setTimeout(function() {
+    apiPost('/api/memorial/resolve', {action: 'next'}).then(function(data) {
+      if (data.error) return;
+      if (data.done) { statusText('📜 奏折已全部批阅，等待帝国崩溃...'); return; }
+      if (data.memorial) {
+        _memProcessed = data.processed || 0;
+        _memTotal = data.total || 0;
+        showMemorialPopup(data.memorial, data);
+      }
+    });
+  }, delay || 500);
+}
+
+function showMemorialPopup(mem, state) {
+  var overlay = document.createElement('div');
+  overlay.className = 'event-popup-overlay show';
+  overlay.style.display = 'flex';
+  overlay.id = 'memorial-overlay';
+
+  var icons = {northeast:'🏯',huabei:'🌊',southwest:'⛰',southeast:'🏭',lingnan:'🌴',nanyang:'⛵',xibei:'🏔',
+               flood:'🌊',revolt:'⚔',famine:'🌾',foreign:'🏴',treasury:'💰',warlord:'🗡'};
+  var regNames = {northeast:'东北',huabei:'华北',southwest:'西南',southeast:'东南',lingnan:'岭南',nanyang:'南洋',xibei:'西北'};
+
+  var html = '<div class="event-popup" style="max-width:550px;text-align:left;padding:20px;">';
+  // 顶部状态
+  html += '<div style="display:flex;justify-content:space-between;margin-bottom:12px;font-size:0.8em;">';
+  html += '<span>💰<b>' + (state.treasury) + '</b>万两</span>';
+  html += '<span>❤<b>' + (state.support) + '</b></span>';
+  html += '<span>🦠<b>' + (state.corruption) + '</b></span>';
+  html += '<span style="color:var(--gold-dim);">已批' + (_memProcessed) + '</span>';
+  html += '</div>';
+  // 奏折内容
+  html += '<div style="border-left:3px solid var(--gold);padding-left:12px;margin-bottom:12px;">';
+  html += '<div style="font-size:1.1em;color:var(--gold);margin-bottom:2px;">' + (icons[mem.region]||'📜') + ' ' + (mem.name||'军机处') + '</div>';
+  if (mem.region) html += '<div style="font-size:0.8em;color:var(--text-dim);margin-bottom:6px;">[' + (regNames[mem.region]||mem.region) + ']</div>';
+  html += '<div style="font-weight:bold;color:var(--text);margin-bottom:4px;">' + (mem.title||'') + '</div>';
+  html += '<div style="font-size:0.85em;color:var(--text-dim);line-height:1.6;">' + (mem.desc||'') + '</div>';
+  html += '<div style="font-size:0.8em;color:var(--gold-dim);margin-top:6px;">💰耗费 ' + (mem.cost||'?') + ' 万两</div>';
+  html += '</div>';
+  // 按钮
+  html += '<div style="display:flex;gap:12px;justify-content:center;">';
+  html += '<button id="mem-approve-btn" onclick="resolveMemorial(\'' + (mem.region||mem.memorial_id) + '\',true)" style="background:var(--gold);color:#000;border:none;padding:10px 32px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1em;">朱批：准奏</button>';
+  html += '<button onclick="resolveMemorial(\'' + (mem.region||mem.memorial_id) + '\',false)" style="background:rgba(200,60,40,0.2);color:var(--red);border:1px solid var(--red);padding:10px 24px;border-radius:4px;cursor:pointer;font-size:1em;">驳</button>';
+  html += '</div>';
+  html += '</div>';
+
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+
+  // 国库不足禁批准
+  if (state.treasury < (mem.cost||0)) {
+    var btn = document.getElementById('mem-approve-btn');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; btn.textContent = '国库不足'; }
+  }
+}
+
+function resolveMemorial(id, approved) {
+  var overlay = document.getElementById('memorial-overlay');
+  if (overlay) overlay.remove();
+  apiPost('/api/memorial/resolve', {action: 'resolve', memorial_id: id, approved: approved}).then(function(data) {
+    if (data.error) { statusText('错误: ' + data.error); return; }
+    statusText((approved ? '✅ 准奏 ' : '❌ 驳回 ') + id);
+    addLogEntry((approved ? '📜 准奏: ' : '📜 驳回: ') + id);
+    if (gameState) {
+      gameState.treasury = data.treasury;
+      gameState.population_support = data.support;
+      gameState.corruption = data.corruption;
+    }
+    // 每回合只出一份奏折——不立即弹出下一份
+  });
+}
+
+function showCollapseNarrative(data) {
+  var treasury = data.treasury || 0;
+  var support = data.population_support || 0;
+  var corruption = data.corruption || 0;
+  // 提取后端返回的动态崩溃消息
+  var events = data.turn_events || [];
+  var collapseMsg = '';
+  for (var i = 0; i < events.length; i++) {
+    if (events[i].indexOf('帝国崩塌') >= 0) { collapseMsg = events[i]; break; }
+  }
+
+  var html = '<div style="text-align:center;max-width:550px;margin:0 auto;">';
+  html += '<h2 style="color:var(--red);margin-bottom:16px;">⚡ 帝国大崩溃 ⚡</h2>';
+  html += '<div style="color:var(--text-dim);line-height:2;text-align:left;font-size:0.85em;">';
+  html += '<p>宣统二年冬。帝国最后一道诏书无人接旨。</p>';
+  // 动态奏折后果
+  if (collapseMsg) {
+    // 去掉前导"⚡ 帝国崩塌！" → 剩余按"；"和"。"拆分
+    var body = collapseMsg.replace(/^⚡ 帝国崩塌！\s*/, '');
+    var parts = body.split(/[；。]/);
+    for (var i = 0; i < parts.length; i++) {
+      var line = parts[i].trim();
+      if (line && line.indexOf('二十八路')<0) {
+        var color = (line.indexOf('驳：')>=0) ? 'var(--red)' : (line.indexOf('批：')>=0) ? 'var(--text-dim)' : 'var(--text)';
+        html += '<p style="color:' + color + ';">' + line + '</p>';
+      }
+    }
+  }
+  // 全局后果
+  if (treasury < 30) html += '<p style="color:var(--red);">户部库银见底。北洋六镇，五镇拒不奉诏。</p>';
+  if (support < 15) html += '<p style="color:var(--red);">民变蜂起。各省咨议局通电自保。</p>';
+  if (corruption > 70) html += '<p style="color:var(--red);">廷臣尽皆自谋出路。帝国躯壳已空。</p>';
+  html += '<p>列强公使团联名照会：各国将自行保护在华利益。</p>';
+  html += '<p style="color:var(--gold);font-weight:bold;text-align:center;margin-top:16px;">二十八路豪杰各据一方。帝国，终于崩塌。</p>';
+  html += '</div>';
+  html += '<div style="margin-top:16px;">';
+  html += '<p style="color:var(--text-dim);font-size:0.8em;">国库余 ' + treasury + ' 万两 · 民心 ' + support + ' · 腐败 ' + corruption + '</p>';
+  html += '<button onclick="dismissEventPopup();showPostCollapseFactionPicker();" style="margin-top:12px;background:var(--gold);color:#000;border:none;padding:10px 32px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1em;">选择崛起势力</button>';
+  html += '</div></div>';
+  showEventPopup('⚡ 帝国崩塌', html, true);
+}
+
+function showPostCollapseFactionPicker() {
+  var html = '<div id="collapse-faction-list" style="max-height:55vh;overflow-y:auto;text-align:left;"></div>';
+  showEventPopup('⚡ 帝国崩塌 · 选择你的势力', html, true);
+  setTimeout(function() {
+    apiGet('/api/factions').then(function(fData) {
+      var factions = fData.factions || [];
+      _collapseFactions = {};
+      factions.forEach(function(f) { _collapseFactions[f.id] = f; });
+      var byRegion = {};
+      factions.forEach(function(f) {
+        var r = f.region_name || f.region || '?';
+        if (!byRegion[r]) byRegion[r] = [];
+        byRegion[r].push(f);
+      });
+      var list = document.getElementById('collapse-faction-list');
+      if (!list) return;
+      var inner = '';
+      for (var rname in byRegion) {
+        inner += '<div style="margin:10px 0 6px;border-top:1px solid var(--border);padding-top:8px;"><b style="color:var(--gold);font-size:0.95em;">' + rname + '</b><span style="color:var(--text-dim);font-size:0.8em;"> · ' + byRegion[rname].length + '势力</span></div>';
+        inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
+        byRegion[rname].forEach(function(f) {
+          var st = f.stats || {};
+          var ld = f.leader || {};
+          var evo = f.evolution || ['?','?','?'];
+          var ns = f.national_spirit || {};
+          var nsName = (ns.name && ns.name !== '暂无国魂') ? ns.name : null;
+          inner += '<div onclick="showFactionPickDetail(\'' + f.id + '\')" style="cursor:pointer;padding:8px 10px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;transition:all 0.15s;" onmouseover="this.style.borderColor=\'var(--gold-dim)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
+          inner += '<div style="font-weight:bold;color:var(--text);margin-bottom:2px;">' + f.name + '</div>';
+          inner += '<div style="color:var(--text-dim);font-size:0.78em;">' + (f.ideology||'') + (ld.name ? ' · @' + ld.name : '') + '</div>';
+          inner += '<div style="font-size:0.75em;color:var(--text-dim);margin:3px 0;">🏭' + (st.industry||0) + ' 🌾' + (st.agriculture||0) + ' ⚔' + (st.military||0) + ' 💰' + (st.economy||0) + ' 📖' + (st.ideology||0) + ' 🌐' + (st.diplomacy||0) + '</div>';
+          inner += '<div style="font-size:0.72em;color:var(--gold-dim);">' + evo[0] + ' → ' + evo[1] + ' → ★' + evo[2] + '★</div>';
+          if (nsName) inner += '<div style="font-size:0.7em;color:var(--gold);margin-top:2px;">⚜ ' + nsName + '</div>';
+          inner += '</div>';
+        });
+        inner += '</div>';
+      }
+      list.innerHTML = inner;
+    });
+  }, 300);
+}
+
+function showFactionPickDetail(fid) {
+  var f = _collapseFactions[fid];
+  if (!f) return;
+  var st = f.stats || {};
+  var ld = f.leader || {};
+  var evo = f.evolution || ['?','?','?'];
+  var ns = f.national_spirit || {};
+  var terr = f.initial_territory || [];
+  var forces = f.initial_forces || [];
+
+  var html = '<div style="text-align:left;max-width:450px;margin:0 auto;">';
+  html += '<h3 style="color:var(--gold);margin-bottom:2px;">' + f.name + '</h3>';
+  html += '<div style="color:var(--text-dim);font-size:0.85em;margin-bottom:8px;">' + (f.ideology||'') + (ld.name ? ' · @' + ld.name + ' · ' + (ld.title||'') : '') + '</div>';
+  // 背景
+  if (ld.background) html += '<div style="font-size:0.8em;color:var(--text-dim);margin:6px 0;padding:6px 10px;background:var(--panel2);border-radius:4px;">' + ld.background + '</div>';
+  if (f.lore) html += '<div style="font-size:0.8em;color:var(--text-dim);font-style:italic;margin:4px 0;">「' + f.lore + '」</div>';
+  // 六维
+  html += '<div style="margin:8px 0;">';
+  ['industry','agriculture','military','economy','ideology','diplomacy'].forEach(function(k) {
+    var v = st[k]||0; var ic = {industry:'🏭',agriculture:'🌾',military:'⚔',economy:'💰',ideology:'📖',diplomacy:'🌐'}[k]||'?';
+    html += '<span style="margin-right:12px;font-size:0.85em;">' + ic + '<b>' + v + '</b></span>';
+  });
+  html += '</div>';
+  // 进化路径
+  html += '<div style="font-size:0.82em;color:var(--gold-dim);margin:4px 0;">' + evo[0] + ' → ' + evo[1] + ' → ★' + evo[2] + '★</div>';
+  // 国魂
+  if (ns.name && ns.name !== '暂无国魂') {
+    html += '<div style="margin:6px 0;padding:6px 10px;background:var(--panel2);border-left:3px solid var(--gold);border-radius:3px;">';
+    html += '<div style="color:var(--gold);font-weight:bold;font-size:0.85em;">⚜ ' + ns.name + '</div>';
+    if (ns.desc) html += '<div style="color:var(--text-dim);font-size:0.78em;">' + ns.desc + '</div>';
+    html += '</div>';
+  }
+  // 初始领土和兵力
+  html += '<div style="font-size:0.78em;color:var(--text-dim);margin:6px 0;">📍' + terr.slice(0,5).join('、') + (terr.length>5?' +'+(terr.length-5):'') + '</div>';
+  html += '<div style="font-size:0.78em;color:var(--text-dim);">🗡' + forces.slice(0,4).join('、') + (forces.length>4?' +'+(forces.length-4):'') + '</div>';
+  // 按钮
+  html += '<div style="margin-top:12px;display:flex;gap:8px;">';
+  html += '<button onclick="pickPostCollapseFaction(\'' + f.id + '\',\'' + f.name + '\')" style="flex:1;background:var(--gold);color:#000;border:none;padding:8px;border-radius:4px;cursor:pointer;font-weight:bold;">确认选择</button>';
+  html += '<button onclick="dismissEventPopup();setTimeout(showPostCollapseFactionPicker,200);" style="background:var(--panel2);color:var(--text-dim);border:1px solid var(--border);padding:8px 16px;border-radius:4px;cursor:pointer;">← 返回</button>';
+  html += '</div></div>';
+  showEventPopup(f.name, html, true);
+}
+
+function pickPostCollapseFaction(fid, fname) {
+  dismissEventPopup();
+  document.getElementById('status-text').textContent = '切换势力...';
+  apiPost('/api/empire/switch-faction', {faction_id: fid}).then(function(data) {
+    if (data.error) { alert(data.error); return; }
+    renderAll(data);
+    addLogEntry('⚡ 帝国崩溃 · ' + fname + ' 崛起！');
   });
 }
 

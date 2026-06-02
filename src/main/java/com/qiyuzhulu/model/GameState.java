@@ -42,6 +42,8 @@ public class GameState {
     private Map<String, AiFactionData> aiFactions;  // AI势力数据
     @JsonProperty("defeated_factions")
     private List<String> defeatedFactions;          // 已灭亡势力ID列表
+    @JsonProperty("pending_spirits")
+    private Map<String, NationalSpirit> pendingSpirits; // Phase1奏折分配的国魂（fid→spirit），初始化后清除
     @JsonProperty("active_wars")
     private List<String> activeWars;                // 当前战争中的势力ID列表
     @JsonProperty("non_aggression_pacts")
@@ -134,6 +136,8 @@ public class GameState {
     public void setPlayerFactionId(String v) { this.playerFactionId = v; }
     public List<String> getPhase1Policies() { return phase1Policies; }
     public void setPhase1Policies(List<String> v) { this.phase1Policies = v; }
+    public Map<String, NationalSpirit> getPendingSpirits() { return pendingSpirits; }
+    public void setPendingSpirits(Map<String, NationalSpirit> v) { this.pendingSpirits = v; }
     public int getActionPoints() { return actionPoints; }
     public void setActionPoints(int v) { this.actionPoints = v; }
     public int getApMax() { return apMax; }

@@ -123,6 +123,7 @@ public class MapController {
 
         // 所有权
         GameState game = stateCtrl.getGame();
+        boolean isEmpirePhase = game != null && game.getPhase() == 1;
         if (game != null && !"1".equals(spectator)) {
             Map<String, Object> ownership = new LinkedHashMap<>();
 
@@ -136,13 +137,14 @@ public class MapController {
             FactionDefinition pf = engine.getFaction(game.getPlayerFactionId()).orElse(null);
             ownership.put("player", Map.of(
                     "faction_id", game.getPlayerFactionId(),
-                    "name", pf != null ? pf.getName() : pfs.getName(),
+                    "name", pfs.getName(), // Phase1可能改名（大清帝国）
                     "region", pf != null ? pf.getRegion() : "",
                     "color", pf != null ? pf.getColor() : "#ffffff",
                     "territory_pids", playerPids));
 
-            // AI
+            // AI（帝国阶段跳过）
             List<Map<String, Object>> aiList = new ArrayList<>();
+            if (!isEmpirePhase)
             for (var ae : game.getAiFactions().entrySet()) {
                 if (game.getDefeatedFactions().contains(ae.getKey())) continue;
                 FactionState afs = ae.getValue().getFactionState();
@@ -198,8 +200,8 @@ public class MapController {
                             .add(u.toMap(true, pfs.getName(), pfs.getUnits().indexOf(u)));
                 }
             }
-            // AI势力部队
-            for (var ae : game.getAiFactions().entrySet()) {
+            // AI势力部队（帝国阶段跳过）
+            if (!isEmpirePhase) for (var ae : game.getAiFactions().entrySet()) {
                 if (game.getDefeatedFactions().contains(ae.getKey())) continue;
                 FactionState afs = ae.getValue().getFactionState();
                 if (afs == null || afs.getUnits() == null) continue;
@@ -212,7 +214,8 @@ public class MapController {
                     }
                 }
             }
-            // NPC驻军（统一后的hostile_npcs）
+            // NPC驻军（帝国阶段跳过）
+            if (!isEmpirePhase) {
             Map<String, NpcDefinition> npcDefs = engine.getGameData().getHostileNpcs();
             if (npcDefs != null) {
                 for (var ne : npcDefs.entrySet()) {
@@ -247,6 +250,7 @@ public class MapController {
                     garrisons.computeIfAbsent(capPid, k -> new ArrayList<>()).addAll(npcUnits);
                 }
             }
+            } // if (!isEmpirePhase)
             result.put("garrisons", garrisons);
         }
 
@@ -258,7 +262,7 @@ public class MapController {
             FactionState pfs = game.getFactionState();
             FactionDefinition pf = engine.getFaction(game.getPlayerFactionId()).orElse(null);
             String pColor = pf != null ? pf.getColor() : "#ffffff";
-            String pName = pf != null ? pf.getName() : pfs.getName();
+            String pName = pfs.getName(); // 优先FactionState名（Phase1可改）
             for (String t : pfs.getTerritories()) {
                 String pid = nameToPid.get(t);
                 if (pid != null) {

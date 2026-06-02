@@ -486,7 +486,11 @@ public class StateController {
         resp.put("ideology", faction != null ? faction.getIdeology() : "");
         resp.put("evolution", faction != null ? faction.getEvolution() : List.of("", "", ""));
         resp.put("leader", faction != null ? faction.getLeader() : null);
-        resp.put("national_spirit", engine.getNationalSpirit(faction));
+        // 国魂：优先Phase1分配的，其次势力自带的
+        NationalSpirit spirit = fs.getNationalSpirit();
+        if (spirit == null || spirit.getName() == null || spirit.getName().isEmpty())
+            spirit = engine.getNationalSpirit(faction);
+        resp.put("national_spirit", spirit);
         resp.put("stats", fs.getStats());
         resp.put("treasury", fs.getTreasury());
         resp.put("agri_tax_rate", fs.getAgriTaxRate());
@@ -570,6 +574,7 @@ public class StateController {
         resp.put("game_over", false);
         resp.put("enacted_resolutions", g.getEnactedResolutions());
         resp.put("researched_techs", g.getResearchedTechs());
+        resp.put("policies", g.getPhase1Policies());
         resp.put("custom_order_flags", g.getCustomOrderFlags());
         resp.put("custom_tactics", g.getCustomTactics());
         resp.put("custom_unit_types", g.getCustomUnitTypes());
@@ -586,6 +591,103 @@ public class StateController {
         resp.put("moving_units", List.of());
 
         return resp;
+    }
+
+    /** POST /api/memorial/resolve — Phase1 批阅一份奏折（每回合最多1份） */
+    @PostMapping("/memorial/resolve")
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> resolveMemorial(@RequestBody Map<String, Object> body) {
+        if (game == null || game.getPhase() != 1)
+            return Map.of("error", "不在帝国阶段");
+
+        FactionState fs = game.getFactionState();
+        List<String> queue = game.getCustomOrderFlags(); // 暂存奏折队列
+        String action = (String) body.getOrDefault("action", "next");
+
+        if ("next".equals(action)) {
+            // 本回合已处理过奏折→不再弹新的
+            int turnKey = game.getTurn();
+            String turnMarker = "_turn_" + turnKey;
+            if (game.getPhase1Policies().contains(turnMarker))
+                return Map.of("done", true, "message", "本回合已批阅");
+
+            // 返回队列中下一份未处理的奏折
+            for (String id : queue) {
+                Map<String, Object> mem = GameEngine.MEMORIALS.get(id);
+                if (mem != null && !game.getPhase1Policies().contains(id)
+                        && !game.getPhase1Policies().contains("rej_" + id)) {
+                    return Map.of("memorial_id", id,
+                            "memorial", mem,
+                            "treasury", fs.getTreasury(),
+                            "support", fs.getPopulationSupport(),
+                            "corruption", fs.getCorruption(),
+                            "processed", (int) game.getPhase1Policies().stream().filter(p -> !p.startsWith("_turn")).count(),
+                            "total", queue.stream().filter(q -> GameEngine.MEMORIALS.containsKey(q)).count());
+                }
+            }
+            return Map.of("done", true, "message", "所有奏折已处理完毕");
+        }
+
+        // 批阅操作
+        String memorialId = (String) body.get("memorial_id");
+        boolean approved = Boolean.TRUE.equals(body.get("approved"));
+        Map<String, Object> mem = GameEngine.MEMORIALS.get(memorialId);
+        if (mem == null) return Map.of("error", "无效奏折");
+
+        game.getPhase1Policies().add(approved ? memorialId : "rej_" + memorialId);
+        game.getPhase1Policies().add("_turn_" + game.getTurn()); // 标记本回合已处理
+        int cost = ((Number) mem.get("cost")).intValue();
+        if (approved) {
+            fs.setTreasury(Math.max(0, fs.getTreasury() - cost));
+        } else {
+            fs.setPopulationSupport(GameEngine.clamp(fs.getPopulationSupport() - 4));
+            fs.setCorruption(GameEngine.clamp(fs.getCorruption() + 3));
+        }
+
+        return Map.of("ok", true, "treasury", fs.getTreasury(),
+                "support", fs.getPopulationSupport(), "corruption", fs.getCorruption());
+    }
+
+    /** POST /api/empire/switch-faction — Phase1崩溃后切换势力 */
+    @PostMapping("/empire/switch-faction")
+    public Map<String, Object> switchFaction(@RequestBody Map<String, Object> body) {
+        if (game == null) return Map.of("error", "无存档");
+        String newFid = (String) body.get("faction_id");
+        var faction = engine.getFaction(newFid).orElse(null);
+        if (faction == null) return Map.of("error", "势力不存在");
+
+        FactionState oldFs = game.getFactionState();
+        FactionState fs = new FactionState();
+        fs.setName(faction.getName());
+        fs.setStats(faction.getStats().copy());
+        fs.setTreasury(oldFs.getTreasury());
+        fs.setPopulationSupport(oldFs.getPopulationSupport());
+        fs.setCorruption(oldFs.getCorruption());
+        fs.setMilitaryTech(1);
+        fs.setCapital(faction.getInitialTerritory().isEmpty() ? "" : faction.getInitialTerritory().get(0));
+        fs.setTerritories(new ArrayList<>(faction.getInitialTerritory()));
+        fs.setForces(new ArrayList<>(faction.getInitialForces()));
+        fs.setUnitSerial(new HashMap<>(Map.of("total", 0)));
+        fs.setUnitPrefix(engine.deriveUnitPrefix(faction.getName()));
+        // 继承奏折效果中的国魂
+        Map<String, NationalSpirit> pending = game.getPendingSpirits();
+        if (pending != null && pending.containsKey(newFid)) {
+            NationalSpirit ns = pending.get(newFid);
+            fs.setNationalSpirit(ns);
+            if (ns.getEffects() != null)
+                for (var e : ns.getEffects().entrySet())
+                    fs.getStats().add(e.getKey(), e.getValue());
+        }
+        List<Unit> units = engine.autoGenerateUnits(faction);
+        fs.setUnits(units);
+        fs.setArmy(engine.recountArmyFromUnits(units));
+        game.setFactionState(fs);
+        game.setPlayerFactionId(newFid);
+        // Phase设为3（直接进入区域统一战）
+        game.setPhase(3);
+        game.setActionPoints(3);
+        autoSave();
+        return buildPanelResponse();
     }
 
     /** POST /api/exit — 退出桌面应用 */

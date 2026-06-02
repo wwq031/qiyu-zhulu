@@ -50,11 +50,17 @@ public class AiFactionService {
             fs.setUnitSerial(new HashMap<>(Map.of("total",0,"infantry",0,"cavalry",0,"artillery",0,"engineer",0,"naval",0)));
             fs.setUnitPrefix(engine.deriveUnitPrefix(faction.getName()));
 
-            // 国家精神
-            NationalSpirit spirit = engine.getNationalSpirit(faction);
-            if (spirit != null && spirit.getEffects() != null) {
-                for (var eff : spirit.getEffects().entrySet()) {
-                    fs.getStats().add(eff.getKey(), eff.getValue());
+            // 国家精神（优先Phase1奏折分配的spirit）
+            Map<String, NationalSpirit> pending = state.getPendingSpirits();
+            NationalSpirit spirit = (pending != null && pending.containsKey(fid))
+                    ? pending.get(fid)
+                    : engine.getNationalSpirit(faction);
+            if (spirit != null) {
+                fs.setNationalSpirit(spirit);
+                if (spirit.getEffects() != null) {
+                    for (var eff : spirit.getEffects().entrySet()) {
+                        fs.getStats().add(eff.getKey(), eff.getValue());
+                    }
                 }
             }
 
