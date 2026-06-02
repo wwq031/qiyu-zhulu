@@ -83,9 +83,11 @@ async function refreshState() {
   else updateConnection(false);
 }
 
-async function sendAction(action) {
-  document.getElementById('status-text').textContent = `执行 ${action}...`;
-  const data = await apiPost('/api/action', {action});
+async function sendAction(action, extra) {
+  document.getElementById('status-text').textContent = '执行 ' + action + '...';
+  var body = {action: action};
+  if (extra) Object.assign(body, extra);
+  const data = await apiPost('/api/action', body);
   if (!data.error) renderAll(data);
   else alert('错误: ' + data.error);
 }

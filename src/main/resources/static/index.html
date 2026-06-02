@@ -107,6 +107,8 @@
     <button onclick="testPanel('garrison')" style="padding:4px 8px;font-size:0.7em;">📍 驻军</button>
     <button onclick="testPanel('move')" style="padding:4px 8px;font-size:0.7em;">🚚 移动测试</button>
     <button onclick="testPanel('attack')" style="padding:4px 8px;font-size:0.7em;">⚔ 攻击测试</button>
+    <button onclick="testPanel('rankings')" style="padding:4px 8px;font-size:0.7em;">📊 排行榜</button>
+    <button onclick="testPanel('switchFaction')" style="padding:4px 8px;font-size:0.7em;">🔄 切换势力</button>
     <button onclick="document.getElementById('test-results').innerHTML=''">🧹 清空</button>
   </div>
 </div>
@@ -153,19 +155,45 @@ function testPanel(what){
       if(d&&d.message)tlog('  ✅ '+d.message,'#4caf50');
       else if(d&&d.error)tlog('  ⚠ '+d.error,'#d4a853');
     }).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }else if(what==='rankings'){
+    fetch(window.API+'/api/debug/rankings').then(function(r){return r.json()}).then(function(d){
+      if(d.error){tlog('  ❌ '+d.error,'#e05555');return}
+      var ranks=d.rankings||[];
+      tlog('  势力排行榜 ('+ranks.length+'个)','#d4a853');
+      ranks.forEach(function(r,i){
+        var tag=r.is_player?' 👈':'';
+        tlog('  '+(i+1)+'. '+r.name+tag+' 综合:'+r.score+' 军'+r.military+' 经'+r.economy+' 省'+r.territories+' 兵'+r.units+' 💰'+r.treasury, r.is_player?'#4caf50':'#888');
+      });
+    }).catch(function(e){tlog('  ❌ '+e.message,'#e05555')});
+  }else if(what==='switchFaction'){
+    fetch(window.API+'/api/factions').then(function(r){return r.json()}).then(function(d){
+      var fs=d.factions||[];
+      tlog('  点击势力名切换:','#d4a853');
+      fs.forEach(function(f){
+        tlog('  <a href=\"#\" onclick=\"debugSwitchFaction(\\''+f.id+'\\')\" style=\"color:var(--text-dim);\">'+f.name+'</a>','#888');
+      });
+    });
   }
+}
+function debugSwitchFaction(fid){
+  if(!confirm('切换到 '+fid+'？当前势力会放回AI。'))return;
+  fetch(window.API+'/api/debug/switch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({faction_id:fid})}).then(function(r){return r.json()}).then(function(d){
+    if(d.error){alert(d.error);return}
+    if(typeof renderAll==='function')renderAll(d);
+    else location.reload();
+  });
 }
 </script>
 <!-- ═══════════════════ 脚本 ═══════════════════ -->
 <script src="/static/vendor/leaflet/leaflet.js"></script>
-<script src="/static/js/utils.js?v=2.2.1"></script>
-<script src="/static/js/app.js?v=2.2.1"></script>
-<script src="/static/js/map.js?v=2.2.1"></script>
-<script src="/static/js/map-commands.js?v=2.2.1"></script>
-<script src="/static/js/popups.js?v=2.2.1"></script>
-<script src="/static/js/menus.js?v=2.2.1"></script>
-<script src="/static/js/newgame.js?v=2.2.1"></script>
-<script src="/static/js/custom-order.js?v=2.2.1"></script>
-<script src="/static/js/settings.js?v=2.2.1"></script>
+<script src="/static/js/utils.js?v=2.3.0"></script>
+<script src="/static/js/app.js?v=2.3.0"></script>
+<script src="/static/js/map.js?v=2.3.0"></script>
+<script src="/static/js/map-commands.js?v=2.3.0"></script>
+<script src="/static/js/popups.js?v=2.3.0"></script>
+<script src="/static/js/menus.js?v=2.3.0"></script>
+<script src="/static/js/newgame.js?v=2.3.0"></script>
+<script src="/static/js/custom-order.js?v=2.3.0"></script>
+<script src="/static/js/settings.js?v=2.3.0"></script>
 </body>
 </html>

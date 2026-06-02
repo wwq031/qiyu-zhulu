@@ -55,18 +55,30 @@ public class GameEngine {
         TACTICS.put("all_out",    Map.of("name","总攻","icon","🔥","atk_mult",2.0,"def_mult",0.0,"loss_mult",2.5));
     }
 
-    /** 区域→列强映射 */
     /** 区域邻接表 */
-    /** Phase 1 七份御前奏折元数据（国魂数据在 game_data.json → memorial_spirits） */
-    public static final Map<String, Map<String, Object>> MEMORIALS = Map.of(
-        "northeast", Map.of("name","盛京将军 赵尔巽","title","日俄觊觎边境，请拨军费加强边防","desc","日俄自旅顺战后各踞南满北满，铁丝网已划至奉天城外三十里。臣请拨国帑四十万两，于长春—奉天—锦州一线修筑炮台兵站。若不设防，不出三年辽东恐非我有。","region","northeast","cost",40),
-        "huabei", Map.of("name","直隶总督 袁世凯","title","黄河汛期将至，请拨银修缮堤防","desc","黄河自铜瓦厢改道已逾半纪，豫鲁两省年年漫决。本年春雨过量，河堤报险三十七处。请拨帑银三十五万两修堤疏漕，并可保京师至德州铁路路基。","region","huabei","cost",35),
-        "southwest", Map.of("name","云贵总督 锡良","title","边陲土司叛乱，请准改土归流","desc","川滇黔交界土司七十二寨，自光绪末已抗粮抗税十二载。法人自滇越铁路北窥，暗输军火予土司。臣请行改土归流，设县置吏，但需饷银三十万两及练勇八千。","region","southwest","cost",30),
-        "southeast", Map.of("name","两江总督 张人骏","title","革命党煽动商埠，请派兵弹压","desc","上海租界革命报纸已增至九种，同盟会密使自东京南洋潜入，联络会党、策反新军。去岁徐锡麟案震惊朝野。臣请密派缇骑赴沪宁汉三镇搜捕党人，需密费三十五万两。","region","southeast","cost",35),
-        "lingnan", Map.of("name","两广总督 岑春煊","title","法属越境侵扰，请编新军固防","desc","法属安南驻军去岁越境十二次，测绘广西边境地图。琼崖海面法舰游弋不断。臣请编练新式边防军三协，购德国快炮二十四门，需饷三十万两。","region","lingnan","cost",30),
-        "nanyang", Map.of("name","闽浙总督 松寿","title","海盗猖獗侨民告急，请扩水师","desc","南洋侨商禀报，马六甲至吕宋海面海盗猖獗，去年劫掠华商货船六十一艘。英荷海军以护航为名扩大巡弋。臣请拨银三十五万两购置快轮十艘，编练南洋水师护侨营。","region","nanyang","cost",35),
-        "xibei", Map.of("name","陕甘总督 升允","title","沙俄渗透边疆，请设行省治理","desc","俄国自日俄战后全力东进，伊犁—喀什噶尔一线俄商队实为测绘队，已绘新疆详图七十六幅。外蒙王公暗通俄使。臣请筹设新疆行省衙门于迪化，调甘军两协驻防，需帑三十万两。","region","xibei","cost",30)
-    );
+    public static final Map<String, Map<String, Object>> MEMORIALS = new LinkedHashMap<>();
+    static {
+        putM("northeast", Map.of("name","盛京将军 赵尔巽","title","日俄觊觎边境，请拨军费加强边防","desc","日俄自旅顺战后各踞南满北满，铁丝网已划至奉天城外三十里。臣请拨国帑四十万两，于长春—奉天—锦州一线修筑炮台兵站。若不设防，不出三年辽东恐非我有。","region","northeast","cost",40));
+        putM("huabei", Map.of("name","直隶总督 袁世凯","title","黄河汛期将至，请拨银修缮堤防","desc","黄河自铜瓦厢改道已逾半纪，豫鲁两省年年漫决。本年春雨过量，河堤报险三十七处。请拨帑银三十五万两修堤疏漕，并可保京师至德州铁路路基。","region","huabei","cost",35));
+        putM("southwest", Map.of("name","云贵总督 锡良","title","边陲土司叛乱，请准改土归流","desc","川滇黔交界土司七十二寨，自光绪末已抗粮抗税十二载。法人自滇越铁路北窥，暗输军火予土司。臣请行改土归流，设县置吏，但需饷银三十万两及练勇八千。","region","southwest","cost",30));
+        putM("southeast", Map.of("name","两江总督 张人骏","title","革命党煽动商埠，请派兵弹压","desc","上海租界革命报纸已增至九种，同盟会密使自东京南洋潜入，联络会党、策反新军。去岁徐锡麟案震惊朝野。臣请密派缇骑赴沪宁汉三镇搜捕党人，需密费三十五万两。","region","southeast","cost",35));
+        putM("lingnan", Map.of("name","两广总督 岑春煊","title","法属越境侵扰，请编新军固防","desc","法属安南驻军去岁越境十二次，测绘广西边境地图。琼崖海面法舰游弋不断。臣请编练新式边防军三协，购德国快炮二十四门，需饷三十万两。","region","lingnan","cost",30));
+        putM("nanyang", Map.of("name","闽浙总督 松寿","title","海盗猖獗侨民告急，请扩水师","desc","南洋侨商禀报，马六甲至吕宋海面海盗猖獗，去年劫掠华商货船六十一艘。英荷海军以护航为名扩大巡弋。臣请拨银三十五万两购置快轮十艘，编练南洋水师护侨营。","region","nanyang","cost",35));
+        putM("xibei", Map.of("name","陕甘总督 升允","title","沙俄渗透边疆，请设行省治理","desc","俄国自日俄战后全力东进，伊犁—喀什噶尔一线俄商队实为测绘队，已绘新疆详图七十六幅。外蒙王公暗通俄使。臣请筹设新疆行省衙门于迪化，调甘军两协驻防，需帑三十万两。","region","xibei","cost",30));
+        putM("flood", Map.of("name","河道总督","title","黄河决口豫鲁告急，请拨银二十万两赈灾","desc","黄河铜瓦厢决口，洪水漫灌豫东鲁西十七县。数百万灾民流离失所，饥民已开始冲击县衙。请即刻拨帑银二十万两赈灾安民。","region","","cost",20));
+        putM("revolt", Map.of("name","军机处","title","四川保路运动演变为武装暴动，请调新军弹压","desc","成都保路同志会已聚众十万，川督来电称省城危急。暴民已控制多条铁路线。请调湖北新军两协入川弹压，需饷二十五万两。","region","","cost",25));
+        putM("famine", Map.of("name","户部尚书","title","陕甘连年大旱，请开仓放粮并免赋税","desc","陕甘总督急报：去岁至今滴雨未下，麦收不足三成。饥民已食树皮草根。请开仓放粮三十万石并免今年赋税，需帑二十万两。","region","","cost",20));
+        putM("foreign", Map.of("name","总理衙门","title","英法公使联名抗议排外运动，要求惩办拳民","desc","英法两国公使今日联名照会：华北多地发生教案，传教士被逐，教堂被毁。要求朝廷严惩肇事者并赔款二十五万两，否则将派军舰示威。","region","","cost",25));
+        putM("treasury", Map.of("name","户部侍郎","title","户部奏报库银不足五十万两，请准发行国债","desc","户部急奏：库银不足五十万两，各省应解京饷逾期未至。请准向汇丰、德华等外资银行借款，以海关关税为抵押，可借三十万两暂渡难关。","region","","cost",-30));
+        putM("warlord", Map.of("name","军机处","title","地方督军拥兵自重拒绝调防，请旨处置","desc","鄂督急电：鄂北新军一协拒不听调，协统称兵士不愿离乡。实则该协统已与当地士绅暗通，拥兵自重。请旨：是剿是抚？需饷十五万两。","region","","cost",15));
+        putM("japan_loan", Map.of("name","日本公使 林权助","title","日本愿提供紧急贷款，以铁路利权为抵押","desc","日本公使林权助求见：日本政府愿提供三十万两白银紧急贷款，年息五厘，以东北两条铁路的运营权为担保。此事关系国体，请陛下圣断。","region","","cost",-30));
+        putM("russia_loan", Map.of("name","俄国公使 廓索维慈","title","俄国愿提供紧急贷款，以矿产开采权为抵押","desc","俄国公使廓索维慈求见：俄罗斯帝国愿提供三十万两白银贷款，以新疆三处矿山的开采权为担保。俄方保证不干涉内政。","region","","cost",-30));
+        putM("britain_loan", Map.of("name","英国公使 朱尔典","title","英国愿提供紧急贷款，以海关关税为抵押","desc","英国公使朱尔典爵士求见：大英帝国愿提供三十万两白银贷款，以海关关税收入为担保，年息四厘。这是目前最优惠的条件。","region","","cost",-30));
+        putM("france_loan", Map.of("name","法国公使 巴斯特","title","法国愿提供紧急贷款，以铁路筑路权为抵押","desc","法国公使巴斯特求见：法兰西共和国愿提供三十万两白银贷款，以滇越铁路延长线的筑路权为担保。此路通，则中国与法属安南连为一体。","region","","cost",-30));
+        putM("usa_loan", Map.of("name","美国公使 芮恩施","title","美国愿提供无抵押紧急贷款，以表友好","desc","美国公使芮恩施求见：美利坚合众国愿提供三十万两白银贷款，无需抵押，仅希望中国对美商开放更多口岸。这是最没有附加条件的援助。","region","","cost",-30));
+    }
+    private static void putM(String k, Map<String, Object> v) { MEMORIALS.put(k, v); }
+
 
     public static final Map<String, List<String>> REGION_ADJACENCY = Map.of(
             "northeast", List.of("huabei"),
@@ -661,6 +673,31 @@ public class GameEngine {
 
         state.setFactionState(fs);
 
+        // 初始化全势力外交关系（区域内所有势力对）
+        Map<String, Map<String, Object>> allRel = new LinkedHashMap<>();
+        var allFactionIds = new ArrayList<>(gameData.getFactions().keySet());
+        for (var ne : gameData.getNpcFactions().entrySet()) allFactionIds.add(ne.getKey());
+        for (int i = 0; i < allFactionIds.size(); i++) {
+            for (int j = i + 1; j < allFactionIds.size(); j++) {
+                String a = allFactionIds.get(i), b = allFactionIds.get(j);
+                if (a.compareTo(b) > 0) { String tmp = a; a = b; b = tmp; }
+                String key = a + "↔" + b;
+                var fa = getFaction(allFactionIds.get(i)).orElse(null);
+                var fb = getFaction(allFactionIds.get(j)).orElse(null);
+                // 同区域默认敌对(-10~-30)，异区域默认中立(-10~+5)
+                int score = 0;
+                if (fa != null && fb != null && fa.getRegion() != null && fa.getRegion().equals(fb.getRegion()))
+                    score = -15 - new java.util.Random().nextInt(20);
+                else
+                    score = -5 + new java.util.Random().nextInt(10);
+                // 意识形态修正
+                if (fa != null && fb != null)
+                    score -= ideologyDistance(fa.getIdeology(), fb.getIdeology()) / 3;
+                allRel.put(key, new LinkedHashMap<>(Map.of("score", score, "pact", "", "turns", 0)));
+            }
+        }
+        state.setAllDiplomaticRelations(allRel);
+
         if (isQuickStart) {
             // 快速开局：应用奏折效果 + 初始化AI势力
             applyMemorialEffects(state);
@@ -748,6 +785,27 @@ public class GameEngine {
                     for (var e : effects.entrySet())
                         fs.getStats().add(e.getKey(), e.getValue());
                 }
+            }
+        }
+
+        // 处理外国贷款等非区域奏折
+        for (String policy : policies) {
+            if (policy.startsWith("_turn") || policy.startsWith("rej_")) continue;
+            if (List.of("northeast","huabei","southwest","southeast","lingnan","nanyang","xibei").contains(policy)) continue;
+            Map<String, Object> regionSpirits = (Map) spiritData.get(policy);
+            if (regionSpirits == null) continue;
+            Map<String, Object> factionSpirits = (Map) regionSpirits.get("approve");
+            if (factionSpirits == null) continue;
+            for (var entry : factionSpirits.entrySet()) {
+                String fid = entry.getKey();
+                Map<String, Object> spData = (Map) entry.getValue();
+                String sname = (String) spData.get("name");
+                if (sname == null || sname.isEmpty()) continue;
+                NationalSpirit ns = new NationalSpirit();
+                ns.setName(sname);
+                ns.setDesc((String) spData.getOrDefault("desc", ""));
+                ns.setEffects((Map<String, Integer>) (Object) spData.get("effects"));
+                pending.put(fid, ns);
             }
         }
 

@@ -476,6 +476,21 @@ public class DiplomacyService {
         state.getEnactedResolutions().add(resId);
         incTracker(state, "resolutions_enacted");
 
+        // 应用国策国魂
+        Map<String, Object> spiritData = (Map<String, Object>) raw.get("spirit");
+        if (spiritData != null) {
+            NationalSpirit spirit = new NationalSpirit();
+            spirit.setName((String) spiritData.get("name"));
+            spirit.setDesc((String) spiritData.get("desc"));
+            Map<String, Integer> spiritEff = (Map<String, Integer>) (Object) spiritData.get("effects");
+            spirit.setEffects(spiritEff);
+            fs.setNationalSpirit(spirit);
+            if (spiritEff != null) {
+                for (var e : spiritEff.entrySet())
+                    s.set(e.getKey(), GameEngine.clamp(s.get(e.getKey()) + e.getValue()));
+            }
+        }
+
         return mapOf("ok", true, "message", "📜 决议颁布：" + raw.get("name"),
                 "narrative", raw.getOrDefault("narrative", ""), "effects", effects);
     }

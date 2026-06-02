@@ -16,11 +16,13 @@ public class AiFactionService {
 
     private final GameEngine engine;
     private final GameDataRepo gameData;
+    private final DiplomacyService diplomacy;
     private final Random rng = new Random();
 
-    public AiFactionService(GameEngine engine, GameDataRepo gameData) {
+    public AiFactionService(GameEngine engine, GameDataRepo gameData, DiplomacyService diplomacy) {
         this.engine = engine;
         this.gameData = gameData;
+        this.diplomacy = diplomacy;
     }
 
     // ═══════════════════════════════════════════ 初始化 ═══════════════════════════════════════════
@@ -153,10 +155,37 @@ public class AiFactionService {
 
             // 6. 发动战役
             results.addAll(aiLaunchCampaigns(state, fs, fid, pers));
+
+            // 7. AI国策决议（20%概率，国库充裕时）
+            if (rng.nextDouble() < 0.20 && fs.getTreasury() > 30) {
+                Map<String, Object> resos = diplomacy.listResolutions(state);
+                List<Map<String, Object>> avail = ((List<Map<String, Object>>) resos.get("resolutions")).stream()
+                        .filter(r -> Boolean.TRUE.equals(r.get("available"))).toList();
+                if (!avail.isEmpty()) {
+                    Map<String, Object> pick = avail.get(rng.nextInt(avail.size()));
+                    Map<String, Object> result = diplomacy.executeResolution(state, (String) pick.get("id"));
+                    if (Boolean.TRUE.equals(result.get("ok")))
+                        results.add("📜 " + fs.getName() + " 颁布「" + pick.get("name") + "」");
+                }
+            }
+
+            // 8. AI建设（15%概率，国库充裕时）
+            if (rng.nextDouble() < 0.15 && fs.getTreasury() > 20 && fs.getTerritories() != null && !fs.getTerritories().isEmpty()) {
+                String[] builds = {"2.1","2.2","2.3","2.4","2.5","2.6"};
+                String bid = builds[rng.nextInt(builds.length)];
+                String loc = fs.getTerritories().get(rng.nextInt(fs.getTerritories().size()));
+                String locPid = engine.getPidByName(loc);
+                if (locPid != null) {
+                    Map<String, Object> buildResult = new com.qiyuzhulu.service.CivilService(engine).build(state, bid, locPid);
+                    if (Boolean.TRUE.equals(buildResult.get("ok")))
+                        results.add("🏗 " + fs.getName() + " 在" + loc + "启动了建设项目");
+                }
+            }
         }
 
         // 7. AI外交
         results.addAll(checkAiDiplomacy(state));
+        processAiToAiDiplomacy(state);
 
         return results;
     }
@@ -428,8 +457,12 @@ public class AiFactionService {
                         && !aiFaction.getRegion().equals(nbData.getRegion())) {
                     if (!engine.isRegionUnified(state, fid)) continue;
                 }
-                // NAP检查
+                // NAP检查（玩家↔AI + AI↔AI）
                 if (engine.hasNonAggression(state, fid, enemyFid)) continue;
+                String aiKey = fid.compareTo(enemyFid) < 0 ? fid + "↔" + enemyFid : enemyFid + "↔" + fid;
+                Map<String, Object> aiRel = state.getAllDiplomaticRelations().get(aiKey);
+                if (aiRel != null && "non_aggression".equals(aiRel.getOrDefault("pact",""))
+                        && ((Number)aiRel.getOrDefault("turns",0)).intValue() > 0) continue;
 
                 double defPower = estimateDefensePower(state, enemyFid, enemyTerrs, nb);
                 double ourPower = posEntry.getValue().stream().mapToDouble(u -> u.getAttack() + u.getDefense()).sum();
@@ -604,6 +637,28 @@ public class AiFactionService {
                 return entry.getKey();
         }
         return "beijing";
+    }
+
+    // ═══════════════════════════════ AI间外交 ═══════════════════════════════
+    @SuppressWarnings("unchecked")
+    void processAiToAiDiplomacy(GameState state) {
+        Map<String, Map<String, Object>> allRel = state.getAllDiplomaticRelations();
+        var aiEntries = new ArrayList<>(state.getAiFactions().entrySet());
+        for (int i = 0; i < aiEntries.size(); i++) {
+            for (int j = i + 1; j < aiEntries.size(); j++) {
+                String fa = aiEntries.get(i).getKey(), fb = aiEntries.get(j).getKey();
+                if (state.getDefeatedFactions().contains(fa) || state.getDefeatedFactions().contains(fb)) continue;
+                String key = fa.compareTo(fb) < 0 ? fa + "↔" + fb : fb + "↔" + fa;
+                Map<String, Object> rel = allRel.get(key);
+                if (rel == null) { rel = new LinkedHashMap<>(Map.of("score",0,"pact","","turns",0)); allRel.put(key, rel); }
+                int score = ((Number) rel.getOrDefault("score",0)).intValue();
+                String pact = (String) rel.getOrDefault("pact","");
+                int turns = ((Number) rel.getOrDefault("turns",0)).intValue();
+                if (turns > 0 && !pact.isEmpty()) { turns--; rel.put("turns",turns); if (turns<=0) rel.put("pact",""); continue; }
+                if (pact.isEmpty() && score > 15 && rng.nextDouble() < 0.10)
+                { rel.put("pact","non_aggression"); rel.put("turns",6+rng.nextInt(7)); }
+            }
+        }
     }
 
 }

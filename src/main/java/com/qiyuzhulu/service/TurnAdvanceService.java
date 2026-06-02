@@ -112,6 +112,19 @@ public class TurnAdvanceService {
         double corrTaxMult = corruption > 70 ? 0.80 : corruption > 50 ? 0.90 : corruption > 30 ? 0.90 : 1.0;
         double corrMaintMult = corruption > 90 ? 1.20 : corruption > 50 ? 1.15 : 1.0;
         int income = (int)(engine.calcIncome(fs) * corrTaxMult);
+        // Phase 1 帝国崩溃值影响收入：帝国财政濒临崩溃
+        if (phase == 1) {
+            int collapsePct = Math.min(95, (100 - fs.getPopulationSupport()) + fs.getCorruption() / 2);
+            double collapseMult = Math.max(0.08, 1.0 - collapsePct / 100.0);
+            // 帝国行政效率低下，基础收入按10%起算
+            income = (int)(income * 0.15 * collapseMult);
+            if (rng.nextInt(3) == 0) {
+                String reason = collapsePct > 70 ? "各省截留税款，中枢几无进项" :
+                    collapsePct > 50 ? "吏治腐败蔓延，税银层层盘剥" :
+                    "帝国幅员辽阔，政令不出京师";
+                events.add("⚠ " + reason + "（收入锐减至" + (int)(collapseMult*10) + "%）");
+            }
+        }
         int maintenance = (int)(engine.calcTotalMaintenance(fs) * corrMaintMult);
         // 贸易协定收入
         int tradeIncome = 0;
@@ -131,6 +144,16 @@ public class TurnAdvanceService {
             events.add("🔴 腐败横行！" + u.getName() + " 因克扣粮饷发生哗变！");
         }
         if (tradeIncome > 0) events.add("📈 贸易协定本回合带来" + tradeIncome + "💰收入");
+
+        // Phase 1 外国贷款奏折（国库低于50时触发，每局只一次）
+        if (phase == 1 && fs.getTreasury() < 50 && !state.getPhase1Policies().contains("_loan_offered")) {
+            state.getPhase1Policies().add("_loan_offered");
+            String power = GameEngine.FOREIGN_POWERS.getOrDefault(engine.getPlayerRegion(state), "英国");
+            String loanKey = power.equals("日本") ? "japan_loan" : power.equals("俄国") ? "russia_loan"
+                    : power.equals("英国") ? "britain_loan" : power.equals("法国") ? "france_loan" : "usa_loan";
+            state.getCustomOrderFlags().add(loanKey);
+            events.add("🏦 国库告急！" + power + "公使提出贷款条件——以利权换银两。奏折已呈御案。");
+        }
 
         // 赤字惩罚
         if (fs.getTreasury() < 0) {
@@ -272,8 +295,10 @@ public class TurnAdvanceService {
                     processed++;
             }
             // 队列中实际奏折总数
+            // 只计7份核心奏折（region-based），紧急奏折不参与allDone判定
             long totalMemorials = state.getCustomOrderFlags().stream()
-                    .filter(q -> GameEngine.MEMORIALS.containsKey(q)).count();
+                    .filter(q -> GameEngine.MEMORIALS.containsKey(q)
+                            && GameEngine.REGION_NAMES.containsKey(q)).count();
             boolean allDone = processed >= totalMemorials && totalMemorials > 0;
             boolean critical = (fs.getTreasury() < 30 || fs.getPopulationSupport() < 10 || fs.getCorruption() > 80) && processed >= 4;
 

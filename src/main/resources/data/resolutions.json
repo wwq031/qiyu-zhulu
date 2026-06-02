@@ -1,23 +1,56 @@
 {
   "categories": {
-    "regime": { "name": "政权与国体", "icon": "🏛", "color": "\033[1;33m" },
-    "military": { "name": "军事", "icon": "⚔", "color": "\033[1;31m" },
-    "domestic": { "name": "内政与经济", "icon": "🏗", "color": "\033[90m" },
-    "diplomacy": { "name": "外交", "icon": "🤝", "color": "\033[1;34m" },
-    "ideology": { "name": "意识形态专属", "icon": "🔮", "color": "\033[1;35m" },
-    "regional": { "name": "区域专属", "icon": "📍", "color": "\033[1;32m" },
-    "emergency": { "name": "紧急决议", "icon": "⚠", "color": "\033[1;91m" }
+    "regime": {
+      "name": "政权与国体",
+      "icon": "🏛",
+      "color": ""
+    },
+    "military": {
+      "name": "军事",
+      "icon": "⚔",
+      "color": ""
+    },
+    "domestic": {
+      "name": "内政与经济",
+      "icon": "🏗",
+      "color": ""
+    },
+    "diplomacy": {
+      "name": "外交",
+      "icon": "🤝",
+      "color": ""
+    },
+    "ideology": {
+      "name": "意识形态专属",
+      "icon": "🔮",
+      "color": ""
+    },
+    "regional": {
+      "name": "区域专属",
+      "icon": "📍",
+      "color": ""
+    },
+    "emergency": {
+      "name": "紧急决议",
+      "icon": "⚠",
+      "color": ""
+    }
   },
-
   "resolutions": [
     {
       "id": "rename_regime",
       "name": "宣布政权更名",
       "category": "regime",
       "description": "统一大区，立国号于天下。废除旧名，自定新称，宣告一方霸业。",
-      "conditions": { "phase_min": 3, "region_unified": true },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true
+      },
       "cost": {},
-      "effects": { "ideology": 8, "diplomacy": 5 },
+      "effects": {
+        "ideology": 8,
+        "diplomacy": 5
+      },
       "special": "玩家可自定新政权名称，替代默认二级进化名",
       "once": true,
       "narrative": "大区既统，旧名不足以镇四方。帐下幕僚呈上新拟国号三策，请你圈定其一。是夜，新政权旗帜于首府城头冉冉升起。"
@@ -27,9 +60,15 @@
       "name": "宣告天下",
       "category": "regime",
       "description": "向全图宣告你的野心方向，震慑邻邦，鼓舞民心。",
-      "conditions": { "phase_min": 4 },
+      "conditions": {
+        "phase_min": 4
+      },
       "cost": {},
-      "effects": { "diplomacy": 10, "ideology": 5, "military": 3 },
+      "effects": {
+        "diplomacy": 10,
+        "ideology": 5,
+        "military": 3
+      },
       "special": "选择扩张方向后，对应区域AI势力态度恶化，本区支持率上升",
       "once": true,
       "narrative": "使者携国书奔赴七大区首府，檄文一字千钧。天下皆知：此非偏安之邦，乃问鼎之师。"
@@ -39,9 +78,22 @@
       "name": "制宪定国",
       "category": "regime",
       "description": "召开制宪会议，以根本大法锁定国体路线，从此名正言顺。",
-      "conditions": { "phase_min": 4, "ideology_min": 60, "economy_min": 50 },
-      "cost": { "ideology": 10 },
-      "effects": { "industry": 3, "agriculture": 3, "military": 3, "economy": 3, "ideology": 3, "diplomacy": 3 },
+      "conditions": {
+        "phase_min": 4,
+        "ideology_min": 60,
+        "economy_min": 50
+      },
+      "cost": {
+        "ideology": 10
+      },
+      "effects": {
+        "industry": 3,
+        "agriculture": 3,
+        "military": 3,
+        "economy": 3,
+        "ideology": 3,
+        "diplomacy": 3
+      },
       "once": true,
       "narrative": "各省代表云集首府，三日三夜激辩，墨迹未干已获万民署名。宪法既立，国本已固——从此师出有名。"
     },
@@ -50,68 +102,161 @@
       "name": "迁都",
       "category": "regime",
       "description": "将首都迁至战略位置更优越的城市，改变防御重心与政治辐射。",
-      "conditions": { "controls_at_least": 3 },
-      "cost": { "economy": 8 },
-      "effects": { "military": 3, "diplomacy": 3, "ideology": -3 },
+      "conditions": {
+        "controls_at_least": 3
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "military": 3,
+        "diplomacy": 3,
+        "ideology": -3
+      },
       "special": "迁都后原核心城市防御时限延长至90天，新城获得+15防御加成",
-      "narrative": "旌旗卷过官道，六部文书装车三百乘。新都选址已定——此城扼天下咽喉，以此为都，攻守之势异矣。"
+      "narrative": "旌旗卷过官道，六部文书装车三百乘。新都选址已定——此城扼天下咽喉，以此为都，攻守之势异矣。",
+      "spirit": {
+        "name": "迁都定鼎",
+        "desc": "放弃旧都，于新根基之地重建朝堂。迁都是一场豪赌——它意味着告别过去，拥抱一个全新的战略格局。",
+        "effects": {
+          "economy": 3,
+          "population_support": -5
+        }
+      }
     },
-
     {
       "id": "total_mobilization",
       "name": "总动员令",
       "category": "military",
       "description": "举国转入战时体制，工厂造枪炮，农田供军粮，一切为了前线。",
-      "conditions": { "at_war": true, "military_min": 40 },
-      "cost": { "economy": 8, "ideology": 5 },
-      "effects": { "military": 10, "industry": 5, "agriculture": -3 },
+      "conditions": {
+        "at_war": true,
+        "military_min": 40
+      },
+      "cost": {
+        "economy": 8,
+        "ideology": 5
+      },
+      "effects": {
+        "military": 10,
+        "industry": 5,
+        "agriculture": -3
+      },
       "cooldown": 12,
-      "narrative": "广播响彻街头巷尾，征兵站前排起长龙。总动员令——四字落地，和平已远。"
+      "narrative": "广播响彻街头巷尾，征兵站前排起长龙。总动员令——四字落地，和平已远。",
+      "spirit": {
+        "name": "总动员令",
+        "desc": "全国上下，不分男女老幼，一切为了前线。工厂转为兵工厂，农田改为军粮基地。这是最后的底牌。",
+        "effects": {
+          "military": 8,
+          "industry": 3,
+          "agriculture": -3,
+          "economy": -5
+        }
+      }
     },
     {
       "id": "elite_guard",
       "name": "组建精锐卫队",
       "category": "military",
       "description": "从全军选拔最优秀的士兵组建王牌部队，配给最好的装备。",
-      "conditions": { "military_min": 60, "economy_min": 40 },
-      "cost": { "economy": 10 },
-      "effects": { "military": 5 },
+      "conditions": {
+        "military_min": 60,
+        "economy_min": 40
+      },
+      "cost": {
+        "economy": 10
+      },
+      "effects": {
+        "military": 5
+      },
       "special": "解锁一支特色王牌部队（名称根据势力特色生成），该部队在战斗中提供+8战术加成",
       "once": true,
-      "narrative": "三千精兵从十万大军中脱颖而出，装备换装一新，军旗绣上金线。此军一出，可当万人。"
+      "narrative": "三千精兵从十万大军中脱颖而出，装备换装一新，军旗绣上金线。此军一出，可当万人。",
+      "spirit": {
+        "name": "精锐卫队",
+        "desc": "从全军挑选最精锐的战士组建独立卫队。他们是国之重器——每一个士兵都抵得上一个连。但维持这样一支部队，代价不菲。",
+        "effects": {
+          "military": 5,
+          "economy": -3
+        }
+      }
     },
     {
       "id": "scorched_earth",
       "name": "焦土抗战",
       "category": "military",
       "description": "撤退时焚毁一切可为敌所用的物资，以焦土换时间。",
-      "conditions": { "at_war": true, "core_under_threat": true },
-      "cost": { "industry": 15, "agriculture": 10 },
-      "effects": { "military": 8 },
+      "conditions": {
+        "at_war": true,
+        "core_under_threat": true
+      },
+      "cost": {
+        "industry": 15,
+        "agriculture": 10
+      },
+      "effects": {
+        "military": 8
+      },
       "special": "被围城市获得+20地形防御加成（持续6回合），但战后该城工业农业各-15需重建",
       "cooldown": 20,
-      "narrative": "黑烟蔽日，工厂机床被拆卸运走，粮仓付之一炬。敌军踏入的将是废墟，而非战利品。"
+      "narrative": "黑烟蔽日，工厂机床被拆卸运走，粮仓付之一炬。敌军踏入的将是废墟，而非战利品。",
+      "spirit": {
+        "name": "焦土令",
+        "desc": "宁可烧光，也不留给敌人。焦土抗战是最残酷的自保——它让侵略者寸步难行，也让自己的土地化为灰烬。",
+        "effects": {
+          "military": 4,
+          "agriculture": -8,
+          "population_support": -10
+        }
+      }
     },
     {
       "id": "levy_en_masse",
       "name": "全民皆兵",
       "category": "military",
       "description": "主力覆灭，但人民仍在。凡是能拿枪的，都站到前线去。",
-      "conditions": { "military_max": 25, "ideology_min": 40 },
-      "cost": { "agriculture": 15, "ideology": 10 },
-      "effects": { "military": 18, "industry": -5 },
+      "conditions": {
+        "military_max": 25,
+        "ideology_min": 40
+      },
+      "cost": {
+        "agriculture": 15,
+        "ideology": 10
+      },
+      "effects": {
+        "military": 18,
+        "industry": -5
+      },
       "special": "仅在军事≤25时可用；获得大量临时民兵部队，战后部分解散",
-      "narrative": "青壮年从工厂田野中被召集，发枪一支、弹药三十发。正规军的旗帜倒了，但巷陌之间，抵抗才刚开始。"
+      "narrative": "青壮年从工厂田野中被召集，发枪一支、弹药三十发。正规军的旗帜倒了，但巷陌之间，抵抗才刚开始。",
+      "spirit": {
+        "name": "全民皆兵",
+        "desc": "国家存亡之际，每一个公民都是战士。征兵令下，工坊、农田、学堂——所有人都放下手中的事，拿起武器。",
+        "effects": {
+          "military": 10,
+          "industry": -5,
+          "agriculture": -5,
+          "economy": -5
+        }
+      }
     },
-
     {
       "id": "five_year_plan",
       "name": "五年计划",
       "category": "domestic",
       "description": "集中全国资源推行工业化建设，以国家意志驱动经济腾飞。",
-      "conditions": { "economy_min": 40, "ideology_min": 50 },
-      "cost": { "economy": 15 },
-      "effects": { "industry": 10, "agriculture": 5 },
+      "conditions": {
+        "economy_min": 40,
+        "ideology_min": 50
+      },
+      "cost": {
+        "economy": 15
+      },
+      "effects": {
+        "industry": 10,
+        "agriculture": 5
+      },
       "special": "持续8回合的长期建设项目，期间每2回合工业+2",
       "cooldown": 24,
       "narrative": "一纸蓝图铺满整面墙壁，工程师们彻夜不眠。五年之后，烟囱将如森林般拔地而起。"
@@ -121,9 +266,17 @@
       "name": "土地改革",
       "category": "domestic",
       "description": "重新分配土地，打破旧地主阶级对农业的垄断。",
-      "conditions": { "ideology_min": 50, "agriculture_max": 60 },
-      "cost": { "economy": 5 },
-      "effects": { "agriculture": 10, "ideology": 5 },
+      "conditions": {
+        "ideology_min": 50,
+        "agriculture_max": 60
+      },
+      "cost": {
+        "economy": 5
+      },
+      "effects": {
+        "agriculture": 10,
+        "ideology": 5
+      },
       "special": "若为共产主义系意识形态，农业额外+8，思想额外+5",
       "once": true,
       "narrative": "地契被堆在村口焚烧，每一户农家领到了新的田亩册。千年土地枷锁，一把火化为灰烬。"
@@ -133,44 +286,92 @@
       "name": "废两改元",
       "category": "domestic",
       "description": "统一混乱的货币体系，废除银两制，推行现代纸币。",
-      "conditions": { "economy_min": 45 },
-      "cost": { "economy": 8 },
-      "effects": { "economy": 8, "diplomacy": 3 },
+      "conditions": {
+        "economy_min": 45
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "economy": 8,
+        "diplomacy": 3
+      },
       "once": true,
-      "narrative": "各省银号关门盘点，旧银元熔化重铸。当第一批统一纸币从印刷机涌出，商路为之畅通。"
+      "narrative": "各省银号关门盘点，旧银元熔化重铸。当第一批统一纸币从印刷机涌出，商路为之畅通。",
+      "spirit": {
+        "name": "废两改元",
+        "desc": "统一币制，废止混乱的银两制度。货币政策是一国经济之基石——从此之后，境内只通行一种货币。",
+        "effects": {
+          "economy": 8,
+          "corruption": -5
+        }
+      }
     },
     {
       "id": "general_amnesty",
       "name": "大赦天下",
       "category": "domestic",
       "description": "赦免狱中轻罪犯人，化解民怨，充实劳动人口。",
-      "conditions": { "ideology_min": 40 },
-      "cost": { "military": 3 },
-      "effects": { "ideology": 10, "agriculture": 3, "industry": 2 },
+      "conditions": {
+        "ideology_min": 40
+      },
+      "cost": {
+        "military": 3
+      },
+      "effects": {
+        "ideology": 10,
+        "agriculture": 3,
+        "industry": 2
+      },
       "cooldown": 15,
-      "narrative": "牢门大开，万人重获自由。这批获赦者被编入屯垦队与工坊，昔日囚徒，今日劳力。"
+      "narrative": "牢门大开，万人重获自由。这批获赦者被编入屯垦队与工坊，昔日囚徒，今日劳力。",
+      "spirit": {
+        "name": "大赦天下",
+        "desc": "赦免所有囚徒，无论罪行轻重。大赦不是软弱——是一种政治表态。它让仇敌变成盟友，让逃犯变成战士。",
+        "effects": {
+          "population_support": 10,
+          "military": 2
+        }
+      }
     },
     {
       "id": "education_reform",
       "name": "新学推广令",
       "category": "domestic",
       "description": "废除旧式私塾，建立现代学校体系，培养新式人才。",
-      "conditions": { "ideology_min": 55, "economy_min": 35 },
-      "cost": { "economy": 10 },
-      "effects": { "ideology": 8, "industry": 5, "agriculture": 3 },
+      "conditions": {
+        "ideology_min": 55,
+        "economy_min": 35
+      },
+      "cost": {
+        "economy": 10
+      },
+      "effects": {
+        "ideology": 8,
+        "industry": 5,
+        "agriculture": 3
+      },
       "special": "6回合后额外思想+5（人才培养见效）",
       "once": true,
       "narrative": "新式学堂取代旧私塾，黑板前站起了第一批穿制服的年轻教师。一代之后，此国之面貌必不同于今。"
     },
-
     {
       "id": "seek_foreign_aid",
       "name": "求援列强",
       "category": "diplomacy",
       "description": "向列强请求军事与经济援助，但需付出代价。",
-      "conditions": { "diplomacy_min": 40 },
-      "cost": { "diplomacy": 5, "economy": 5 },
-      "effects": { "military": 8, "economy": 5, "industry": 5 },
+      "conditions": {
+        "diplomacy_min": 40
+      },
+      "cost": {
+        "diplomacy": 5,
+        "economy": 5
+      },
+      "effects": {
+        "military": 8,
+        "economy": 5,
+        "industry": 5
+      },
       "special": "援助的列强获得关税优惠或租界特权；30%概率触发列强附加政治条件",
       "cooldown": 12,
       "narrative": "外国顾问团入驻首府，军火船靠岸卸货。援手伸来了——但握着的那端，未必没有绳索。"
@@ -180,9 +381,17 @@
       "name": "组建区域同盟",
       "category": "diplomacy",
       "description": "联合意识形态相近的势力，组建军事同盟。",
-      "conditions": { "phase_min": 4, "diplomacy_min": 60 },
-      "cost": { "diplomacy": 8 },
-      "effects": { "diplomacy": 10, "military": 3 },
+      "conditions": {
+        "phase_min": 4,
+        "diplomacy_min": 60
+      },
+      "cost": {
+        "diplomacy": 8
+      },
+      "effects": {
+        "diplomacy": 10,
+        "military": 3
+      },
       "special": "自动与同意识形态的非敌对势力签订军事同盟；列强关注度+20",
       "once": true,
       "narrative": "盟约于首府签署，各国代表举杯共饮。以意识形态为纽带，多个政权结成统一战线。"
@@ -192,9 +401,15 @@
       "name": "宣布永久中立",
       "category": "diplomacy",
       "description": "向全世界宣告中立立场，不介入他国战争。",
-      "conditions": { "diplomacy_min": 45 },
-      "cost": { "economy": 5 },
-      "effects": { "diplomacy": 15 },
+      "conditions": {
+        "diplomacy_min": 45
+      },
+      "cost": {
+        "economy": 5
+      },
+      "effects": {
+        "diplomacy": 15
+      },
       "special": "列强干涉概率-50%，但无法主动宣战（持续24回合，可提前废除）",
       "once": true,
       "narrative": "声明以七国文字同时发布，中立旗帜在边境口岸升起。世界知道：这片土地不参与任何野心游戏。"
@@ -204,22 +419,45 @@
       "name": "废除不平等条约",
       "category": "diplomacy",
       "description": "单方面废除列强强加的一切不平等条约，收回主权。",
-      "conditions": { "diplomacy_min": 70, "military_min": 60 },
-      "cost": { "diplomacy": 15 },
-      "effects": { "economy": 10, "diplomacy": 5, "ideology": 10 },
+      "conditions": {
+        "diplomacy_min": 70,
+        "military_min": 60
+      },
+      "cost": {
+        "diplomacy": 15
+      },
+      "effects": {
+        "economy": 10,
+        "diplomacy": 5,
+        "ideology": 10
+      },
       "special": "所有列强关系-40，可能引发军事干涉；但本区民众支持率大幅上升",
       "once": true,
       "narrative": "外交总长将一纸照会拍在列强公使的桌上——所有租界、治外法权、关税协定，即日废止。百年屈辱，一笔勾销。"
     },
-
     {
       "id": "warlord_purge",
       "name": "铁腕肃清",
       "category": "ideology",
       "description": "以铁腕清除内部反对派，巩固独裁权力。",
-      "conditions": { "ideology_min": 60, "ideology_match": ["军阀独裁","军阀联邦","军事独裁","马家军阀","旧官僚独裁","地方军阀"] },
-      "cost": { "economy": 5 },
-      "effects": { "ideology": 10, "military": 3 },
+      "conditions": {
+        "ideology_min": 60,
+        "ideology_match": [
+          "军阀独裁",
+          "军阀联邦",
+          "军事独裁",
+          "马家军阀",
+          "旧官僚独裁",
+          "地方军阀"
+        ]
+      },
+      "cost": {
+        "economy": 5
+      },
+      "effects": {
+        "ideology": 10,
+        "military": 3
+      },
       "special": "内部叛乱概率永久-30%，但经济增长-2每回合（持续10回合）",
       "once": true,
       "narrative": "军警深夜出动，名单上一个又一个名字被划去。反对者的声音，天亮之前彻底消失。独裁之基，以铁与血浇筑。"
@@ -229,9 +467,23 @@
       "name": "土地集体化",
       "category": "ideology",
       "description": "废除土地私有，建立集体农庄，以社会主义方式重组农业。",
-      "conditions": { "ideology_min": 70, "ideology_match": ["共产主义","左翼土地革命","共产党革命","城市工团主义"] },
-      "cost": { "economy": 8 },
-      "effects": { "agriculture": 15, "ideology": 5, "economy": -3 },
+      "conditions": {
+        "ideology_min": 70,
+        "ideology_match": [
+          "共产主义",
+          "左翼土地革命",
+          "共产党革命",
+          "城市工团主义"
+        ]
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "agriculture": 15,
+        "ideology": 5,
+        "economy": -3
+      },
       "special": "短期经济下降，6回合后农业额外+8",
       "once": true,
       "narrative": "田埂被推平，拖拉机在连片的集体农庄土地上轰鸣。每一粒粮食，从此属于人民。"
@@ -241,9 +493,24 @@
       "name": "输出世界革命",
       "category": "ideology",
       "description": "武装支持邻区的共产主义势力，将革命火种播撒四方。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["共产主义","左翼土地革命","共产党革命","城市工团主义"] },
-      "cost": { "diplomacy": 20, "economy": 10 },
-      "effects": { "ideology": 10, "military": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "共产主义",
+          "左翼土地革命",
+          "共产党革命",
+          "城市工团主义"
+        ]
+      },
+      "cost": {
+        "diplomacy": 20,
+        "economy": 10
+      },
+      "effects": {
+        "ideology": 10,
+        "military": 3
+      },
       "special": "邻区共产主义势力军事+5；列强（尤其日本/英国）敌意大幅上升",
       "once": true,
       "narrative": "满载武器与宣传品的列车驶向边境。革命不是一国的私产——它是全人类的解放事业。"
@@ -253,9 +520,20 @@
       "name": "民族复兴宣言",
       "category": "ideology",
       "description": "发布一个民族、一个国家、一个领袖的复兴宣言。",
-      "conditions": { "phase_min": 3, "ideology_match": ["国家主义"] },
-      "cost": { "diplomacy": 10 },
-      "effects": { "ideology": 10, "military": 5, "industry": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_match": [
+          "国家主义"
+        ]
+      },
+      "cost": {
+        "diplomacy": 10
+      },
+      "effects": {
+        "ideology": 10,
+        "military": 5,
+        "industry": 3
+      },
       "special": "征兵效率翻倍，但排外法案自动触发（外交-5）",
       "once": true,
       "narrative": "广场上万众云集，宣言以激昂的语调响彻全城。一个民族，一个国家——复兴的号角已经吹响。"
@@ -265,9 +543,20 @@
       "name": "登基大典",
       "category": "ideology",
       "description": "举行复辟大典，重整天子威仪，恢复帝国礼制。",
-      "conditions": { "controls_city": "北京", "ideology_match": ["君主立宪","满蒙民族主义"] },
-      "cost": { "economy": 15 },
-      "effects": { "ideology": 15, "diplomacy": 10 },
+      "conditions": {
+        "controls_city": "北京",
+        "ideology_match": [
+          "君主立宪",
+          "满蒙民族主义"
+        ]
+      },
+      "cost": {
+        "economy": 15
+      },
+      "effects": {
+        "ideology": 15,
+        "diplomacy": 10
+      },
       "special": "获得「天命所归」buff：所有旧派势力好感+30；但共和/共产势力敌意大增",
       "once": true,
       "narrative": "紫禁城太和殿钟鼓齐鸣，新帝身着龙袍，告祭天地祖宗。中断十余年的朝仪，再一次回荡在九重宫阙之间。"
@@ -277,9 +566,22 @@
       "name": "制宪会议",
       "category": "ideology",
       "description": "召开全民选举的制宪会议，以民主程序确立共和法统。",
-      "conditions": { "phase_min": 4, "ideology_match": ["三民主义共和","民主联邦"] },
-      "cost": { "economy": 10 },
-      "effects": { "ideology": 10, "diplomacy": 10, "economy": 5, "military": -3 },
+      "conditions": {
+        "phase_min": 4,
+        "ideology_match": [
+          "三民主义共和",
+          "民主联邦"
+        ]
+      },
+      "cost": {
+        "economy": 10
+      },
+      "effects": {
+        "ideology": 10,
+        "diplomacy": 10,
+        "economy": 5,
+        "military": -3
+      },
       "special": "获得列强民主国家的承认与支持；民众支持率+20%",
       "once": true,
       "narrative": "代表们从各省赶来，手握选票走进会场。这是第一次——国家的根本大法不是由一人写就，而是由人民的代表共同决定。"
@@ -289,9 +591,22 @@
       "name": "圣战宣言",
       "category": "ideology",
       "description": "以信仰之名号召信众武装抵抗入侵者。",
-      "conditions": { "at_war": true, "core_under_threat": true, "ideology_match": ["神权自治","温和伊斯兰自治","泛突厥民族主义"] },
-      "cost": { "diplomacy": 30 },
-      "effects": { "military": 15, "ideology": 10 },
+      "conditions": {
+        "at_war": true,
+        "core_under_threat": true,
+        "ideology_match": [
+          "神权自治",
+          "温和伊斯兰自治",
+          "泛突厥民族主义"
+        ]
+      },
+      "cost": {
+        "diplomacy": 30
+      },
+      "effects": {
+        "military": 15,
+        "ideology": 10
+      },
       "special": "所有同信仰势力好感+30；异教/世俗势力关系不可逆恶化",
       "once": true,
       "narrative": "大寺院的钟声响彻群山，宗教领袖登上宣礼台。凡信者，皆当执刃——此非侵略，乃护教之战。"
@@ -301,9 +616,20 @@
       "name": "自由贸易区",
       "category": "ideology",
       "description": "划定自由贸易区，免除关税壁垒，吸引全球资本。",
-      "conditions": { "economy_min": 70, "ideology_match": ["商业邦联","财阀民主"] },
-      "cost": { "ideology": 10 },
-      "effects": { "economy": 15, "diplomacy": 5 },
+      "conditions": {
+        "economy_min": 70,
+        "ideology_match": [
+          "商业邦联",
+          "财阀民主"
+        ]
+      },
+      "cost": {
+        "ideology": 10
+      },
+      "effects": {
+        "economy": 15,
+        "diplomacy": 5
+      },
       "special": "每回合额外经济+1（永久buff）；但列强经济渗透风险+30%",
       "once": true,
       "narrative": "港口仓库堆满万国货物，关税杆被锯断扔进海里。资本如水，闸门一开，财富奔涌而来——但也带来了外国的账本和尺子。"
@@ -313,9 +639,21 @@
       "name": "英式军事改革",
       "category": "ideology",
       "description": "仿效英国军事体制，派遣军官留英，以英式操典整编全军。",
-      "conditions": { "phase_min": 3, "ideology_match": ["亲英自强"] },
-      "cost": { "economy": 10, "diplomacy": 5 },
-      "effects": { "military": 10, "diplomacy": 5, "industry": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_match": [
+          "亲英自强"
+        ]
+      },
+      "cost": {
+        "economy": 10,
+        "diplomacy": 5
+      },
+      "effects": {
+        "military": 10,
+        "diplomacy": 5,
+        "industry": 3
+      },
       "special": "英国好感+30，获得英式装备加成；但军事自主性降低，英国可能干涉内政",
       "once": true,
       "narrative": "留英军官团归国，带回桑赫斯特的操典与恩菲尔德的图纸。滇军换装英式制服，步伐从昆明石板路踏到萨尔温江畔。"
@@ -325,9 +663,20 @@
       "name": "民族共治宪章",
       "category": "ideology",
       "description": "以成文宪章确立各族平等代表权，打造真正的多民族命运共同体。",
-      "conditions": { "phase_min": 3, "ideology_match": ["多民族联邦"] },
-      "cost": { "ideology": 8 },
-      "effects": { "ideology": 12, "diplomacy": 5, "agriculture": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_match": [
+          "多民族联邦"
+        ]
+      },
+      "cost": {
+        "ideology": 8
+      },
+      "effects": {
+        "ideology": 12,
+        "diplomacy": 5,
+        "agriculture": 3
+      },
       "special": "各族支持率+15%；30%概率触发个别土司抵制（临时叛乱），但成功后永久消除民族分裂debuff",
       "once": true,
       "narrative": "各族头人围坐圆桌，宪章以七种文字同时书写。千百年来第一次——苗、彝、侗、藏、回、汉，不以刀兵而以票数决定山区的未来。"
@@ -337,9 +686,22 @@
       "name": "中南解放宣言",
       "category": "ideology",
       "description": "向全世界宣告中南半岛民族解放的正当性，号召越老柬人民共抗殖民。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["泛中南民族主义"] },
-      "cost": { "diplomacy": 20, "ideology": 5 },
-      "effects": { "ideology": 10, "military": 5, "diplomacy": -3 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "泛中南民族主义"
+        ]
+      },
+      "cost": {
+        "diplomacy": 20,
+        "ideology": 5
+      },
+      "effects": {
+        "ideology": 10,
+        "military": 5,
+        "diplomacy": -3
+      },
       "special": "法国敌意+40；中南半岛反殖武装军力+8；列强中的反殖阵营好感+20",
       "once": true,
       "narrative": "宣言以四种语言从雨林深处传遍印度支那。从河内到金边，被殖民者第一次听到一个声音：你们不是法国人的附庸，你们是一个古老的、共同的民族。"
@@ -349,9 +711,23 @@
       "name": "大海进军案",
       "category": "ideology",
       "description": "以举国之力推行超级海军计划，目标控制第一岛链全部制海权。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["海权军国"] },
-      "cost": { "economy": 20, "industry": 5 },
-      "effects": { "naval_power": 15, "military": 8, "industry": 3, "economy": -5 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "海权军国"
+        ]
+      },
+      "cost": {
+        "economy": 20,
+        "industry": 5
+      },
+      "effects": {
+        "naval_power": 15,
+        "military": 8,
+        "industry": 3,
+        "economy": -5
+      },
       "special": "海军建设速度翻倍（6回合内naval_power每2回合+3）；但陆军维持费被挤压",
       "once": true,
       "narrative": "船坞日夜焊光不息，龙骨一根接一根入水。海军将官在作战室推演：第一岛链之内，不留任何敌对舰队。大海不是屏障——大海是帝国的通途。"
@@ -361,9 +737,22 @@
       "name": "全球护侨令",
       "category": "ideology",
       "description": "向全球宣布：凡有华人聚居之地，即受本政权保护。以海军为后盾捍卫侨民。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["华人民族主义"] },
-      "cost": { "diplomacy": 15, "economy": 5 },
-      "effects": { "ideology": 10, "diplomacy": 8, "naval_power": 10 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "华人民族主义"
+        ]
+      },
+      "cost": {
+        "diplomacy": 15,
+        "economy": 5
+      },
+      "effects": {
+        "ideology": 10,
+        "diplomacy": 8,
+        "naval_power": 10
+      },
       "special": "全球华侨势力好感+50；侨汇收入翻倍；但英荷美等国关系-20",
       "once": true,
       "narrative": "檄文以中文刻于铜板，由快船分送马尼拉、槟城、旧金山、巴达维亚。电波同时发出同一句话——从今往后，每一个海外的华人，都不是孤身一人。"
@@ -373,9 +762,21 @@
       "name": "祖地光复运动",
       "category": "ideology",
       "description": "动员所有原住民部落，以祖先之名收复被外来者占据的每一寸土地。",
-      "conditions": { "phase_min": 3, "ideology_match": ["本土民族主义"] },
-      "cost": { "ideology": 10, "economy": 5 },
-      "effects": { "military": 12, "ideology": 10, "diplomacy": -10 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_match": [
+          "本土民族主义"
+        ]
+      },
+      "cost": {
+        "ideology": 10,
+        "economy": 5
+      },
+      "effects": {
+        "military": 12,
+        "ideology": 10,
+        "diplomacy": -10
+      },
       "special": "所有外来势力（殖民者、华侨、移民政权）好感-30；本土部落征兵效率×3；获得「祖地守护者」buff（山地/雨林+15防御）",
       "once": true,
       "narrative": "部落长老汇集于圣山之下，以祖传仪轨举行了中断百年的「土地盟誓」。鼓声震天——每一棵椰子树的根，都比任何殖民者的炮台更深。"
@@ -385,22 +786,42 @@
       "name": "国际反殖纵队",
       "category": "ideology",
       "description": "组建跨国界反殖民武装，吸收全球被压迫民族的志愿战士，点燃世界反殖烽火。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["第三世界反殖民"] },
-      "cost": { "economy": 12, "diplomacy": 30 },
-      "effects": { "military": 10, "ideology": 12, "diplomacy": 5 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "第三世界反殖民"
+        ]
+      },
+      "cost": {
+        "economy": 12,
+        "diplomacy": 30
+      },
+      "effects": {
+        "military": 10,
+        "ideology": 12,
+        "diplomacy": 5
+      },
       "special": "每有一个列强殖民地被解放，军力+3思想+3（可叠加3次）；但所有殖民列强关系-50",
       "once": true,
       "narrative": "各色面孔汇聚于热带港口——马来渔民的竹筏枪手、非洲矿工的自卫队、印度铁路工人的纠察队。旗帜上缝着三种文字：被压迫者，联合起来。"
     },
-
     {
       "id": "manchuria_colonization",
       "name": "满洲开拓团",
       "category": "regional",
       "description": "组织大规模移民开发东北沃土，将黑土地变成帝国粮仓。",
-      "conditions": { "region": "northeast", "region_unified": true },
-      "cost": { "economy": 10 },
-      "effects": { "agriculture": 12, "industry": 5 },
+      "conditions": {
+        "region": "northeast",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 10
+      },
+      "effects": {
+        "agriculture": 12,
+        "industry": 5
+      },
       "special": "日本干涉概率+30%；解锁额外人口增长buff",
       "once": true,
       "narrative": "移民列车从山海关鱼贯而出，满载农具与种子。黑土地上的犁沟延伸至地平线——这片沃土将以粮食喂养整个帝国。"
@@ -410,9 +831,17 @@
       "name": "中原一统令",
       "category": "regional",
       "description": "以中央正统之名号令中原，整合华北军政资源。",
-      "conditions": { "region": "huabei", "region_unified": true },
-      "cost": { "economy": 8 },
-      "effects": { "military": 8, "ideology": 5 },
+      "conditions": {
+        "region": "huabei",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "military": 8,
+        "ideology": 5
+      },
       "special": "邻区非友好势力态度-15；「正统」宣称对其他地区的外交影响+10",
       "once": true,
       "narrative": "中原既定，天下归心。檄文发出，四方震动——坐拥中原者，自古得天下。"
@@ -422,9 +851,18 @@
       "name": "改土归流令",
       "category": "regional",
       "description": "废除土司世袭制，改设流官，将多民族地区纳入中央管辖。",
-      "conditions": { "region": "southwest", "region_unified": true },
-      "cost": { "ideology": 5 },
-      "effects": { "ideology": 10, "diplomacy": 5, "agriculture": 3 },
+      "conditions": {
+        "region": "southwest",
+        "region_unified": true
+      },
+      "cost": {
+        "ideology": 5
+      },
+      "effects": {
+        "ideology": 10,
+        "diplomacy": 5,
+        "agriculture": 3
+      },
       "special": "30%概率触发土司叛乱（临时敌对势力出现），但成功后西南永久稳固",
       "once": true,
       "narrative": "土司印信被收缴，朝廷任命的流官骑马赴任。各族头人表情复杂——千百年的规矩，今日改变。"
@@ -434,9 +872,18 @@
       "name": "长江经济圈",
       "category": "regional",
       "description": "以长江为纽带整合东南富庶之地，打造亚洲金融中心。",
-      "conditions": { "region": "southeast", "region_unified": true },
-      "cost": { "economy": 12 },
-      "effects": { "economy": 15, "industry": 5, "diplomacy": 5 },
+      "conditions": {
+        "region": "southeast",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 12
+      },
+      "effects": {
+        "economy": 15,
+        "industry": 5,
+        "diplomacy": 5
+      },
       "special": "列强经济关注度+20%；每回合额外税收+2",
       "once": true,
       "narrative": "南京路和外滩灯火彻夜不熄，银行大楼一座接一座奠基。长江两岸，一个经济巨人正在睁开眼睛。"
@@ -446,9 +893,18 @@
       "name": "南洋护侨令",
       "category": "regional",
       "description": "宣布对南洋华侨的保护责任，以军力为后盾维护侨民权益。",
-      "conditions": { "region": "lingnan", "region_unified": true },
-      "cost": { "economy": 8 },
-      "effects": { "diplomacy": 10, "economy": 8, "military": 3 },
+      "conditions": {
+        "region": "lingnan",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "diplomacy": 10,
+        "economy": 8,
+        "military": 3
+      },
       "special": "英国态度-25；南洋华侨势力好感+40；解锁后续南海扩张",
       "once": true,
       "narrative": "战舰出珠江口，驶向南中国海。南洋的华侨子弟，从此不必再怕异乡排华的暴徒——因为你们背后，站着一个国家。"
@@ -458,9 +914,20 @@
       "name": "南海舰队建设",
       "category": "regional",
       "description": "在天然良港建造海军基地，组建远洋作战舰队。",
-      "conditions": { "region": "nanyang", "region_unified": true },
-      "cost": { "economy": 15, "industry": 5 },
-      "effects": { "military": 10, "naval_power": 12, "economy": 5, "diplomacy": 5 },
+      "conditions": {
+        "region": "nanyang",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 15,
+        "industry": 5
+      },
+      "effects": {
+        "military": 10,
+        "naval_power": 12,
+        "economy": 5,
+        "diplomacy": 5
+      },
       "special": "解锁大规模海军建设能力；英荷警惕度+30；可争夺南海制海权",
       "once": true,
       "narrative": "船坞里龙骨轰然入水，炮台上新铸的要塞炮指向海峡入口。南海之上，终于升起了一支属于自己的舰队。"
@@ -470,33 +937,69 @@
       "name": "西域都护重建",
       "category": "regional",
       "description": "以汉代西域都护府为蓝本，重建对西域的军政管辖体系。",
-      "conditions": { "region": "xibei", "region_unified": true },
-      "cost": { "economy": 10, "military": 5 },
-      "effects": { "military": 8, "diplomacy": 5, "ideology": 10 },
+      "conditions": {
+        "region": "xibei",
+        "region_unified": true
+      },
+      "cost": {
+        "economy": 10,
+        "military": 5
+      },
+      "effects": {
+        "military": 8,
+        "diplomacy": 5,
+        "ideology": 10
+      },
       "special": "沙俄/苏联敌意+25；丝绸之路贸易收入翻倍",
       "once": true,
       "narrative": "都护府大旗在惠远城头猎猎作响，驿站烽燧自玉门关一路向西点亮。千年之后，西域再入中华之臂。"
     },
-
     {
       "id": "emergency_scorched_earth",
       "name": "焦土抗战（紧急）",
       "category": "emergency",
       "description": "敌军兵临城下，宁可毁掉一切，也不能拱手让人。",
-      "conditions": { "core_under_siege": true, "military_min": 20 },
-      "cost": { "industry": 20, "agriculture": 15 },
-      "effects": { "military": 10 },
+      "conditions": {
+        "core_under_siege": true,
+        "military_min": 20
+      },
+      "cost": {
+        "industry": 20,
+        "agriculture": 15
+      },
+      "effects": {
+        "military": 10
+      },
       "special": "被围城市防御+20（持续8回合）；战后需重建（消耗经济和工业各10）",
-      "narrative": "敌军已至城下。工厂机器被拆卸后送，粮仓泼上煤油。他们得到的，只能是灰烬。"
+      "narrative": "敌军已至城下。工厂机器被拆卸后送，粮仓泼上煤油。他们得到的，只能是灰烬。",
+      "spirit": {
+        "name": "焦土令（紧急）",
+        "desc": "军情紧急，即刻烧毁敌军可能利用的一切资源。这是残酷的决断——宁可毁掉，绝不资敌。",
+        "effects": {
+          "military": 6,
+          "agriculture": -5,
+          "population_support": -5
+        }
+      }
     },
     {
       "id": "emergency_foreign_rescue",
       "name": "列强紧急求援",
       "category": "emergency",
       "description": "政权危在旦夕，不惜一切代价向列强请求军事干预。",
-      "conditions": { "survival_pressure_min": 80, "diplomacy_min": 30 },
-      "cost": { "diplomacy": 20, "economy": 15, "ideology": 15 },
-      "effects": { "military": 12, "economy": 8 },
+      "conditions": {
+        "survival_pressure_min": 80,
+        "diplomacy_min": 30
+      },
+      "cost": {
+        "diplomacy": 20,
+        "economy": 15,
+        "ideology": 15
+      },
+      "effects": {
+        "military": 12,
+        "economy": 8
+      },
       "special": "列强出兵援助，但将索取领土/关税/驻军权等重大让步",
       "narrative": "求援电报用明码拍发，不加掩饰地宣告了绝望。列强舰队正在起锚——援军将至，代价必重。"
     },
@@ -505,14 +1008,21 @@
       "name": "流亡政府",
       "category": "emergency",
       "description": "核心领土尽失，但政权不灭——在盟友或列强领土组建流亡政府。",
-      "conditions": { "core_cities_lost": "all", "has_ally": true },
-      "cost": { "ideology": 20, "economy": 10 },
-      "effects": { "diplomacy": 10 },
+      "conditions": {
+        "core_cities_lost": "all",
+        "has_ally": true
+      },
+      "cost": {
+        "ideology": 20,
+        "economy": 10
+      },
+      "effects": {
+        "diplomacy": 10
+      },
       "special": "保留政权存在，可在盟友领土重建部队（军事重置为20）；获得国际同情buff",
       "once": true,
       "narrative": "政府要员搭上最后的列车，驶向盟友的国境。首府陷落了，但政权不死——流亡只是暂时的退却。"
     },
-
     {
       "id": "chain_red_1",
       "name": "农民运动讲习所",
@@ -521,9 +1031,25 @@
       "step": 1,
       "chain_name": "红色革命",
       "description": "在各县乡开办农民运动讲习所，培养农民骨干，传播革命思想，为土地革命奠定组织基础。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["共产主义","共产党革命","左翼土地革命","城市工团主义","革命社会主义"] },
-      "cost": { "economy": 5 },
-      "effects": { "ideology": 8, "agriculture": 5, "military": 2 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "共产主义",
+          "共产党革命",
+          "左翼土地革命",
+          "城市工团主义",
+          "革命社会主义"
+        ]
+      },
+      "cost": {
+        "economy": 5
+      },
+      "effects": {
+        "ideology": 8,
+        "agriculture": 5,
+        "military": 2
+      },
       "special": "解锁后续红色革命链；农村根据地思想传播加速",
       "once": true,
       "narrative": "祠堂改作教室，田埂就是操场。穿粗布短衫的年轻人围坐灯下，第一次听到「阶级」「剥削」「革命」这些字眼。星星之火，从这间农舍开始燎原。"
@@ -536,9 +1062,23 @@
       "step": 2,
       "chain_name": "红色革命",
       "description": "颁布土地革命纲领——打土豪、分田地、废债务。以血与火砸碎千年土地枷锁，让耕者真正拥有其田。",
-      "conditions": { "phase_min": 3, "ideology_min": 60, "requires": ["chain_red_1"] },
-      "cost": { "economy": 8, "ideology": 5 },
-      "effects": { "agriculture": 12, "ideology": 10, "military": 5, "economy": -3 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_min": 60,
+        "requires": [
+          "chain_red_1"
+        ]
+      },
+      "cost": {
+        "economy": 8,
+        "ideology": 5
+      },
+      "effects": {
+        "agriculture": 12,
+        "ideology": 10,
+        "military": 5,
+        "economy": -3
+      },
       "special": "农村动员效率翻倍；地主阶级反抗（临时叛乱概率20%）",
       "once": true,
       "narrative": "地契堆积在村口，一把火烧到午夜。每一户佃农都领到了盖着大红印章的田亩册。千年的枷锁，今夜熔成铁水——浇铸成镰刀与锤头。"
@@ -551,14 +1091,27 @@
       "step": 3,
       "chain_name": "红色革命",
       "description": "枪杆子里出政权。将农民赤卫队整编为正規革命武装，以农村包围城市、武装夺取政权的战略宣告于世。",
-      "conditions": { "phase_min": 3, "military_min": 50, "ideology_min": 70, "requires": ["chain_red_2"] },
-      "cost": { "economy": 10, "ideology": 8 },
-      "effects": { "military": 15, "ideology": 12, "diplomacy": -5 },
+      "conditions": {
+        "phase_min": 3,
+        "military_min": 50,
+        "ideology_min": 70,
+        "requires": [
+          "chain_red_2"
+        ]
+      },
+      "cost": {
+        "economy": 10,
+        "ideology": 8
+      },
+      "effects": {
+        "military": 15,
+        "ideology": 12,
+        "diplomacy": -5
+      },
       "special": "所有部队获得「人民军队」buff（士气+10、征兵费用-30%）；列强军事干涉概率+25%",
       "once": true,
       "narrative": "赤卫队扛着步枪从山林中列队而出，队伍里农民、矿工、挑夫，面目粗糙却步伐坚定。宣言只有一句话：天下者，我们的天下。"
     },
-
     {
       "id": "chain_warlord_1",
       "name": "督军联席会议",
@@ -567,9 +1120,26 @@
       "step": 1,
       "chain_name": "军阀铁腕",
       "description": "召集各路镇守使、督军、师旅长举行联席会议，以枪杆子划定势力范围和指挥权归属。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["军阀独裁","军事独裁","旧官僚独裁","地方军阀","马家军阀","军阀联邦"] },
-      "cost": { "economy": 8 },
-      "effects": { "military": 8, "ideology": 5, "diplomacy": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "军阀独裁",
+          "军事独裁",
+          "旧官僚独裁",
+          "地方军阀",
+          "马家军阀",
+          "军阀联邦"
+        ]
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "military": 8,
+        "ideology": 5,
+        "diplomacy": 3
+      },
       "special": "内部分裂风险-20%；统一指挥体系初步建立",
       "once": true,
       "narrative": "督军们围坐长桌，每人身后站着一个荷枪实弹的副官。茶是凉的，话是硬的——但枪杆子碰枪杆子，终归要谈出一个总把头来。"
@@ -582,9 +1152,23 @@
       "step": 2,
       "chain_name": "军阀铁腕",
       "description": "在联席会议基础上成立军事统一委员会，收编各路私兵为统一国防军，建立垂直指挥的军事集权体制。",
-      "conditions": { "phase_min": 3, "military_min": 55, "ideology_min": 50, "requires": ["chain_warlord_1"] },
-      "cost": { "economy": 12, "ideology": 5 },
-      "effects": { "military": 10, "industry": 5, "ideology": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "military_min": 55,
+        "ideology_min": 50,
+        "requires": [
+          "chain_warlord_1"
+        ]
+      },
+      "cost": {
+        "economy": 12,
+        "ideology": 5
+      },
+      "effects": {
+        "military": 10,
+        "industry": 5,
+        "ideology": 3
+      },
       "special": "所有军阀私兵整编为正规军；军队指挥效率+25%；个别督军可能抵制（10%概率军事政变）",
       "once": true,
       "narrative": "各路军旗被降下，新制的统一军旗缓缓升起。参谋部的电话线牵到每一个团部——从此，枪口一致对外，而非彼此。"
@@ -597,14 +1181,29 @@
       "step": 3,
       "chain_name": "军阀铁腕",
       "description": "一人号令，三军听命。以军事强人为核心构建威权政体——军队即国家，统帅即法律。",
-      "conditions": { "phase_min": 4, "military_min": 65, "ideology_min": 60, "requires": ["chain_warlord_2"] },
-      "cost": { "economy": 15, "ideology": 10 },
-      "effects": { "military": 12, "ideology": 8, "industry": 8, "diplomacy": -5, "economy": -3 },
+      "conditions": {
+        "phase_min": 4,
+        "military_min": 65,
+        "ideology_min": 60,
+        "requires": [
+          "chain_warlord_2"
+        ]
+      },
+      "cost": {
+        "economy": 15,
+        "ideology": 10
+      },
+      "effects": {
+        "military": 12,
+        "ideology": 8,
+        "industry": 8,
+        "diplomacy": -5,
+        "economy": -3
+      },
       "special": "获得「铁腕」永久buff（军事+2/回合持续10回合）；但外交孤立+反对派地下活动概率上升",
       "once": true,
       "narrative": "统帅府邸外的卫兵换了新式制服，帽徽在灯光下闪着冷光。办公厅里，最后一纸任命书签下——从省城到县城，再无第二个声音。铁腕之下，是为秩序。"
     },
-
     {
       "id": "chain_republic_1",
       "name": "地方自治章程",
@@ -613,9 +1212,25 @@
       "step": 1,
       "chain_name": "共和宪政",
       "description": "从县议会、省议会选举起步，以地方自治为基石逐步构建民主制度。让人民从身边的事务开始学习民主。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["三民主义共和","民主联邦","多民族联邦","自由主义宪政"] },
-      "cost": { "economy": 8, "ideology": 5 },
-      "effects": { "ideology": 8, "diplomacy": 5, "economy": 5 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "三民主义共和",
+          "民主联邦",
+          "多民族联邦",
+          "自由主义宪政"
+        ]
+      },
+      "cost": {
+        "economy": 8,
+        "ideology": 5
+      },
+      "effects": {
+        "ideology": 8,
+        "diplomacy": 5,
+        "economy": 5
+      },
       "special": "民众支持率+15%；地方治理效率提升",
       "once": true,
       "narrative": "投票箱第一次抬进县衙大堂。穿长衫的、短打的、赤脚的，排着长队——他们对「民主」二字尚觉拗口，但知道今天自己说的话，算数。"
@@ -628,9 +1243,23 @@
       "step": 2,
       "chain_name": "共和宪政",
       "description": "由各省选举代表召开制宪会议，以民主程序起草国家根本大法，确立三权分立与公民权利。",
-      "conditions": { "phase_min": 3, "ideology_min": 60, "diplomacy_min": 45, "requires": ["chain_republic_1"] },
-      "cost": { "economy": 12, "ideology": 8 },
-      "effects": { "ideology": 12, "diplomacy": 10, "economy": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_min": 60,
+        "diplomacy_min": 45,
+        "requires": [
+          "chain_republic_1"
+        ]
+      },
+      "cost": {
+        "economy": 12,
+        "ideology": 8
+      },
+      "effects": {
+        "ideology": 12,
+        "diplomacy": 10,
+        "economy": 3
+      },
       "special": "列强民主国家好感+30；获得「宪政」buff（外交+1/回合）",
       "once": true,
       "narrative": "各省代表携提案步入会场，旁听席上坐满了记者和外国观察员。争论持续了三个月——从总统制还是内阁制，到每一个公民的人身自由是否不可侵犯。当宪法草案以七成多数通过时，全场起立鼓掌长达十分钟。"
@@ -643,14 +1272,28 @@
       "step": 3,
       "chain_name": "共和宪政",
       "description": "以三民主义五权宪法为纲，建立行政、立法、司法、考试、监察五权分立的完整宪政体系。",
-      "conditions": { "phase_min": 4, "ideology_min": 70, "diplomacy_min": 55, "requires": ["chain_republic_2"] },
-      "cost": { "economy": 15, "ideology": 10 },
-      "effects": { "ideology": 15, "diplomacy": 12, "economy": 8, "military": -3 },
+      "conditions": {
+        "phase_min": 4,
+        "ideology_min": 70,
+        "diplomacy_min": 55,
+        "requires": [
+          "chain_republic_2"
+        ]
+      },
+      "cost": {
+        "economy": 15,
+        "ideology": 10
+      },
+      "effects": {
+        "ideology": 15,
+        "diplomacy": 12,
+        "economy": 8,
+        "military": -3
+      },
       "special": "五权宪法永久buff：思想+1/回合、外交+1/回合；民主制度获国际承认；但军人政治势力反感",
       "once": true,
       "narrative": "五权宪法全文镌刻于大理石壁上，立于首府中央广场。考试院、监察院相继挂牌——这不是对西方的简单模仿，而是以千年科举传统与监察御史制度为根，嫁接现代民主之枝。有洋记者写道：'他们在发明一种新的文明。'"
     },
-
     {
       "id": "chain_national_1",
       "name": "民族觉醒启蒙",
@@ -659,9 +1302,26 @@
       "step": 1,
       "chain_name": "民族复兴",
       "description": "以报刊、学堂、演讲为武器唤醒民族意识——我们是谁、我们来自哪里、我们将去往何方。一个民族，必先自知而后自立。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["华人民族主义","国家主义","本土民族主义","泛中南民族主义","泛突厥民族主义"] },
-      "cost": { "economy": 5, "ideology": 5 },
-      "effects": { "ideology": 10, "diplomacy": 3, "military": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "华人民族主义",
+          "国家主义",
+          "本土民族主义",
+          "泛中南民族主义",
+          "泛突厥民族主义"
+        ]
+      },
+      "cost": {
+        "economy": 5,
+        "ideology": 5
+      },
+      "effects": {
+        "ideology": 10,
+        "diplomacy": 3,
+        "military": 3
+      },
       "special": "民族凝聚力+20%；同族人口支持率大幅上升",
       "once": true,
       "narrative": "街头报童挥舞着号外，新式学堂里教员在黑板上写下巨大的「国」字。一种新的情感在城市和乡村之间蔓延——比乡愁更炽热，比宗族更宽广。它叫「民族」。"
@@ -674,9 +1334,23 @@
       "step": 2,
       "chain_name": "民族复兴",
       "description": "超越阶级、地域、派系之见，以民族大义为旗帜团结一切可以团结的力量，建立最广泛的民族统一战线。",
-      "conditions": { "phase_min": 3, "ideology_min": 60, "military_min": 45, "requires": ["chain_national_1"] },
-      "cost": { "economy": 10, "ideology": 8 },
-      "effects": { "ideology": 12, "military": 8, "diplomacy": 5 },
+      "conditions": {
+        "phase_min": 3,
+        "ideology_min": 60,
+        "military_min": 45,
+        "requires": [
+          "chain_national_1"
+        ]
+      },
+      "cost": {
+        "economy": 10,
+        "ideology": 8
+      },
+      "effects": {
+        "ideology": 12,
+        "military": 8,
+        "diplomacy": 5
+      },
       "special": "不同派系的内部摩擦-40%；征兵效率+30%；获得「民族阵线」buff",
       "once": true,
       "narrative": "工、农、商、学、兵——五面旗帜在广场上并排竖起。不同出身、不同口音、不同信仰的人们第一次站在同一面旗帜下。这面旗帜不绣党派，只绣山河。"
@@ -689,14 +1363,28 @@
       "step": 3,
       "chain_name": "民族复兴",
       "description": "以民族复兴为大纛，向全世界宣告一个古老民族的重新崛起。驱除列强、光复故土、振兴中华。",
-      "conditions": { "phase_min": 4, "ideology_min": 70, "military_min": 60, "requires": ["chain_national_2"] },
-      "cost": { "economy": 15, "ideology": 12 },
-      "effects": { "ideology": 15, "military": 12, "industry": 8, "diplomacy": -8 },
+      "conditions": {
+        "phase_min": 4,
+        "ideology_min": 70,
+        "military_min": 60,
+        "requires": [
+          "chain_national_2"
+        ]
+      },
+      "cost": {
+        "economy": 15,
+        "ideology": 12
+      },
+      "effects": {
+        "ideology": 15,
+        "military": 12,
+        "industry": 8,
+        "diplomacy": -8
+      },
       "special": "全民动员上限+20%；所有列强关系-25但本族支持率+40%；获得「民族复兴」永久buff",
       "once": true,
       "narrative": "宣言以五种文字同时向世界发布。广场上的呼声如雷——不是祈求，不是交涉，是宣告。这个民族睡了一百年——而今，它睁开了眼睛。列强的公使们在使馆里交换着不安的眼神。"
     },
-
     {
       "id": "chain_industry_1",
       "name": "全国商会联盟",
@@ -705,9 +1393,25 @@
       "step": 1,
       "chain_name": "实业救国",
       "description": "联合各省商会、钱庄、实业家，组建全国商会联盟，以资本的力量为政治奠基。商人不再只是交税的——他们是国家的股东。",
-      "conditions": { "phase_min": 3, "region_unified": true, "ideology_match": ["民族资本主义","商业邦联","财阀民主","海权军国","亲英自强"] },
-      "cost": { "economy": 8 },
-      "effects": { "economy": 10, "industry": 5, "diplomacy": 5 },
+      "conditions": {
+        "phase_min": 3,
+        "region_unified": true,
+        "ideology_match": [
+          "民族资本主义",
+          "商业邦联",
+          "财阀民主",
+          "海权军国",
+          "亲英自强"
+        ]
+      },
+      "cost": {
+        "economy": 8
+      },
+      "effects": {
+        "economy": 10,
+        "industry": 5,
+        "diplomacy": 5
+      },
       "special": "商会网络覆盖全境；贸易收入+20%",
       "once": true,
       "narrative": "各地商会的匾额挂进了同一个大厅。丝绸商、茶叶商、钱庄老板、船运大亨——他们第一次发现，彼此加起来的力量比任何一个督军都大。"
@@ -720,9 +1424,23 @@
       "step": 2,
       "chain_name": "实业救国",
       "description": "以国家力量扶持民族工业——关税保护、政府订货、技术引进三位一体，让烟囱如森林般在大地上拔地而起。",
-      "conditions": { "phase_min": 3, "economy_min": 55, "industry_min": 50, "requires": ["chain_industry_1"] },
-      "cost": { "economy": 15, "ideology": 5 },
-      "effects": { "industry": 15, "economy": 10, "agriculture": 3 },
+      "conditions": {
+        "phase_min": 3,
+        "economy_min": 55,
+        "industry_min": 50,
+        "requires": [
+          "chain_industry_1"
+        ]
+      },
+      "cost": {
+        "economy": 15,
+        "ideology": 5
+      },
+      "effects": {
+        "industry": 15,
+        "economy": 10,
+        "agriculture": 3
+      },
       "special": "工业建设速度+30%；获得「产业振兴」buff（工业+1/回合持续12回合）",
       "once": true,
       "narrative": "关税法案在议会一字一句地推敲——每提高一个点的进口税，就有一个民族工厂获得喘息。机器从外洋运来，工程师从各国请来。不出十年，国货当与洋货争雄于市。"
@@ -735,15 +1453,30 @@
       "step": 3,
       "chain_name": "实业救国",
       "description": "在国家主导下建立经济统制体系——金融、交通、能源、军工悉归国家调控。资本为国家服务，而非国家为资本服务。",
-      "conditions": { "phase_min": 4, "economy_min": 70, "industry_min": 65, "requires": ["chain_industry_2"] },
-      "cost": { "economy": 20, "ideology": 8 },
-      "effects": { "industry": 15, "economy": 12, "military": 8, "ideology": -3, "diplomacy": 3 },
+      "conditions": {
+        "phase_min": 4,
+        "economy_min": 70,
+        "industry_min": 65,
+        "requires": [
+          "chain_industry_2"
+        ]
+      },
+      "cost": {
+        "economy": 20,
+        "ideology": 8
+      },
+      "effects": {
+        "industry": 15,
+        "economy": 12,
+        "military": 8,
+        "ideology": -3,
+        "diplomacy": 3
+      },
       "special": "获得「经济统制」永久buff（经济+2/回合、工业+1/回合）；但外资撤退+自由市场萎缩",
       "once": true,
       "narrative": "中央银行、铁路总局、矿业委员会——一块块铜牌在大理石门廊旁挂起。政府的手伸进了经济的最深处，有人叫它「统制」，有人叫它「掐死」。但数字不会撒谎：钢产量翻了三倍，第一条国产铁路全线通车。这——就是国家资本主义的力量。"
     }
   ],
-
   "condition_check_rules": {
     "phase_min": "当前阶段 ≥ 值",
     "phase_max": "当前阶段 ≤ 值",
@@ -767,37 +1500,56 @@
     "requires": "需先执行指定决议ID列表",
     "industry_min": "工业 ≥ 值"
   },
-
   "chains": {
     "red_revolution": {
       "name": "红色革命",
       "icon": "⚒",
       "description": "从农民运动到武装夺取政权，以革命手段彻底改造社会。",
-      "steps": ["chain_red_1", "chain_red_2", "chain_red_3"]
+      "steps": [
+        "chain_red_1",
+        "chain_red_2",
+        "chain_red_3"
+      ]
     },
     "warlord_iron_fist": {
       "name": "军阀铁腕",
       "icon": "⚔",
       "description": "以枪杆子统一枪杆子，从督军联席到军事集权，建立威权秩序。",
-      "steps": ["chain_warlord_1", "chain_warlord_2", "chain_warlord_3"]
+      "steps": [
+        "chain_warlord_1",
+        "chain_warlord_2",
+        "chain_warlord_3"
+      ]
     },
     "republican_constitution": {
       "name": "共和宪政",
       "icon": "🏛",
       "description": "从地方自治到全国制宪，以民主程序确立共和法统和三权分立。",
-      "steps": ["chain_republic_1", "chain_republic_2", "chain_republic_3"]
+      "steps": [
+        "chain_republic_1",
+        "chain_republic_2",
+        "chain_republic_3"
+      ]
     },
     "national_revival": {
       "name": "民族复兴",
       "icon": "🏯",
       "description": "唤醒民族意识，建立统一战线，宣告一个古老民族的重新崛起。",
-      "steps": ["chain_national_1", "chain_national_2", "chain_national_3"]
+      "steps": [
+        "chain_national_1",
+        "chain_national_2",
+        "chain_national_3"
+      ]
     },
     "industrial_salvation": {
       "name": "实业救国",
       "icon": "💰",
       "description": "以商会联盟为起点，产业振兴为手段，经济统制为终极形态。",
-      "steps": ["chain_industry_1", "chain_industry_2", "chain_industry_3"]
+      "steps": [
+        "chain_industry_1",
+        "chain_industry_2",
+        "chain_industry_3"
+      ]
     }
   }
 }

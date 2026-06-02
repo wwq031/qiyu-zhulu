@@ -37,7 +37,9 @@ public class GameState {
     @JsonProperty("training_queue")
     private List<TrainingItem> trainingQueue;       // 训练队列
     @JsonProperty("diplomatic_relations")
-    private Map<String, DiplomaticRelation> diplomaticRelations;  // 外交关系
+    private Map<String, DiplomaticRelation> diplomaticRelations;  // 外交关系（玩家↔目标）
+    @JsonProperty("all_diplomatic_relations")
+    private Map<String, Map<String, Object>> allDiplomaticRelations; // 全势力外交（fidA↔fidB→{score,pact,turns}）
     @JsonProperty("ai_factions")
     private Map<String, AiFactionData> aiFactions;  // AI势力数据
     @JsonProperty("defeated_factions")
@@ -96,6 +98,7 @@ public class GameState {
         this.constructionQueue = new ArrayList<>();
         this.trainingQueue = new ArrayList<>();
         this.diplomaticRelations = new HashMap<>();
+        this.allDiplomaticRelations = new HashMap<>();
         this.aiFactions = new HashMap<>();
         this.defeatedFactions = new ArrayList<>();
         this.activeWars = new ArrayList<>();
@@ -150,6 +153,8 @@ public class GameState {
     public void setTrainingQueue(List<TrainingItem> v) { this.trainingQueue = v; }
     public Map<String, DiplomaticRelation> getDiplomaticRelations() { return diplomaticRelations; }
     public void setDiplomaticRelations(Map<String, DiplomaticRelation> v) { this.diplomaticRelations = v; }
+    public Map<String, Map<String, Object>> getAllDiplomaticRelations() { return allDiplomaticRelations; }
+    public void setAllDiplomaticRelations(Map<String, Map<String, Object>> v) { this.allDiplomaticRelations = v; }
     public Map<String, AiFactionData> getAiFactions() { return aiFactions; }
     public void setAiFactions(Map<String, AiFactionData> v) { this.aiFactions = v; }
     public List<String> getDefeatedFactions() { return defeatedFactions; }

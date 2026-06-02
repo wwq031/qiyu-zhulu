@@ -43,6 +43,8 @@ public class FactionDefinition {
     private boolean npc;
     @JsonProperty("ai_personality")
     private String aiPersonality;
+    @JsonProperty("collapse_intro")
+    private String collapseIntro;                       // 崩溃后入势叙事
 
     public FactionDefinition() {}
 
@@ -90,4 +92,6 @@ public class FactionDefinition {
     public void setNpc(boolean v) { this.npc = v; }
     public String getAiPersonality() { return aiPersonality; }
     public void setAiPersonality(String v) { this.aiPersonality = v; }
+    public String getCollapseIntro() { return collapseIntro; }
+    public void setCollapseIntro(String v) { this.collapseIntro = v; }
 }

@@ -120,7 +120,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);overflow:hid
 .event-popup-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:3000;display:none;justify-content:center;align-items:center;}
 .event-popup-overlay.show{display:flex;}
 .event-popup{background:var(--panel);border:2px solid var(--gold);border-radius:8px;padding:24px;max-width:500px;width:90%;text-align:center;animation:popIn 0.3s ease;}
-.event-popup-body{color:var(--text);line-height:1.7;margin-bottom:16px;font-size:0.95em;}
+.event-popup-body{color:var(--text);line-height:1.7;margin-bottom:16px;font-size:0.95em;max-height:70vh;overflow-y:auto;}
 @keyframes popIn{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
 
 /* ═══════════════════ 税率拉条 ═══════════════════ */
@@ -133,6 +133,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);overflow:hid
 .tax-slider::-moz-range-thumb{width:16px;height:16px;background:var(--gold);border-radius:50%;cursor:pointer;border:none;}
 .tax-val{min-width:40px;text-align:right;font-weight:bold;color:var(--gold);}
 .tax-hint{font-size:0.72em;color:var(--text-dim);margin-top:4px;}
+
+/* ═══════════════════ 滚动条 ═══════════════════ */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--panel);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dim);}
+*{scrollbar-width:thin;scrollbar-color:var(--border) var(--panel);}
 
 /* ═══════════════════ 自定义指令栏 ═══════════════════ */
 #custom-bar{display:flex;gap:4px;padding:4px;position:absolute;bottom:0;left:0;right:52px;background:rgba(17,25,34,0.92);border-top:1px solid var(--border);z-index:500;}

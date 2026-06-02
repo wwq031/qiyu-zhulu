@@ -139,7 +139,12 @@ function renderAll(data) {
   el=document.getElementById('status-text'); if(el)el.textContent = '就绪';
 
   // AI叙事弹出
-  if (data.narrative) showEventPopup('📜 AI GM 裁决', data.narrative, false);
+  if (data.narrative) {
+    var narTitle = '📜 天下大势';
+    if (gameState && gameState.phase === 1) narTitle = '🏛 养心殿 · 宣统二年冬';
+    else if (data.phase >= 2 && data.faction) narTitle = '⚔ ' + data.faction + ' · 崛起';
+    showEventPopup(narTitle, data.narrative, false);
+  }
   if (data.reason) showEventPopup('⚠ GM 判定', data.reason, false);
 
   // 事件日志（弹窗形式）
@@ -223,10 +228,11 @@ function renderAll(data) {
     addLogEntry('⚡ 势力覆灭 — 游戏结束');
   }
 
-  // 子菜单渲染
-  if (data.result_type && data.result_type !== 'ok') {
+  // 子菜单渲染（部门面板开着时不弹子菜单）
+  var deptOpen = document.getElementById('dept-panel');
+  if (data.result_type && data.result_type !== 'ok' && (!deptOpen || !deptOpen.classList.contains('open'))) {
     renderSubmenu(data.result_type, data.data || {});
-  } else {
+  } else if (data.result_type === 'ok') {
     hideSubmenu();
   }
 
@@ -620,12 +626,58 @@ function renderDeptContent(type, data) {
       break;
     case 'diplomacy':
       var targets = (data.data||{}).diplo_targets || [];
-      html += '<div class="submenu-target">外交对象: ' + targets.length + '个势力</div>';
-      targets.slice(0,8).forEach(function(t,i) {
-        var warTag = t.at_war ? ' [交战中]' : '';
-        html += '<div class="submenu-item" onclick="sendAction(\'3.1\',{target_index:'+i+'})"><span class="icon">🤝</span>' + t.name + warTag + '<span class="cost">军' + t.military + '</span></div>';
+      var myDip = (data.stats||{}).diplomacy || 0;
+      html += '<div class="submenu-target" style="margin-bottom:6px;">🌐 外交斡旋 · 外交力 ' + myDip + ' · 对象 ' + targets.length + '个势力</div>';
+      // 外交操作速查
+      var pactIcons = {'non_aggression':'🕊互不侵犯','alliance':'🤝军事同盟','trade':'📈贸易协定','truce':'🏳休战'};
+      targets.forEach(function(t, i) {
+        var relScore = t.relation || 0;
+        var relColor = relScore > 30 ? 'var(--green)' : relScore > 0 ? 'var(--text)' : relScore > -30 ? 'var(--yellow)' : 'var(--red)';
+        var relBar = '';
+        var absRel = Math.min(100, Math.abs(relScore));
+        var barW = Math.max(4, absRel);
+        if (relScore >= 0) relBar = '<span style="display:inline-block;width:60px;height:4px;background:var(--border);border-radius:2px;vertical-align:middle;"><span style="display:block;width:'+barW+'%;height:100%;background:'+relColor+';border-radius:2px;"></span></span>';
+        else relBar = '<span style="display:inline-block;width:60px;height:4px;background:var(--border);border-radius:2px;vertical-align:middle;"><span style="display:block;width:'+barW+'%;height:100%;background:var(--red);border-radius:2px;"></span></span>';
+        var pactLabel = t.pact ? (' · ' + (pactIcons[t.pact] || t.pact)) : '';
+        var warClass = t.at_war ? ' style="border-color:var(--red);background:rgba(200,60,40,0.08);"' : '';
+        html += '<div class="submenu-item"' + warClass + '>';
+        html += '<div style="flex:1;min-width:0;" onclick="var d=document.getElementById(\'diplo-detail-'+i+'\');d.style.display=d.style.display===\'none\'?\'block\':\'none\';">';
+        html += '<div style="font-weight:bold;font-size:0.9em;cursor:pointer;">' + t.name + (t.at_war ? ' <span style="color:var(--red);">⚡交战中</span>' : '') + ' <span style="font-size:0.7em;color:var(--text-dim);">▾</span></div>';
+        html += '<div style="font-size:0.75em;color:var(--text-dim);">' + (t.ideology||'') + (t.leader?' · @'+t.leader:'') + ' · ⚔军' + (t.military||0) + pactLabel + '</div>';
+        html += '<div style="font-size:0.72em;color:' + relColor + ';">关系 ' + (relScore>0?'+':'') + relScore + ' ' + relBar + '</div>';
+        // 展开详情
+        html += '<div id="diplo-detail-'+i+'" style="display:none;margin-top:8px;padding:8px 10px;background:var(--bg);border-radius:4px;font-size:0.8em;line-height:1.6;">';
+        html += '<div>📍 区域: ' + (t.region||'?') + ' · 意识形态: ' + (t.ideology||'?') + '</div>';
+        if (t.leader) html += '<div>👤 领袖: ' + t.leader + '</div>';
+        html += '<div>⚔ 军事: ' + (t.military||0) + ' · 💰 经济: ' + (t.economy||0) + '</div>';
+        html += '<div style="color:' + relColor + ';">🤝 关系: ' + (relScore>0?'+':'') + relScore + (t.pact ? ' · 现有条约: ' + (pactIcons[t.pact]||t.pact) : ' · 无条约') + '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end;min-width:180px;">';
+        if (!t.at_war) {
+          html += '<button onclick="doDiploAction(\'1\','+i+')" title="互不侵犯条约 · 外交≥40 · 💰15 · 12回合" style="font-size:0.7em;padding:2px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);border-radius:3px;cursor:pointer;">🕊互不侵犯</button>';
+          html += '<button onclick="doDiploAction(\'6\','+i+')" title="贸易协定 · 外交≥35 · 💰8 · 每回合+3💰" style="font-size:0.7em;padding:2px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);border-radius:3px;cursor:pointer;">📈贸易</button>';
+          html += '<button onclick="doDiploAction(\'2\','+i+')" title="军事同盟 · 外交≥60 · 💰25 · 16回合" style="font-size:0.7em;padding:2px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);border-radius:3px;cursor:pointer;">🤝同盟</button>';
+          html += '<button onclick="doDiploAction(\'3\','+i+')" title="正式宣战" style="font-size:0.7em;padding:2px 6px;background:rgba(200,60,40,0.1);border:1px solid var(--red);color:var(--red);border-radius:3px;cursor:pointer;">⚔宣战</button>';
+        } else {
+          html += '<button onclick="doDiploAction(\'4\','+i+')" title="和谈 · 外交≥35 · 💰10" style="font-size:0.7em;padding:2px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:3px;cursor:pointer;">☮和谈</button>';
+          html += '<button onclick="doDiploAction(\'7\','+i+')" title="休战3回合 · 消耗1AP" style="font-size:0.7em;padding:2px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);border-radius:3px;cursor:pointer;">🏳休战</button>';
+        }
+        html += '</div></div>';
       });
-      html += '<div class="submenu-item" onclick="sendAction(\'3.5\')"><span class="icon">🌍</span>列强援助</div>';
+      var regionRels = (data.data||{}).region_relations || [];
+      if (regionRels.length) {
+        html += '<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">';
+        html += '<div style="color:var(--text-dim);font-size:0.8em;cursor:pointer;" onclick="var el=document.getElementById(\\'region-rels\\');el.style.display=el.style.display===\\'none\\'?\\'block\\':\\'none\\';">📊 区域内势力关系 ▸</div>';
+        html += '<div id="region-rels" style="display:none;margin-top:4px;font-size:0.75em;">';
+        regionRels.slice(0,30).forEach(function(r) {
+          var s = r.score||0;
+          var sc = s>10?"var(--green)":s<-10?"var(--red)":"var(--text-dim)";
+          var p = r.pact||"";
+          html += "<div style=\"padding:2px 0;\">"+r.a_name+" ⇄ "+r.b_name+": <span style=\"color:"+sc+";\">"+(s>0?"+":"")+s+"</span>"+(p?" · "+(p==="non_aggression"?"🕊互不侵犯":p==="alliance"?"🤝同盟":p==="trade"?"📈贸易":"🏳休战"):"")+"</div>";
+        });
+        html += "</div></div>";
+      }
       break;
     case 'intel':
       html += '<div class="submenu-item" onclick="sendAction(\'4.1\')"><span class="icon">🔍</span>侦察敌情</div>';
@@ -651,11 +703,50 @@ function renderDeptContent(type, data) {
       break;
     case 'resolutions':
       var resos = (data.data||{}).resolutions || [];
+      var chains = (data.data||{}).chains || {};
       var availR = resos.filter(function(r){return r.available;});
-      html += '<div class="submenu-target">可用国策: ' + availR.length + '/' + resos.length + '</div>';
-      availR.forEach(function(r) {
-        html += '<div class="submenu-item" onclick="sendAction(\'7.'+r.id+'\')"><span class="icon">📜</span>'+r.name+'<span class="cost">'+r.category+'</span></div>';
-      });
+      var execR = resos.filter(function(r){return r.executed;});
+      var lockedR = resos.filter(function(r){return !r.available && !r.executed;});
+      html += '<div class="submenu-target" style="margin-bottom:8px;">📜 国策院 · 已颁布 ' + execR.length + ' · 可用 ' + availR.length + ' · 锁定 ' + lockedR.length + '</div>';
+      // 可用国策
+      if (availR.length) {
+        html += '<div style="color:var(--green);font-weight:bold;font-size:0.85em;margin:8px 0 4px;">✅ 可颁布</div>';
+        availR.forEach(function(r) {
+          var effs = r.effects || {};
+          var effStr = '';
+          for (var k in effs) { var v=effs[k]; var ic=window._STAT_ICONS[k]||k; effStr+=(v>0?'+':'')+v+ic+' '; }
+          var missing = r.missing || [];
+          html += '<div class="submenu-item" onclick="sendAction(\'7.'+r.id+'\')" style="cursor:pointer;">';
+          html += '<div style="flex:1;"><span class="icon">📜</span><b>' + r.name + '</b>';
+          html += '<span style="color:var(--text-dim);font-size:0.8em;margin-left:6px;">[' + (r.category||'?') + ']</span>';
+          if (r.description) html += '<div style="font-size:0.75em;color:var(--text-dim);margin-top:2px;">' + r.description + '</div>';
+          if (effStr) html += '<div style="font-size:0.72em;color:var(--gold-dim);">' + effStr.trim() + '</div>';
+          var sp = r.spirit;
+          if (sp && sp.name) html += '<div style="font-size:0.72em;color:var(--gold);margin-top:2px;">⚜ ' + sp.name + '</div>';
+          html += '</div>';
+          if (r.chain_name) html += '<span style="color:var(--cyan);font-size:0.75em;">🔗' + r.chain_name + '</span>';
+          html += '</div>';
+        });
+      }
+      // 已执行
+      if (execR.length) {
+        html += '<div style="color:var(--text-dim);font-weight:bold;font-size:0.85em;margin:8px 0 4px;">✓ 已颁布</div>';
+        execR.forEach(function(r) {
+          html += '<div class="submenu-item" style="opacity:0.6;cursor:default;"><span class="icon">✓</span>' + r.name + '<span style="color:var(--text-dim);font-size:0.8em;margin-left:6px;">[' + (r.category||'?') + ']</span></div>';
+        });
+      }
+      // 锁定
+      if (lockedR.length) {
+        html += '<div style="color:var(--text-dim);font-weight:bold;font-size:0.85em;margin:8px 0 4px;">🔒 锁定</div>';
+        lockedR.forEach(function(r) {
+          var missing = r.missing || [];
+          html += '<div class="submenu-item" style="opacity:0.5;cursor:default;">';
+          html += '<div style="flex:1;"><span class="icon">🔒</span>' + r.name;
+          html += '<span style="color:var(--text-dim);font-size:0.8em;margin-left:6px;">[' + (r.category||'?') + ']</span>';
+          if (missing.length) html += '<div style="font-size:0.72em;color:var(--red);">需: ' + missing.join(', ') + '</div>';
+          html += '</div></div>';
+        });
+      }
       break;
     default:
       html += '<p style="color:var(--text-dim)">' + JSON.stringify(data.output || '无数据') + '</p>';
@@ -800,11 +891,25 @@ function showCollapseNarrative(data) {
   html += '<button onclick="dismissEventPopup();showPostCollapseFactionPicker();" style="margin-top:12px;background:var(--gold);color:#000;border:none;padding:10px 32px;border-radius:4px;cursor:pointer;font-weight:bold;font-size:1em;">选择崛起势力</button>';
   html += '</div></div>';
   showEventPopup('⚡ 帝国崩塌', html, true);
+  // 隐藏弹窗默认的"确定"按钮（用自定义按钮替代）
+  setTimeout(function() {
+    var btns = document.querySelectorAll('#event-popup-overlay .btn-gold');
+    for (var i = 0; i < btns.length; i++) { btns[i].style.display = 'none'; }
+  }, 50);
 }
 
 function showPostCollapseFactionPicker() {
-  var html = '<div id="collapse-faction-list" style="max-height:55vh;overflow-y:auto;text-align:left;"></div>';
+  dismissEventPopup();
+  setTimeout(function() {
+  var html = '<div style="display:flex;gap:12px;min-height:400px;">';
+  html += '<div id="collapse-faction-list" style="flex:1;max-height:60vh;overflow-y:auto;text-align:left;min-width:250px;"></div>';
+  html += '<div id="collapse-faction-detail" style="flex:1;max-height:60vh;overflow-y:auto;text-align:left;border-left:1px solid var(--border);padding-left:12px;color:var(--text-dim);font-size:0.85em;">← 点击左侧势力查看详情</div>';
+  html += '</div>';
   showEventPopup('⚡ 帝国崩塌 · 选择你的势力', html, true);
+  setTimeout(function() {
+    var btns = document.querySelectorAll('#event-popup-overlay .btn-gold');
+    for (var i = 0; i < btns.length; i++) { btns[i].style.display = 'none'; }
+  }, 50);
   setTimeout(function() {
     apiGet('/api/factions').then(function(fData) {
       var factions = fData.factions || [];
@@ -820,30 +925,22 @@ function showPostCollapseFactionPicker() {
       if (!list) return;
       var inner = '';
       for (var rname in byRegion) {
-        inner += '<div style="margin:10px 0 6px;border-top:1px solid var(--border);padding-top:8px;"><b style="color:var(--gold);font-size:0.95em;">' + rname + '</b><span style="color:var(--text-dim);font-size:0.8em;"> · ' + byRegion[rname].length + '势力</span></div>';
-        inner += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">';
+        inner += '<div style="margin:4px 0;"><b style="color:var(--gold);font-size:0.85em;">' + rname + '</b><span style="color:var(--text-dim);font-size:0.7em;"> · ' + byRegion[rname].length + '势力</span></div>';
         byRegion[rname].forEach(function(f) {
-          var st = f.stats || {};
-          var ld = f.leader || {};
-          var evo = f.evolution || ['?','?','?'];
-          var ns = f.national_spirit || {};
-          var nsName = (ns.name && ns.name !== '暂无国魂') ? ns.name : null;
-          inner += '<div onclick="showFactionPickDetail(\'' + f.id + '\')" style="cursor:pointer;padding:8px 10px;background:var(--panel2);border:1px solid var(--border);border-radius:4px;transition:all 0.15s;" onmouseover="this.style.borderColor=\'var(--gold-dim)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
-          inner += '<div style="font-weight:bold;color:var(--text);margin-bottom:2px;">' + f.name + '</div>';
-          inner += '<div style="color:var(--text-dim);font-size:0.78em;">' + (f.ideology||'') + (ld.name ? ' · @' + ld.name : '') + '</div>';
-          inner += '<div style="font-size:0.75em;color:var(--text-dim);margin:3px 0;">🏭' + (st.industry||0) + ' 🌾' + (st.agriculture||0) + ' ⚔' + (st.military||0) + ' 💰' + (st.economy||0) + ' 📖' + (st.ideology||0) + ' 🌐' + (st.diplomacy||0) + '</div>';
-          inner += '<div style="font-size:0.72em;color:var(--gold-dim);">' + evo[0] + ' → ' + evo[1] + ' → ★' + evo[2] + '★</div>';
-          if (nsName) inner += '<div style="font-size:0.7em;color:var(--gold);margin-top:2px;">⚜ ' + nsName + '</div>';
+          inner += '<div data-fid="' + f.id + '" onclick="renderCollapseDetail(this.getAttribute(\'data-fid\'))" style="cursor:pointer;padding:5px 8px;margin:2px 0;background:var(--panel2);border:1px solid var(--border);border-radius:3px;font-size:0.82em;" onmouseover="this.style.borderColor=\'var(--gold-dim)\'" onmouseout="this.style.borderColor=\'var(--border)\'">';
+          inner += '<b>' + f.name + '</b> <span style="color:var(--text-dim);font-size:0.85em;">' + (f.ideology||'') + '</span>';
           inner += '</div>';
         });
-        inner += '</div>';
       }
       list.innerHTML = inner;
     });
   }, 300);
+  }, 200);
 }
 
-function showFactionPickDetail(fid) {
+var _collapsePickedFid = null;
+function renderCollapseDetail(fid) {
+  _collapsePickedFid = fid;
   var f = _collapseFactions[fid];
   if (!f) return;
   var st = f.stats || {};
@@ -852,38 +949,29 @@ function showFactionPickDetail(fid) {
   var ns = f.national_spirit || {};
   var terr = f.initial_territory || [];
   var forces = f.initial_forces || [];
-
-  var html = '<div style="text-align:left;max-width:450px;margin:0 auto;">';
-  html += '<h3 style="color:var(--gold);margin-bottom:2px;">' + f.name + '</h3>';
-  html += '<div style="color:var(--text-dim);font-size:0.85em;margin-bottom:8px;">' + (f.ideology||'') + (ld.name ? ' · @' + ld.name + ' · ' + (ld.title||'') : '') + '</div>';
-  // 背景
+  var panel = document.getElementById('collapse-faction-detail');
+  if (!panel) return;
+  var html = '<h3 style="color:var(--gold);margin:0 0 4px;">' + f.name + '</h3>';
+  html += '<div style="color:var(--text-dim);font-size:0.85em;margin-bottom:6px;">' + (f.ideology||'') + (ld.name ? ' · @' + ld.name + ' · ' + (ld.title||'') : '') + '</div>';
   if (ld.background) html += '<div style="font-size:0.8em;color:var(--text-dim);margin:6px 0;padding:6px 10px;background:var(--panel2);border-radius:4px;">' + ld.background + '</div>';
   if (f.lore) html += '<div style="font-size:0.8em;color:var(--text-dim);font-style:italic;margin:4px 0;">「' + f.lore + '」</div>';
-  // 六维
-  html += '<div style="margin:8px 0;">';
+  html += '<div style="margin:8px 0;font-size:0.85em;">';
   ['industry','agriculture','military','economy','ideology','diplomacy'].forEach(function(k) {
     var v = st[k]||0; var ic = {industry:'🏭',agriculture:'🌾',military:'⚔',economy:'💰',ideology:'📖',diplomacy:'🌐'}[k]||'?';
-    html += '<span style="margin-right:12px;font-size:0.85em;">' + ic + '<b>' + v + '</b></span>';
+    html += '<span style="margin-right:12px;">' + ic + '<b>' + v + '</b></span>';
   });
   html += '</div>';
-  // 进化路径
   html += '<div style="font-size:0.82em;color:var(--gold-dim);margin:4px 0;">' + evo[0] + ' → ' + evo[1] + ' → ★' + evo[2] + '★</div>';
-  // 国魂
   if (ns.name && ns.name !== '暂无国魂') {
     html += '<div style="margin:6px 0;padding:6px 10px;background:var(--panel2);border-left:3px solid var(--gold);border-radius:3px;">';
     html += '<div style="color:var(--gold);font-weight:bold;font-size:0.85em;">⚜ ' + ns.name + '</div>';
     if (ns.desc) html += '<div style="color:var(--text-dim);font-size:0.78em;">' + ns.desc + '</div>';
     html += '</div>';
   }
-  // 初始领土和兵力
   html += '<div style="font-size:0.78em;color:var(--text-dim);margin:6px 0;">📍' + terr.slice(0,5).join('、') + (terr.length>5?' +'+(terr.length-5):'') + '</div>';
   html += '<div style="font-size:0.78em;color:var(--text-dim);">🗡' + forces.slice(0,4).join('、') + (forces.length>4?' +'+(forces.length-4):'') + '</div>';
-  // 按钮
-  html += '<div style="margin-top:12px;display:flex;gap:8px;">';
-  html += '<button onclick="pickPostCollapseFaction(\'' + f.id + '\',\'' + f.name + '\')" style="flex:1;background:var(--gold);color:#000;border:none;padding:8px;border-radius:4px;cursor:pointer;font-weight:bold;">确认选择</button>';
-  html += '<button onclick="dismissEventPopup();setTimeout(showPostCollapseFactionPicker,200);" style="background:var(--panel2);color:var(--text-dim);border:1px solid var(--border);padding:8px 16px;border-radius:4px;cursor:pointer;">← 返回</button>';
-  html += '</div></div>';
-  showEventPopup(f.name, html, true);
+  html += '<button onclick="pickPostCollapseFaction(\'' + fid + '\',\'' + f.name + '\')" style="margin-top:10px;background:var(--gold);color:#000;border:none;padding:8px 24px;border-radius:4px;cursor:pointer;font-weight:bold;width:100%;">确认选择 · ' + f.name + '</button>';
+  panel.innerHTML = html;
 }
 
 function pickPostCollapseFaction(fid, fname) {
@@ -894,6 +982,10 @@ function pickPostCollapseFaction(fid, fname) {
     renderAll(data);
     addLogEntry('⚡ 帝国崩溃 · ' + fname + ' 崛起！');
   });
+}
+
+function doDiploAction(sub, idx) {
+  sendAction('3.' + sub, {target_index: idx});
 }
 
 // ── 启动 ──────────────────────────────────────────────────

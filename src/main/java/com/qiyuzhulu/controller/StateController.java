@@ -156,6 +156,25 @@ public class StateController {
             resp.put("result_type", "diplo_menu");
             Map<String, Object> data = new LinkedHashMap<>();
             data.put("diplo_targets", diplomacy.getDiploTargets(game));
+            // 附加区域内势力间外交关系
+            String myRegion = engine.getFaction(game.getPlayerFactionId()).map(FactionDefinition::getRegion).orElse("");
+            List<Map<String,Object>> regionRelations = new ArrayList<>();
+            for (var entry : game.getAllDiplomaticRelations().entrySet()) {
+                String[] fids = entry.getKey().split("↔");
+                if (fids.length != 2) continue;
+                String aName = getNameForFid(fids[0]), bName = getNameForFid(fids[1]);
+                if (aName == null || bName == null) continue;
+                // 只要同区域的
+                String aRegion = engine.getFaction(fids[0]).map(FactionDefinition::getRegion).orElse("");
+                if (!myRegion.equals(aRegion)) {
+                    aRegion = engine.getFaction(fids[1]).map(FactionDefinition::getRegion).orElse("");
+                    if (!myRegion.equals(aRegion)) continue;
+                }
+                Map<String,Object> relEntry = new LinkedHashMap<>(entry.getValue());
+                relEntry.put("a_name", aName); relEntry.put("b_name", bName);
+                regionRelations.add(relEntry);
+            }
+            data.put("region_relations", regionRelations);
             resp.put("data", data);
             return resp;
         }
@@ -427,6 +446,10 @@ public class StateController {
             Map<String, Object> resp = buildPanelResponse();
             resp.put("message", "新游戏已创建：" + game.getFactionState().getName());
             resp.put("policies", game.getPhase1Policies());
+            // Phase 1 帝国开场叙事
+            if (game.getPhase() == 1) {
+                resp.put("narrative", "宣统二年冬。紫禁城养心殿。\n\n帝国已到最危险的时刻——国库仅余二百万两白银，各省咨议局通电要求立宪，列强公使团日日催促，革命党在南方蠢蠢欲动。北洋六镇中已有五镇不听调遣。\n\n你是大清最后的决策者。\n\n七份紧急奏折已呈上御案。每一份都关乎帝国的存亡，但国帑有限，你不可能全部批准。\n\n请皇帝陛下御览批阅——帝国命运，在此一举。");
+            }
             return resp;
         } catch (IllegalArgumentException e) {
             return Map.of("error", e.getMessage());
@@ -687,7 +710,90 @@ public class StateController {
         game.setPhase(3);
         game.setActionPoints(3);
         autoSave();
+        Map<String, Object> resp = buildPanelResponse();
+        // 附加入场叙事 + 区域敌对势力
+        String intro = faction.getCollapseIntro();
+        if (intro != null && !intro.isEmpty()) {
+            // 构建区域敌对势力描述
+            StringBuilder rivals = new StringBuilder();
+            String region = faction.getRegion();
+            for (var fe : engine.getGameData().getFactions().entrySet()) {
+                if (fe.getKey().equals(newFid)) continue;
+                if (region.equals(fe.getValue().getRegion())) {
+                    if (rivals.length() > 0) rivals.append("\n\n");
+                    rivals.append("⚔ ").append(fe.getValue().getName())
+                          .append(" · ").append(fe.getValue().getIdeology());
+                }
+            }
+            String fullNarrative = intro + "\n\n———\n\n📋 区域争霸 · "
+                + GameEngine.REGION_NAMES.getOrDefault(region, region)
+                + "\n\n本区还有三支势力割据一方。只有消灭全部对手，才能统一本区域，获得对外扩张的资格：\n\n"
+                + rivals.toString()
+                + "\n\n———\n\n帝国崩塌给了所有人机会。但机会，只属于最后的胜利者。";
+            resp.put("narrative", fullNarrative);
+        }
+        return resp;
+    }
+
+    /** POST /api/debug/switch — 调试用：随时切换势力 */
+    @PostMapping("/debug/switch")
+    public Map<String, Object> debugSwitch(@RequestBody Map<String, Object> body) {
+        if (game == null) return Map.of("error", "无存档");
+        String fid = (String) body.get("faction_id");
+        // 在当前AI势力中查找
+        var aiData = game.getAiFactions().get(fid);
+        if (aiData != null && aiData.getFactionState() != null) {
+            FactionState oldFs = game.getFactionState();
+            // 把当前玩家放回AI
+            AiFactionData oldAi = new AiFactionData();
+            oldAi.setFactionState(oldFs);
+            oldAi.setRegion(engine.getFaction(game.getPlayerFactionId()).map(FactionDefinition::getRegion).orElse(""));
+            game.getAiFactions().put(game.getPlayerFactionId(), oldAi);
+            // 切到新势力
+            game.setFactionState(aiData.getFactionState());
+            game.setPlayerFactionId(fid);
+            game.getAiFactions().remove(fid);
+            game.setActionPoints(game.getApMax());
+        } else if (game.getPlayerFactionId().equals(fid)) {
+            return Map.of("error", "已是当前势力");
+        } else {
+            return Map.of("error", "目标势力不存在或已灭亡");
+        }
+        autoSave();
         return buildPanelResponse();
+    }
+
+    /** GET /api/debug/rankings — 全势力排行榜 */
+    @GetMapping("/debug/rankings")
+    public Map<String, Object> debugRankings() {
+        if (game == null) return Map.of("error", "无存档");
+        List<Map<String, Object>> list = new ArrayList<>();
+        // 玩家
+        FactionState pfs = game.getFactionState();
+        list.add(rankEntry(game.getPlayerFactionId(), pfs.getName(), pfs, true));
+        // AI
+        for (var ae : game.getAiFactions().entrySet()) {
+            if (game.getDefeatedFactions().contains(ae.getKey())) continue;
+            FactionState afs = ae.getValue().getFactionState();
+            if (afs == null) continue;
+            list.add(rankEntry(ae.getKey(), afs.getName(), afs, false));
+        }
+        list.sort((a,b) -> Integer.compare(
+            ((Number)b.get("score")).intValue(), ((Number)a.get("score")).intValue()));
+        return Map.of("rankings", list);
+    }
+    private Map<String,Object> rankEntry(String fid, String name, FactionState fs, boolean isPlayer) {
+        Stats s = fs.getStats();
+        int units = fs.getUnits() != null ? (int)fs.getUnits().stream().filter(Unit::isActive).count() : 0;
+        int terrs = fs.getTerritories() != null ? fs.getTerritories().size() : 0;
+        int score = s.getMilitary() * 3 + s.getEconomy() * 2 + s.getIndustry() + terrs * 2 + units * 5 + fs.getTreasury() / 10;
+        Map<String,Object> e = new LinkedHashMap<>();
+        e.put("fid",fid); e.put("name",name); e.put("is_player",isPlayer);
+        e.put("score",score); e.put("military",s.getMilitary()); e.put("economy",s.getEconomy());
+        e.put("industry",s.getIndustry()); e.put("territories",terrs); e.put("units",units);
+        e.put("treasury",fs.getTreasury()); e.put("support",fs.getPopulationSupport());
+        e.put("corruption",fs.getCorruption());
+        return e;
     }
 
     /** POST /api/exit — 退出桌面应用 */
@@ -700,6 +806,16 @@ public class StateController {
             System.exit(0);
         }).start();
         return Map.of("message", "Server shutting down...");
+    }
+
+    private String getNameForFid(String fid) {
+        var f = engine.getFaction(fid).orElse(null);
+        if (f != null) return f.getName();
+        var n = engine.getGameData().getNpcFactions().get(fid);
+        if (n != null) return n.getName();
+        var h = engine.getGameData().getHostileNpcs().get(fid);
+        if (h != null) return h.getName();
+        return null;
     }
 
     private void autoSave() {

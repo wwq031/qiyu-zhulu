@@ -427,15 +427,15 @@ async function initLeafletMap(containerId) {
     const cs = cityStoreMap[name];
     if (cs && cs.owner_name && cs.owner_color) {
       const c = cs.is_player ? '#ffffff' : cs.owner_color;
-      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.35 };
+      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.22 };
     }
     if (cs && cs.owner_name) {
       const c = cs.is_player ? '#ffffff' : (REGION_COLORS[cs.region] || '#aaa');
-      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.35 };
+      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.22 };
     }
     if (cs) {
       const c = REGION_COLORS[cs.region] || '#3a5068';
-      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.18 };
+      return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.10 };
     }
     return null;
   };
@@ -448,7 +448,7 @@ async function initLeafletMap(containerId) {
         if (s) return s;
         const r = feature.properties.region || 'unknown';
         const c = REGION_COLORS[r] || '#3a5068';
-        return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.18 };
+        return { color: darken(c, 0.55), weight: 2, opacity: 0.6, fillColor: c, fillOpacity: 0.10 };
       },
       onEachFeature: function(feature, layer) {
         const name = feature.properties.name || '';
@@ -826,16 +826,16 @@ async function applyOwnership(data) {
       let fillColor, fillOpacity;
       if (cs && cs.owner_name) {
         fillColor = cs.is_player ? '#ffffff' : (cs.owner_color || REGION_COLORS[cs.region] || '#aaa');
-        fillOpacity = 0.35;
+        fillOpacity = 0.22;
       } else if (cs) {
         fillColor = REGION_COLORS[cs.region] || '#3a5068';
-        fillOpacity = 0.18;
+        fillOpacity = 0.10;
       } else {
         continue;
       }
       const ri = parseInt(fillColor.slice(1,3),16), gi = parseInt(fillColor.slice(3,5),16), bi = parseInt(fillColor.slice(5,7),16);
-      const dc = '#' + [Math.round(ri*0.55), Math.round(gi*0.55), Math.round(bi*0.55)].map(v => v.toString(16).padStart(2,'0')).join('');
-      layer.setStyle({ color: dc, weight: 2, opacity: 0.6, fillColor: fillColor, fillOpacity: fillOpacity });
+      const dc = '#' + [Math.round(ri*0.30), Math.round(gi*0.30), Math.round(bi*0.30)].map(v => v.toString(16).padStart(2,'0')).join('');
+      layer.setStyle({ color: dc, weight: 2, opacity: 0.5, fillColor: fillColor, fillOpacity: Math.min(0.22, fillOpacity) });
       fillUpdated++;
     }
     console.log('[applyOwnership] fill colors updated:', fillUpdated);
