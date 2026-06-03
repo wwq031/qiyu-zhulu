@@ -149,10 +149,19 @@ public class CampaignService {
             attackerTactics.put(u.getName(), allTactics.containsKey(tactic) ? tactic : "assault");
         }
 
-        // NPC地块无真实驻军 → 直接占领
+        // NPC地块 + 无真实驻军 → 直接占领
+        // 但须先通过跨区检查（与faction敌人一致）
         String enemyFid = enemyInfo.getOwnerFid();
         String enemyType = enemyInfo.getOwnerType();
         if ("npc".equals(enemyType) || "npc_faction".equals(enemyType)) {
+            // 跨区检查
+            var pf = engine.getFaction(state.getPlayerFactionId()).orElse(null);
+            Province ep = engine.getProvince(provincePid);
+            if (pf != null && ep != null && ep.getRegion() != null
+                    && !ep.getRegion().equals(pf.getRegion())
+                    && !engine.isRegionUnified(state, state.getPlayerFactionId())) {
+                return GameUtils.mapOf("ok", false, "message", "尚未统一本区域，无法跨区作战");
+            }
             // 检查是否有真实AI部队在此
             boolean hasRealDefenders = false;
             for (var ae : state.getAiFactions().entrySet()) {
@@ -167,7 +176,6 @@ public class CampaignService {
                 if (hasRealDefenders) break;
             }
             if (!hasRealDefenders) {
-                // 直接占领
                 String pname = engine.getProvince(provincePid).getName();
                 fs.getTerritories().add(pname);
                 state.setActionPoints(Math.max(0, state.getActionPoints() - 1));

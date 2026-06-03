@@ -193,14 +193,24 @@ public class CampaignController {
                     if (nb != null && totalDist <= effectiveSpeed) {
                         List<String> newPath = new ArrayList<>(path);
                         newPath.add(nbPid);
-                        reachable.add(Map.of(
-                                "pid", nbPid, "name", nb.getName(),
-                                "lat", nb.getLat(), "lng", nb.getLng(),
-                                "distance", totalDist, "path", newPath,
-                                "is_enemy", !fs.getTerritories().contains(nb.getName()),
-                                "enemy_fid", ""));
-                        if (totalDist < effectiveSpeed)
-                            queue.add(new Object[]{nbPid, newPath, totalDist, nbRail});
+                        // 跨区过滤：未统一本区前不能进入其他大区
+                        boolean crossRegionBlocked = false;
+                        var playerFaction = engine.getFaction(game.getPlayerFactionId()).orElse(null);
+                        if (playerFaction != null && nb.getRegion() != null
+                                && !nb.getRegion().equals(playerFaction.getRegion())
+                                && !engine.isRegionUnified(game, game.getPlayerFactionId())) {
+                            crossRegionBlocked = true;
+                        }
+                        if (!crossRegionBlocked) {
+                            reachable.add(Map.of(
+                                    "pid", nbPid, "name", nb.getName(),
+                                    "lat", nb.getLat(), "lng", nb.getLng(),
+                                    "distance", totalDist, "path", newPath,
+                                    "is_enemy", !fs.getTerritories().contains(nb.getName()),
+                                    "enemy_fid", ""));
+                            if (totalDist < effectiveSpeed)
+                                queue.add(new Object[]{nbPid, newPath, totalDist, nbRail});
+                        }
                     }
                 }
             }
@@ -220,6 +230,13 @@ public class CampaignController {
         String destPid = engine.resolvePositionToPid((String) body.get("dest_pid"));
         Province dest = engine.getProvince(destPid);
         if (dest == null) return Map.of("error", "无效目的地");
+
+        // 跨区检查：未统一本区前不能移动到其他大区
+        var pf = engine.getFaction(game.getPlayerFactionId()).orElse(null);
+        if (pf != null && dest.getRegion() != null && !dest.getRegion().equals(pf.getRegion())
+                && !engine.isRegionUnified(game, game.getPlayerFactionId())) {
+            return Map.of("error", "尚未统一本区域，无法跨区移动");
+        }
 
         // 支持单部队和批量移动
         List<Integer> indices = (List<Integer>) body.get("unit_indices");
