@@ -94,12 +94,13 @@ async function testConnection() {
   statusEl.textContent = '测试中...';
   try {
     var data = await apiGet('/api/config/check?provider=' + provider);
-    if (data.available) {
+    var ok = data.available || data.ok;
+    if (ok) {
       statusEl.style.background = '#1a3a2a'; statusEl.style.color = 'var(--green)';
-      statusEl.textContent = '✓ ' + data.message;
+      statusEl.textContent = '✓ ' + (data.message || '连接正常');
     } else {
-      statusEl.style.background = '#3a3a1a'; statusEl.style.color = 'var(--red)';
-      statusEl.textContent = '✗ ' + data.message;
+      statusEl.style.background = '#3a3a1a'; statusEl.style.color = 'var(--gold-dim)';
+      statusEl.textContent = '✗ ' + (data.message || '连接失败');
     }
   } catch(e) {
     statusEl.style.background = '#3a1a1a'; statusEl.style.color = 'var(--red)';

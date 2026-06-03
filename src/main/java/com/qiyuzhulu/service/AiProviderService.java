@@ -75,12 +75,45 @@ public class AiProviderService {
     /** 测试连接 */
     public Map<String, Object> checkConnection() {
         if ("local".equals(provider)) {
-            return Map.of("ok", true, "message", "本地模板模式，无需连接");
+            return Map.of("available", true, "message", "本地模板模式，无需连接");
         }
         if (apiKey == null || apiKey.isEmpty()) {
-            return Map.of("ok", false, "message", "未设置API密钥");
+            return Map.of("available", false, "message", "未设置API密钥");
         }
-        return Map.of("ok", true, "message", provider + " 连接可用（未实际测试）");
+        // 尝试实际连接测试
+        try {
+            var result = testProviderConnection(provider);
+            if (result != null) return result;
+        } catch (Exception ignored) {}
+        return Map.of("available", true, "message", provider + " 配置有效（密钥已设置）");
+    }
+
+    /** 实际测试供应商连接 */
+    private Map<String, Object> testProviderConnection(String prov) {
+        String url = API_BASES.getOrDefault(prov, "");
+        if (url.isEmpty()) return null;
+        String key = apiKey;
+        if (key == null || key.isEmpty()) return null;
+        try {
+            var req = java.net.HttpURLConnection.class.cast(
+                java.net.URI.create(url + "/models").toURL().openConnection());
+            req.setRequestMethod("GET");
+            req.setRequestProperty("Authorization", "Bearer " + key);
+            req.setConnectTimeout(5000);
+            req.setReadTimeout(5000);
+            int code = req.getResponseCode();
+            if (code == 200) {
+                return Map.of("available", true, "message", prov + " 连接成功 ✓");
+            } else if (code == 401) {
+                return Map.of("available", false, "message", "API密钥无效 (401)");
+            } else {
+                return Map.of("available", true, "message", prov + " 响应 " + code + "（可尝试使用）");
+            }
+        } catch (java.net.SocketTimeoutException e) {
+            return Map.of("available", false, "message", "连接超时，请检查网络或Base URL");
+        } catch (Exception e) {
+            return Map.of("available", false, "message", "连接失败: " + e.getMessage());
+        }
     }
 
     /** AI裁决——根据当前provider分发 */

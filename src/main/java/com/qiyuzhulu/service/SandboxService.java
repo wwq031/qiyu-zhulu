@@ -285,6 +285,8 @@ public class SandboxService {
 
     /** 应用裁决结果 */
     public Map<String, Object> apply(GameState state, String order, Map<String, Object> adjudication) {
+        // 包一层可变Map：上游可能返回Map.of()等不可变Map
+        adjudication = new LinkedHashMap<>(adjudication);
         Map<String, Object> resp = new LinkedHashMap<>();
         FactionState fs = state.getFactionState();
         boolean sandbox = Boolean.TRUE.equals(adjudication.get("sandbox"));
@@ -357,9 +359,10 @@ public class SandboxService {
         resp.put("narrative", adjudication.get("narrative"));
         resp.put("cost", cost);
         resp.put("effects", effects);
-        resp.put("feasibility", feasibility);
-        resp.put("risk", risk);
-        resp.put("risk_triggered", riskTriggered);
+        // 沙盒模式下始终显示高可行低风险（实际已无条件执行）
+        resp.put("feasibility", sandbox ? "high" : feasibility);
+        resp.put("risk", sandbox ? "low" : risk);
+        resp.put("risk_triggered", sandbox ? false : riskTriggered);
         resp.put("special", special);
         resp.put("provider", adjudication.getOrDefault("provider", "local"));
 
