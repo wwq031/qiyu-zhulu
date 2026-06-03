@@ -495,7 +495,7 @@ function renderTrainingMenu(data) {
   if (!selectingLoc) {
     html += '<div style="margin:8px 0;font-size:0.82em;color:var(--text-dim);">训练新部队（消耗1AP）：</div>';
     for (const ut of unitTypes) {
-      html += `<div class="submenu-item" onclick="sendAction('1.1.${ut.letter}')">
+      html += `<div class="submenu-item" onclick="sendAction('1.1.${ut.key || ut.letter}')">
         <span class="sm-idx">${ut.icon||''}</span>
         <span class="sm-name">${ut.name}</span>
         <span class="sm-info">

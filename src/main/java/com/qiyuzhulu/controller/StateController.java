@@ -305,6 +305,38 @@ public class StateController {
                     "has_ongoing", !ongoing.isEmpty(), "ap", ap));
             return resp;
         }
+        // 1.2.R.{idx} — 从战役列表撤退
+        if (action.startsWith("1.2.R.")) {
+            int displayIdx = Integer.parseInt(action.substring("1.2.R.".length())) - 1;
+            var ongoing = game.getActiveCampaigns().stream()
+                    .filter(c -> "ongoing".equals(c.getStatus())).collect(java.util.stream.Collectors.toList());
+            if (displayIdx < 0 || displayIdx >= ongoing.size()) {
+                resp = buildPanelResponse(); resp.put("output", "无效战役索引"); return resp;
+            }
+            Campaign c = ongoing.get(displayIdx);
+            int realIdx = game.getActiveCampaigns().indexOf(c);
+            Map<String, Object> result = campaign.retreatFromCampaign(game, realIdx);
+            resp = buildPanelResponse();
+            resp.put("result_type", "ok");
+            resp.put("output", result.get("message"));
+            return resp;
+        }
+        // 1.2.S.{idx} — 从战役列表增援
+        if (action.startsWith("1.2.S.") && !action.contains(".U.")) {
+            int displayIdx = Integer.parseInt(action.substring("1.2.S.".length())) - 1;
+            var ongoing = game.getActiveCampaigns().stream()
+                    .filter(c -> "ongoing".equals(c.getStatus())).collect(java.util.stream.Collectors.toList());
+            if (displayIdx < 0 || displayIdx >= ongoing.size()) {
+                resp = buildPanelResponse(); resp.put("output", "无效战役索引"); return resp;
+            }
+            Campaign c = ongoing.get(displayIdx);
+            int realIdx = game.getActiveCampaigns().indexOf(c);
+            Map<String, Object> result = campaign.reinforceCampaign(game, realIdx, List.of(0), Map.of());
+            resp = buildPanelResponse();
+            resp.put("result_type", "ok");
+            resp.put("output", result.get("message"));
+            return resp;
+        }
         // 1.3 兵力部署 — 按区域+省份列出部队
         if ("1.3".equals(action)) {
             resp = buildPanelResponse();
@@ -439,10 +471,17 @@ public class StateController {
             resp.put("output", result.get("message"));
             return resp;
         }
-        // 休战提议 3.0
-        if ("3.0".equals(action)) {
+        // 休战提议 3.0 / 3.7 (前端diplo_menu休战按钮)
+        if ("3.0".equals(action) || action.startsWith("3.7")) {
+            // 3.0 用 target_id, 3.7 用 target_index
             String targetId = body.get("target_id") != null ? body.get("target_id").toString() : null;
-            if (targetId == null) { resp = buildPanelResponse(); resp.put("output", "缺少target_id"); return resp; }
+            if (targetId == null && body.get("target_index") != null) {
+                Integer tIdx = ((Number) body.get("target_index")).intValue();
+                List<Map<String, Object>> targets = diplomacy.getDiploTargets(game);
+                if (tIdx >= 0 && tIdx < targets.size())
+                    targetId = (String) targets.get(tIdx).get("id");
+            }
+            if (targetId == null) { resp = buildPanelResponse(); resp.put("output", "缺少目标"); return resp; }
             Map<String, Object> result = diplomacy.proposeTruce(game, targetId);
             resp = buildPanelResponse();
             resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
