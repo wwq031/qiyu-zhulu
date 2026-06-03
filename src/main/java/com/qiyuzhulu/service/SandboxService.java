@@ -58,8 +58,11 @@ public class SandboxService {
         return ctx;
     }
 
-    /** 裁决——根据配置的provider分发（local/DeepSeek/OpenAI/Claude） */
+    /** 裁决——local用丰富模板，外部API走AiProvider */
     public Map<String, Object> aiAdjudicate(GameState state, String order) {
+        if ("local".equals(aiProvider.getProvider())) {
+            return localAdjudicate(state, order);
+        }
         return aiProvider.adjudicate(buildContext(state, order));
     }
 
@@ -71,18 +74,29 @@ public class SandboxService {
         String lower = order.toLowerCase();
         List<Map<String, Object>> actions = new ArrayList<>();
 
-        // ── 沙盒专属模板 ──
+        // ── 不可能判定（在模板匹配之前）──
+        if (matches(lower, "陨石", "魔法", "超自然", "召唤恶魔", "召唤神龙", "核弹", "原子弹",
+                "外星人", "修仙", "法术", "降头", "蛊术")) {
+            result.put("feasibility", "impossible");
+            result.put("feasibility_reason", "该行动违背1910年代物理法则，无法执行。");
+            result.put("narrative", "「" + order + "」——军机处认为此议荒唐至极，不予考虑。");
+            result.put("provider", "local");
+            return result;
+        }
+
+        // ── 沙盒专属模板（标记sandbox=true，跳过AP/cost/限制）──
         // 吞并/消灭势力
         if (matches(lower, "吞并", "消灭", "灭掉", "干掉", "清除", "征服", "合并", "收编", "吃掉")) {
             String target = extractTarget(order);
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("sandbox", true);
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("military", rng.nextInt(16)+10, "diplomacy", rng.nextInt(11)+5));
             if (target != null) actions.add(Map.of("type", "annex_faction", "target", target));
             result.put("narrative", "沙盒GM签发了灭亡令。" + (target != null ? target : "目标势力") + "的旗帜从城头缓缓降下——领土并入" + fs.getName() + "。");
         }
         // 空降/闪现/传送/地道 → 创意移动模式
         else if (matches(lower, "空降", "闪现", "传送", "瞬移", "钻地", "地道", "挖洞", "潜入")) {
+            result.put("sandbox", true);
             String dest = extractLocation(order);
             if (dest == null) dest = extractLocationAfter(order, "到", "至", "在", "往");
             String destPid = resolveLocation(dest);
@@ -94,26 +108,26 @@ public class SandboxService {
                 result.put("narrative", "沙盒引擎搜索了" + (dest != null ? dest : "目标地点") + "的坐标，但地理老师似乎没教过这个地方。部队在原地没动。");
             }
         }
-        // 兵力召唤（含空降部署到指定地点）
-        else if (matches(lower, "兵", "部队", "军团", "召唤", "部署", "生成", "十万", "百万", "大军")) {
+        // 兵力召唤/扩军（需军事语境：召唤+兵/部队/军团，或扩军/征兵/募兵）
+        else if ((matches(lower, "召唤", "生成") && matches(lower, "兵", "部队", "军团", "师", "旅", "团"))
+                || matches(lower, "扩军", "征兵", "募兵", "增兵")) {
+            result.put("sandbox", true);
             String utype = lower.contains("骑兵") || lower.contains("马") ? "cavalry"
                     : lower.contains("炮兵") || lower.contains("炮") ? "artillery"
                     : lower.contains("海军") || lower.contains("水师") || lower.contains("舰") ? "naval"
                     : lower.contains("工兵") || lower.contains("工程") ? "engineer" : "infantry";
-            // 提取部署地点
             String loc = extractLocation(order);
             if (loc == null) loc = fs.getTerritories().get(0);
             int num = extractNum(order, 1);
             for (int i = 0; i < num; i++) actions.add(Map.of("type", "train_unit", "unit_type", utype, "location", loc));
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("military", rng.nextInt(6)+5));
             result.put("narrative", "沙盒引擎启动。" + num + "支" + utype + "部队凭空出现在" + loc + "。征兵官看了看名册，决定不在'来源'一栏填任何东西。");
         }
         // 全属性拉满
         else if (matches(lower, "拉满", "全满", "满属性", "全属性", "无敌", "超级大国")) {
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("sandbox", true);
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("military", rng.nextInt(11)+10, "industry", rng.nextInt(6)+5,
                     "agriculture", rng.nextInt(6)+5, "economy", rng.nextInt(6)+5,
                     "ideology", rng.nextInt(6)+5, "diplomacy", rng.nextInt(6)+5));
@@ -121,29 +135,36 @@ public class SandboxService {
         }
         // 秒建
         else if (matches(lower, "秒建", "瞬间", "立刻建成", "一键建造")) {
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("sandbox", true);
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("industry", rng.nextInt(8)+5, "economy", rng.nextInt(5)+3));
             result.put("narrative", "沙盒建筑队从虚空中现身。三小时后——不，三小时后——新设施已经投入使用。");
         }
         // 金钱/国库
         else if (matches(lower, "钱", "金", "银", "国库", "黄金", "填满", "给钱")) {
+            result.put("sandbox", true);
             int bonus = rng.nextInt(41) + 10;
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("treasury", bonus, "economy", rng.nextInt(5)+3));
             result.put("narrative", "沙盒GM打了个响指。" + fs.getName() + "的国库里多了" + bonus + "枚银元。军需官明智地选择了沉默。");
         }
         // 统一/胜利
         else if (matches(lower, "统一", "胜利", "征服", "占领全图", "一键")) {
-            result.put("feasibility", "high");
-            result.put("cost", Map.of());
+            result.put("sandbox", true);
+            result.put("feasibility", "high"); result.put("cost", Map.of());
             result.put("effects", Map.of("military", rng.nextInt(11)+10, "diplomacy", rng.nextInt(6)+5));
             result.put("narrative", "沙盒GM按下了快进键。" + fs.getName() + "的旗帜插上了更多城头——虽然将军们也不太确定到底发生了什么。");
         }
 
         // ── 常规模板（非沙盒）──
-        else if (matches(lower, "间谍", "情报", "侦察", "侦查", "刺探")) {
+        else if (matches(lower, "修筑", "修建", "工事", "城防", "防御工事", "堡垒", "要塞", "筑城")) {
+            String loc = extractLocation(order);
+            String locStr = loc != null ? "在" + loc : "";
+            result.put("feasibility", "high");
+            result.put("cost", Map.of("treasury", -8));
+            result.put("effects", Map.of("military", 3, "industry", 2));
+            result.put("narrative", fs.getName() + locStr + "大兴土木修筑防御工事。竣工后城防大幅强化，军心大振。");
+        } else if (matches(lower, "间谍", "情报", "侦察", "侦查", "刺探")) {
             result.put("feasibility", "high");
             result.put("cost", Map.of("treasury", -5));
             result.put("effects", Map.of("military", 2));
@@ -168,6 +189,26 @@ public class SandboxService {
             result.put("cost", Map.of("treasury", -5));
             result.put("effects", Map.of("ideology", 4));
             result.put("narrative", "宣传机器全力运转，民众对" + fs.getName() + "的支持率稳步上升。");
+        } else if (matches(lower, "贸易", "通商", "商路", "商队")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of("treasury", -6));
+            result.put("effects", Map.of("economy", 3, "diplomacy", 1));
+            result.put("narrative", fs.getName() + "开辟了新的贸易路线，商队络绎不绝。");
+        } else if (matches(lower, "改革", "改制", "革新")) {
+            result.put("feasibility", "medium");
+            result.put("cost", Map.of("treasury", -15));
+            result.put("effects", Map.of("ideology", 3, "economy", 3));
+            result.put("narrative", fs.getName() + "推行了一系列改革措施，虽遇阻力但方向正确。");
+        } else if (matches(lower, "镇压", "戒严", "清剿", "剿匪")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of("treasury", -4));
+            result.put("effects", Map.of("military", 1, "ideology", 2));
+            result.put("narrative", fs.getName() + "出动军警维持秩序，地方治安明显好转。");
+        } else if (matches(lower, "撤退", "退兵", "撤军")) {
+            result.put("feasibility", "high");
+            result.put("cost", Map.of("treasury", -2));
+            result.put("effects", Map.of());
+            result.put("narrative", fs.getName() + "下令部队有序后撤，保存有生力量。");
         } else {
             result.put("feasibility", "medium");
             result.put("cost", Map.of("treasury", -5));

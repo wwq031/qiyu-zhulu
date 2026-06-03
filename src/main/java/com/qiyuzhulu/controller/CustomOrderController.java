@@ -54,8 +54,11 @@ public class CustomOrderController {
         if (game == null) return Map.of("error", "无存档");
         String order = (String) body.get("order");
         if (order == null || order.isEmpty()) return Map.of("error", "缺少 order");
-        Map<String, Object> result = sandbox.apply(game, order,
-                sandbox.aiAdjudicate(game, order));
+        boolean isSandbox = Boolean.TRUE.equals(body.get("sandbox"));
+        // 沙盒模式：注入sandbox标记到裁决结果
+        Map<String, Object> adjudication = sandbox.aiAdjudicate(game, order);
+        if (isSandbox) adjudication.put("sandbox", true);
+        Map<String, Object> result = sandbox.apply(game, order, adjudication);
         Map<String, Object> resp = stateCtrl.buildPanelResponse(game);
         resp.putAll(result);
         resp.put("fallback", "local".equals(result.getOrDefault("provider", "local")));

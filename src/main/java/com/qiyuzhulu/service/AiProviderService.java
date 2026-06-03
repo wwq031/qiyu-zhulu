@@ -8,6 +8,8 @@ import java.util.*;
 /**
  * AI 供应商抽象层 — 支持 local/DeepSeek/OpenAI/Claude。
  * 会话级配置，不写文件。
+ * 注：local 模式的丰富模板在 SandboxService.localAdjudicate()，
+ *      此处仅做最后兜底，正常流程不经过这里。
  */
 @Service
 public class AiProviderService {
@@ -30,6 +32,9 @@ public class AiProviderService {
     );
 
     public AiProviderService() {}
+
+    /** 获取当前provider */
+    public String getProvider() { return provider; }
 
     /** 设置会话级配置 */
     public synchronized Map<String, Object> setConfig(Map<String, Object> cfg) {
