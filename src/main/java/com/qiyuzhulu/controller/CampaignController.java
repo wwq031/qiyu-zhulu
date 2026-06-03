@@ -166,6 +166,20 @@ public class CampaignController {
 
         int effectiveSpeed = engine.hasRailway(pos) ? baseSpeed * 2 : Math.max(2, baseSpeed);
 
+        // 预计算：有实际守军的省份（空NPC省不标红，走移动→回合末占领）
+        Set<String> defendedPids = new HashSet<>();
+        for (var ae : game.getAiFactions().entrySet()) {
+            FactionState afs = ae.getValue().getFactionState();
+            if (afs != null && afs.getUnits() != null) {
+                for (Unit u : afs.getUnits()) {
+                    if (u.isActive()) {
+                        String upid = engine.resolvePositionToPid(u.getPosition());
+                        if (upid != null) defendedPids.add(upid);
+                    }
+                }
+            }
+        }
+
         // BFS
         List<Map<String, Object>> reachable = new ArrayList<>();
         Set<String> visited = new HashSet<>();
@@ -202,11 +216,14 @@ public class CampaignController {
                             crossRegionBlocked = true;
                         }
                         if (!crossRegionBlocked) {
+                            // 只在有真实守军时才标红（空NPC省走移动→回合末占领）
+                            boolean isEnemy = !fs.getTerritories().contains(nb.getName())
+                                    && defendedPids.contains(nbPid);
                             reachable.add(Map.of(
                                     "pid", nbPid, "name", nb.getName(),
                                     "lat", nb.getLat(), "lng", nb.getLng(),
                                     "distance", totalDist, "path", newPath,
-                                    "is_enemy", !fs.getTerritories().contains(nb.getName()),
+                                    "is_enemy", isEnemy,
                                     "enemy_fid", ""));
                             if (totalDist < effectiveSpeed)
                                 queue.add(new Object[]{nbPid, newPath, totalDist, nbRail});
