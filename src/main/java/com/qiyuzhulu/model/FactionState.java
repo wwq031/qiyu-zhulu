@@ -1,5 +1,6 @@
 package com.qiyuzhulu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
@@ -129,7 +130,8 @@ public class FactionState {
         return (int) units.stream().filter(u -> type.equals(u.getType())).count();
     }
 
-    /** 获取活跃部队（非歼灭/投降） */
+    /** 获取活跃部队（非歼灭/投降） — 计算属性，不参与序列化 */
+    @JsonIgnore
     public List<Unit> getActiveUnits() {
         return units.stream().filter(Unit::isActive).toList();
     }

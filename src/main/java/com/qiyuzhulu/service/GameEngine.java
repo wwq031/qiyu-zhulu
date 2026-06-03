@@ -503,6 +503,7 @@ public class GameEngine {
         totals.put("commerce", 0);
         totals.put("railway_provinces", 0);
         totals.put("port_provinces", 0);
+        totals.put("port_level", 0);
         totals.put("population", 0);
         totals.put("resources", new HashMap<String, Integer>());
         totals.put("province_count", 0);
@@ -529,7 +530,12 @@ public class GameEngine {
             totals.put("agriculture", (int) totals.get("agriculture") + agr);
             totals.put("commerce", (int) totals.get("commerce") + p.getCommerce());
             if (p.getRailway() > 0) totals.put("railway_provinces", (int) totals.get("railway_provinces") + 1);
-            if (p.getPort() > 0) totals.put("port_provinces", (int) totals.get("port_provinces") + 1);
+            int builtPort = bld.getOrDefault("port", 0);
+            int totalPort = p.getPort() + builtPort;
+            if (totalPort > 0) {
+                totals.put("port_provinces", (int) totals.get("port_provinces") + 1);
+                totals.put("port_level", (int) totals.get("port_level") + totalPort);
+            }
             totals.put("population", (int) totals.get("population") + p.getPopulation());
             @SuppressWarnings("unchecked")
             Map<String, Integer> resMap = (Map<String, Integer>) totals.get("resources");

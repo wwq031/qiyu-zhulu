@@ -239,13 +239,13 @@ public class MilitaryService {
         return list;
     }
 
-    private String getUnitIcon(String type) {
+    public String getUnitIcon(String type) {
         @SuppressWarnings("unchecked")
         Map<String, Object> ut = (Map<String, Object>) GameEngine.UNIT_TYPES.getOrDefault(type, Map.of());
         return (String) ut.getOrDefault("icon", "🗡");
     }
 
-    private String getUnitTypeName(String type) {
+    public String getUnitTypeName(String type) {
         @SuppressWarnings("unchecked")
         Map<String, Object> ut = (Map<String, Object>) GameEngine.UNIT_TYPES.getOrDefault(type, Map.of());
         return (String) ut.getOrDefault("name", type);

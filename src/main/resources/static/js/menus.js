@@ -389,7 +389,7 @@ async function buildItem(buildId, needsProvince) {
     // 地块级建设：先选省份
     _pendingBuildId = buildId;
     const provs = getPlayerProvinceOptions();
-    if (!provs.length) { alert('没有可用的建设省份'); return; }
+    if (!provs.length) { showToast('没有可用的建设省份', 'warn'); return; }
     let html = '<h3>📍 选择建设省份</h3>';
     html += `<div class="submenu-target-count">为「${buildId}」选择目标省份</div>`;
     for (let i = 0; i < provs.length; i++) {
@@ -438,15 +438,14 @@ async function confirmBuildProvince(pid) {
 }
 
 async function doBuild(buildId, provincePid) {
-  document.getElementById('status-text').textContent = `建设中...`;
+  document.getElementById('status-text').textContent = '建设中...';
   const body = {action: buildId};
-  if (provincePid) body.meta = {province: provincePid};
+  if (provincePid) body.province = provincePid;
   const data = await apiPost('/api/action', body);
   if (!data.error) {
     renderAll(data);
-    if (data.result_type === 'ok') hideSubmenu();
   } else {
-    alert('建设失败: ' + (data.error || '未知错误'));
+    showToast('建设失败: ' + (data.error || '未知错误'), 'error');
   }
 }
 

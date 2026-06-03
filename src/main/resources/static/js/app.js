@@ -81,9 +81,13 @@ function updateConnection(ok) {
 
 // ── 渲染函数 ────────────────────────────────────────────────
 function renderAll(data) {
+  if (!data || data.error) {
+    if (data && data.error) console.error('renderAll 收到错误:', data.error);
+    return;
+  }
+  try {
   var wasEmpire = (gameState && gameState.phase === 1); // 必须在 gameState=data 之前
   gameState = data;
-  if (!data || data.error) return;
   clearEventPopups(); // 清空上次残留的弹窗队列
 
   // 合并自定义战术到全局战术定义（供所有下拉框使用）
@@ -228,9 +232,11 @@ function renderAll(data) {
     addLogEntry('⚡ 势力覆灭 — 游戏结束');
   }
 
-  // 子菜单渲染（部门面板开着时不弹子菜单）
+  // 子菜单渲染 — 部门面板开着时先关闭它再弹子菜单
   var deptOpen = document.getElementById('dept-panel');
-  if (data.result_type && data.result_type !== 'ok' && (!deptOpen || !deptOpen.classList.contains('open'))) {
+  var deptIsOpen = deptOpen && deptOpen.classList.contains('open');
+  if (data.result_type && data.result_type !== 'ok') {
+    if (deptIsOpen) closeDept();
     renderSubmenu(data.result_type, data.data || {});
   } else if (data.result_type === 'ok') {
     hideSubmenu();
@@ -267,6 +273,10 @@ function renderAll(data) {
   if (gmHasMap || (typeof mapInitialized !== 'undefined' && mapInitialized)) {
     // 始终全量刷新地图（/api/map 含全部势力部队，/api/state 只有玩家部队）
     refreshMapOwnership();
+  }
+  } catch(e) {
+    console.error('❌ renderAll 渲染异常:', e.message, e.stack);
+    showToast('渲染错误: ' + e.message, 'error');
   }
 }
 
@@ -668,7 +678,7 @@ function renderDeptContent(type, data) {
       var regionRels = (data.data||{}).region_relations || [];
       if (regionRels.length) {
         html += '<div style="margin-top:8px;border-top:1px solid var(--border);padding-top:8px;">';
-        html += '<div style="color:var(--text-dim);font-size:0.8em;cursor:pointer;" onclick="var el=document.getElementById(\\'region-rels\\');el.style.display=el.style.display===\\'none\\'?\\'block\\':\\'none\\';">📊 区域内势力关系 ▸</div>';
+        html += '<div style="color:var(--text-dim);font-size:0.8em;cursor:pointer;" onclick="var el=document.getElementById(\'region-rels\');el.style.display=el.style.display===\'none\'?\'block\':\'none\';">📊 区域内势力关系 ▸</div>';
         html += '<div id="region-rels" style="display:none;margin-top:4px;font-size:0.75em;">';
         regionRels.slice(0,30).forEach(function(r) {
           var s = r.score||0;
@@ -689,7 +699,8 @@ function renderDeptContent(type, data) {
       var items = (data.data||{}).items || [];
       html += '<div class="submenu-target">建设项目: ' + items.length + '个可用</div>';
       items.forEach(function(item) {
-        html += '<div class="submenu-item" onclick="sendAction(\''+item.id+'\')"><span class="icon">'+item.icon+'</span>'+item.name+'<span class="cost">'+item.cost+'💰/'+item.turns+'回合</span></div>';
+        var needsProv = item.needs_province ? 'true' : 'false';
+        html += '<div class="submenu-item" onclick="closeDept();buildItem(\''+item.id+'\','+needsProv+')"><span class="icon">'+item.icon+'</span>'+item.name+'<span class="cost">'+item.cost+'💰/'+item.turns+'回合</span></div>';
       });
       break;
     case 'tech':
@@ -780,15 +791,21 @@ var _collapseFactions = {}; // 崩溃后可选势力
 
 function checkMemorial(delay) {
   setTimeout(function() {
+    try {
     apiPost('/api/memorial/resolve', {action: 'next'}).then(function(data) {
-      if (data.error) return;
+      if (data.error) { console.warn('checkMemorial 服务端报错:', data.error); return; }
       if (data.done) { statusText('📜 奏折已全部批阅，等待帝国崩溃...'); return; }
       if (data.memorial) {
         _memProcessed = data.processed || 0;
         _memTotal = data.total || 0;
         showMemorialPopup(data.memorial, data);
       }
+    }).catch(function(e) {
+      console.error('checkMemorial 网络异常:', e);
     });
+    } catch(e) {
+      console.error('checkMemorial 异常:', e);
+    }
   }, delay || 500);
 }
 
@@ -836,19 +853,26 @@ function showMemorialPopup(mem, state) {
 }
 
 function resolveMemorial(id, approved) {
-  var overlay = document.getElementById('memorial-overlay');
-  if (overlay) overlay.remove();
-  apiPost('/api/memorial/resolve', {action: 'resolve', memorial_id: id, approved: approved}).then(function(data) {
-    if (data.error) { statusText('错误: ' + data.error); return; }
-    statusText((approved ? '✅ 准奏 ' : '❌ 驳回 ') + id);
-    addLogEntry((approved ? '📜 准奏: ' : '📜 驳回: ') + id);
-    if (gameState) {
-      gameState.treasury = data.treasury;
-      gameState.population_support = data.support;
-      gameState.corruption = data.corruption;
-    }
-    // 每回合只出一份奏折——不立即弹出下一份
-  });
+  try {
+    var overlay = document.getElementById('memorial-overlay');
+    if (overlay) overlay.remove();
+    apiPost('/api/memorial/resolve', {action: 'resolve', memorial_id: id, approved: approved}).then(function(data) {
+      if (data.error) { showToast('批阅失败: ' + data.error, 'error'); return; }
+      showToast((approved ? '✅ 准奏 ' : '❌ 驳回 ') + id, 'success');
+      addLogEntry((approved ? '📜 准奏: ' : '📜 驳回: ') + id);
+      if (gameState) {
+        gameState.treasury = data.treasury;
+        gameState.population_support = data.support;
+        gameState.corruption = data.corruption;
+      }
+    }).catch(function(e) {
+      console.error('resolveMemorial 网络异常:', e);
+      showToast('批阅失败: ' + e.message, 'error');
+    });
+  } catch(e) {
+    console.error('resolveMemorial 异常:', e);
+    showToast('批阅失败: ' + e.message, 'error');
+  }
 }
 
 function showCollapseNarrative(data) {
@@ -975,13 +999,21 @@ function renderCollapseDetail(fid) {
 }
 
 function pickPostCollapseFaction(fid, fname) {
-  dismissEventPopup();
-  document.getElementById('status-text').textContent = '切换势力...';
-  apiPost('/api/empire/switch-faction', {faction_id: fid}).then(function(data) {
-    if (data.error) { alert(data.error); return; }
-    renderAll(data);
-    addLogEntry('⚡ 帝国崩溃 · ' + fname + ' 崛起！');
-  });
+  try {
+    dismissEventPopup();
+    document.getElementById('status-text').textContent = '切换势力...';
+    apiPost('/api/empire/switch-faction', {faction_id: fid}).then(function(data) {
+      if (data.error) { showToast('切换失败: ' + data.error, 'error'); return; }
+      renderAll(data);
+      addLogEntry('⚡ 帝国崩溃 · ' + fname + ' 崛起！');
+    }).catch(function(e) {
+      console.error('pickPostCollapseFaction 异常:', e);
+      showToast('切换势力失败: ' + e.message, 'error');
+    });
+  } catch(e) {
+    console.error('pickPostCollapseFaction 同步异常:', e);
+    showToast('切换势力失败: ' + e.message, 'error');
+  }
 }
 
 function doDiploAction(sub, idx) {

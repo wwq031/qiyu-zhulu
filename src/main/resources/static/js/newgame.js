@@ -36,14 +36,18 @@ var MEMORIALS = [
 
 // ── 新游戏入口：直接进入帝国（Phase 1）──
 async function showNewGameModal() {
-  document.getElementById('status-text').textContent = '创建帝国...';
-  closeModal('newgame-modal');
-  // 自动用京师拱卫军代表中枢
-  var data = await apiPost('/api/new-game', {faction_id: 'capital_garrison', policies: []});
-  if (data.error) { alert(data.error); return; }
-  data._empirePending = true; // 标记为帝国模式，崩溃后选势力
-  renderAll(data);
-  addLogEntry('🏛 宣统二年 · 帝国余晖');
+  try {
+    document.getElementById('status-text').textContent = '创建帝国...';
+    closeModal('newgame-modal');
+    var data = await apiPost('/api/new-game', {faction_id: 'capital_garrison', policies: []});
+    if (data.error) { showToast('创建失败: ' + data.error, 'error'); return; }
+    data._empirePending = true;
+    renderAll(data);
+    addLogEntry('🏛 宣统二年 · 帝国余晖');
+  } catch(e) {
+    console.error('showNewGameModal 异常:', e);
+    showToast('创建帝国失败: ' + e.message, 'error');
+  }
 }
 
 function closeNewGameWizard() {
@@ -211,17 +215,27 @@ function goToRegionSelect() {
 }
 
 function selectFactionAndStart(fid, fname) {
-  document.getElementById('status-text').textContent = '创建游戏中...';
-  closeModal('newgame-modal');
-  apiPost('/api/new-game', {faction_id: fid, policies: ngPolicies}).then(function(data) {
-    if (data.error) { alert(data.error); return; }
-    renderAll(data);
-    addLogEntry('⚡ 帝国崩溃 · 新游戏开始 — ' + fname);
-  }).catch(function(e) { alert('创建失败: ' + e.message); });
+  try {
+    document.getElementById('status-text').textContent = '创建游戏中...';
+    closeModal('newgame-modal');
+    apiPost('/api/new-game', {faction_id: fid, policies: ngPolicies}).then(function(data) {
+      if (data.error) { showToast('创建失败: ' + data.error, 'error'); return; }
+      renderAll(data);
+      addLogEntry('⚡ 帝国崩溃 · 新游戏开始 — ' + fname);
+    }).catch(function(e) {
+      console.error('selectFactionAndStart 异常:', e);
+      showToast('创建游戏失败: ' + e.message, 'error');
+    });
+  } catch(e) {
+    console.error('selectFactionAndStart 同步异常:', e);
+    showToast('创建游戏失败: ' + e.message, 'error');
+  }
 }
 
 // ── 快速开局 ──
-function quickStart() {
+async function quickStart() {
+  document.getElementById('status-text').textContent = '快速开局...';
+
   // 随机批2-3份奏折
   var ids = MEMORIALS.map(function(m) { return m.id; });
   var count = Math.random() < 0.5 ? 2 : 3;
@@ -230,11 +244,25 @@ function quickStart() {
     var idx = Math.floor(Math.random() * ids.length);
     if (ngPolicies.indexOf(ids[idx]) < 0) ngPolicies.push(ids[idx]);
   }
-  // 跳到选区
-  ngStep = 2;
-  document.getElementById('newgame-modal').classList.add('show');
-  try { apiGet('/api/factions').then(function(d) { ngAllFactions = d.factions || []; goToRegionSelect(); }); } catch(e) {}
+
+  // 加载势力，随机选一个，直接开局
+  try {
+    var factionsData = await apiGet('/api/factions');
+    var factions = factionsData.factions || [];
+    if (!factions.length) { alert('无可用势力'); return; }
+    var pick = factions[Math.floor(Math.random() * factions.length)];
+    var data = await apiPost('/api/new-game', {faction_id: pick.id, policies: ngPolicies});
+    if (data.error) { alert(data.error); return; }
+    closeModal('newgame-modal');
+    renderAll(data);
+    addLogEntry('⚡ 快速开局 — ' + pick.name);
+  } catch(e) {
+    alert('快速开局失败: ' + e.message);
+  }
 }
+
+// 回退函数已不需要，但保留以免引用报错
+function fallbackQuickStart() { quickStart(); }
 
 // ── 读档（保留）──
 async function showLoadModal() {
@@ -252,20 +280,30 @@ async function showLoadModal() {
 }
 
 async function loadGame(slot) {
-  document.getElementById('status-text').textContent = '加载中...';
-  var data = await apiPost('/api/load', {slot: slot});
-  if (data.error) { alert(data.error); return; }
-  closeModal('load-modal');
-  renderAll(data);
-  addLogEntry('📂 已加载存档 [' + slot + ']');
+  try {
+    document.getElementById('status-text').textContent = '加载中...';
+    var data = await apiPost('/api/load', {slot: slot});
+    if (data.error) { showToast('加载失败: ' + data.error, 'error'); return; }
+    closeModal('load-modal');
+    renderAll(data);
+    addLogEntry('📂 已加载存档 [' + slot + ']');
+  } catch(e) {
+    console.error('loadGame 异常:', e);
+    showToast('加载存档失败: ' + e.message, 'error');
+  }
 }
 
 async function saveGame() {
-  var slot = prompt('存档名称（留空=auto）：', 'auto');
-  if (slot === null) return;
-  var data = await apiPost('/api/save', {slot: slot});
-  if (data.error) alert(data.error);
-  else statusText('✅ ' + data.message);
+  try {
+    var slot = prompt('存档名称（留空=auto）：', 'auto');
+    if (slot === null) return;
+    var data = await apiPost('/api/save', {slot: slot});
+    if (data.error) { showToast('保存失败: ' + data.error, 'error'); return; }
+    showToast('✅ ' + data.message, 'success');
+  } catch(e) {
+    console.error('saveGame 异常:', e);
+    showToast('保存失败: ' + e.message, 'error');
+  }
 }
 
 // ── 选择势力（兼容旧版）──

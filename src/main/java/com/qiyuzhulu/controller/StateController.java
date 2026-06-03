@@ -140,7 +140,14 @@ public class StateController {
         }
         // 内政建设 2.1-2.11
         if (action.matches("2\\.\\d+")) {
+            // 支持 location_pid、province（根级）或 meta.province（前端封装）
             String locPid = body.get("location_pid") != null ? body.get("location_pid").toString() : null;
+            if (locPid == null) locPid = body.get("province") != null ? body.get("province").toString() : null;
+            if (locPid == null && body.get("meta") instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> meta = (Map<String, Object>) body.get("meta");
+                locPid = meta.get("province") != null ? meta.get("province").toString() : null;
+            }
             Map<String, Object> result = civil.build(game, action, locPid);
             if (Boolean.TRUE.equals(result.get("ok"))) {
                 game.setActionPoints(ap - 1);
@@ -264,6 +271,97 @@ public class StateController {
             resp.put("data", data);
             return resp;
         }
+        // 1.2 当前战争 — 列出进行中的战役
+        if ("1.2".equals(action)) {
+            resp = buildPanelResponse();
+            resp.put("result_type", "campaigns_menu");
+            List<Map<String, Object>> ongoing = new ArrayList<>();
+            List<Map<String, Object>> completed = new ArrayList<>();
+            for (Campaign c : game.getActiveCampaigns()) {
+                Map<String, Object> ci = new LinkedHashMap<>();
+                ci.put("id", c.getId());
+                ci.put("province_name", c.getProvinceName());
+                ci.put("terrain", c.getTerrain() != null ? c.getTerrain() : "");
+                ci.put("round", c.getRound());
+                ci.put("max_rounds", c.getMaxRounds());
+                ci.put("attacker_name", c.getAttackerName());
+                ci.put("defender_name", c.getDefenderName());
+                ci.put("attacker_units", c.getAttackerCache() != null ? c.getAttackerCache().size() : 0);
+                ci.put("defender_units", c.getDefenderCache() != null ? c.getDefenderCache().size() : 0);
+                int atkStr = 0, defStr = 0;
+                if (c.getAttackerCache() != null) for (Unit u : c.getAttackerCache()) atkStr += u.getStrength();
+                if (c.getDefenderCache() != null) for (Unit u : c.getDefenderCache()) defStr += u.getStrength();
+                ci.put("attacker_strength", atkStr);
+                ci.put("defender_strength", defStr);
+                ci.put("attacker_tactics", c.getAttackerTactics());
+                ci.put("defender_tactics", c.getDefenderTactics());
+                if ("ongoing".equals(c.getStatus())) {
+                    ongoing.add(ci);
+                } else {
+                    completed.add(ci);
+                }
+            }
+            resp.put("data", Map.of("campaigns_menu", true, "ongoing", ongoing, "completed", completed,
+                    "has_ongoing", !ongoing.isEmpty(), "ap", ap));
+            return resp;
+        }
+        // 1.3 兵力部署 — 按区域+省份列出部队
+        if ("1.3".equals(action)) {
+            resp = buildPanelResponse();
+            resp.put("result_type", "deployment_menu");
+            Map<String, List<Unit>> posMap = engine.listArmyPositions(game.getFactionState().getUnits());
+            // 按区域分组
+            Map<String, Map<String, List<Unit>>> regionProvs = new LinkedHashMap<>();
+            for (var entry : posMap.entrySet()) {
+                Province p = engine.getProvince(entry.getKey());
+                String region = p != null && p.getRegion() != null ? p.getRegion() : "其他";
+                String provName = p != null ? p.getName() : entry.getKey();
+                regionProvs.computeIfAbsent(region, k -> new LinkedHashMap<>())
+                        .put(provName, entry.getValue());
+            }
+            List<Map<String, Object>> regionUnits = new ArrayList<>();
+            int totalUnits = 0, totalAtk = 0, totalDef = 0, totalMorale = 0;
+            for (var re : regionProvs.entrySet()) {
+                String rname = GameEngine.REGION_NAMES.getOrDefault(re.getKey(), re.getKey());
+                List<Map<String, Object>> provinces = new ArrayList<>();
+                for (var pe : re.getValue().entrySet()) {
+                    List<Map<String, Object>> unitList = new ArrayList<>();
+                    for (Unit u : pe.getValue()) {
+                        Map<String, Object> ui = new LinkedHashMap<>();
+                        ui.put("name", u.getName()); ui.put("icon", military.getUnitIcon(u.getType()));
+                        ui.put("type_name", military.getUnitTypeName(u.getType()));
+                        ui.put("attack", u.getAttack()); ui.put("defense", u.getDefense());
+                        ui.put("strength", u.getStrength()); ui.put("max_strength", u.getMaxStrength());
+                        ui.put("morale", u.getMorale()); ui.put("exp", u.getExperience());
+                        ui.put("exp_tag", u.getExperience() >= 50 ? "★" : "");
+                        ui.put("status", u.getStatus() != null ? u.getStatus() : "ready");
+                        ui.put("supply", u.getSupply() != null ? u.getSupply() : "supplied");
+                        ui.put("supply_tag", "cut_off".equals(u.getSupply()) ? "⚠断补" : "strained".equals(u.getSupply()) ? "⚠吃紧" : "");
+                        ui.put("maintenance_cost", engine.calcUnitMaintenance(u, game.getFactionState()));
+                        unitList.add(ui);
+                        totalUnits++; totalAtk += u.getAttack(); totalDef += u.getDefense(); totalMorale += u.getMorale();
+                    }
+                    provinces.add(Map.of("name", pe.getKey(), "terrain", "—", "is_owned", true, "units", unitList));
+                }
+                regionUnits.add(Map.of("name", rname, "provinces", provinces));
+            }
+            int totalMaint = engine.calcTotalMaintenance(game.getFactionState());
+            resp.put("data", Map.of("deployment_menu", true, "region_units", regionUnits,
+                    "total_units", totalUnits, "total_atk", totalAtk, "total_def", totalDef,
+                    "avg_morale", totalUnits > 0 ? totalMorale / totalUnits : 0,
+                    "total_maintenance", totalMaint, "ap", ap));
+            return resp;
+        }
+        // 1.4 军事行动菜单 — 发动战役/调动部队
+        if ("1.4".equals(action)) {
+            resp = buildPanelResponse();
+            resp.put("result_type", "operations_menu");
+            resp.put("data", Map.of("operations_menu", true, "ap", ap, "options", List.of(
+                Map.of("id","1.4.1","name","发动战役","icon","⚔","desc","选择省份→选部队→发动进攻"),
+                Map.of("id","1.4.2","name","调动部队","icon","🚚","desc","在地图上选择部队移动")
+            )));
+            return resp;
+        }
         // 战役菜单 1.4.1 — 显示可攻击的敌方省份
         if ("1.4.1".equals(action)) {
             resp = buildPanelResponse();
@@ -365,7 +463,25 @@ public class StateController {
         if ("1.5".equals(action)) {
             resp = buildPanelResponse();
             resp.put("result_type", "design_bureau");
-            resp.put("data", Map.of("custom_tactics", game.getCustomTactics() != null ? game.getCustomTactics().keySet() : List.of(),
+            List<Map<String, Object>> options = new ArrayList<>();
+            options.add(Map.of("id","1.5.1","name","设计自定义战术","icon","📐","desc","设定攻防倍率，损耗自动计算 · 设计费5💰"));
+            options.add(Map.of("id","1.5.2","name","设计自定义兵种","icon","🏗","desc","设定攻防士气经验，造价自动推导 · 设计费10💰"));
+            // 已注册的自定义战术
+            if (game.getCustomTactics() != null) {
+                for (var entry : game.getCustomTactics().entrySet()) {
+                    CustomTactic ct = entry.getValue();
+                    options.add(Map.of("id","tactic:"+entry.getKey(),"name","📐 "+ct.getName(),"icon","✅","desc","已注册 · 攻x"+String.format("%.1f",ct.getAtkMult())+" 防x"+String.format("%.1f",ct.getDefMult())));
+                }
+            }
+            // 已注册的自定义兵种
+            if (game.getCustomUnitTypes() != null) {
+                for (var entry : game.getCustomUnitTypes().entrySet()) {
+                    CustomUnitType cut = entry.getValue();
+                    options.add(Map.of("id","unit:"+entry.getKey(),"name","🏗 "+cut.getName(),"icon","✅","desc","已注册 · 攻"+cut.getAtk()+" 防"+cut.getDef()+" 士"+cut.getMorale()));
+                }
+            }
+            resp.put("data", Map.of("options", options,
+                    "custom_tactics", game.getCustomTactics() != null ? game.getCustomTactics().keySet() : List.of(),
                     "custom_unit_types", game.getCustomUnitTypes() != null ? game.getCustomUnitTypes().keySet() : List.of()));
             return resp;
         }
@@ -376,8 +492,8 @@ public class StateController {
             if (meta == null) { resp = buildPanelResponse(); resp.put("output", "缺少 meta 参数"); return resp; }
             Map<String, Object> result = military.registerCustomTactic(game, meta);
             resp = buildPanelResponse();
-            resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
-            resp.put("output", result.get("message"));
+            resp.put("result_type", "design_result");
+            resp.put("data", Map.of("ok", result.get("ok"), "message", result.get("message")));
             return resp;
         }
         // 设计局 — 自定义兵种 1.5.2
@@ -387,8 +503,8 @@ public class StateController {
             if (meta == null) { resp = buildPanelResponse(); resp.put("output", "缺少 meta 参数"); return resp; }
             Map<String, Object> result = military.registerCustomUnitType(game, meta);
             resp = buildPanelResponse();
-            resp.put("result_type", Boolean.TRUE.equals(result.get("ok")) ? "ok" : "error");
-            resp.put("output", result.get("message"));
+            resp.put("result_type", "design_result");
+            resp.put("data", Map.of("ok", result.get("ok"), "message", result.get("message")));
             return resp;
         }
 

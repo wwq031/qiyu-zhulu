@@ -30,7 +30,9 @@ java -jar target/qiyuzhulu-2.2.0.jar --server.port=5000
 └── src/main/
     ├── java/com/qiyuzhulu/
     │   ├── QiyuApplication.java
-    │   ├── config/WebConfig.java
+    │   ├── config/
+    │   │   ├── WebConfig.java
+    │   │   └── GlobalExceptionHandler.java  全局异常拦截 → 结构化报错JSON
     │   ├── model/                   (18 POJOs)
     │   │   ├── GameState.java       顶层状态 (~50字段, @JsonProperty)
     │   │   ├── FactionState.java    势力状态 (stats/treasury/units/territories/spirit/corruption...)
@@ -95,9 +97,10 @@ java -jar target/qiyuzhulu-2.2.0.jar --server.port=5000
     │   │   ├── PanelRenderer.java   面板渲染 (~190行)
     │   │   └── GameUtils.java       工具 (mapOf)
     │   └── controller/
-    │       ├── StateController.java /api/state, /api/action (26分支if-else), /api/new-game,
+    │       ├── StateController.java /api/state, /api/action (30+分支), /api/new-game,
     │       │                       /api/memorial/resolve, /api/empire/switch-faction,
     │       │                       /api/debug/switch, /api/debug/rankings
+    │       │                       + 1.2-1.5全子菜单handler + 建设三省名兼容
     │       ├── MapController.java   /api/map (ownership/garrisons/capitals/city_store/active_campaigns),
     │       │                       /api/map/province-detail, /api/map/faction-info
     │       ├── CampaignController.java /api/map/reachable, /api/map/move, /api/map/attack,
@@ -110,9 +113,8 @@ java -jar target/qiyuzhulu-2.2.0.jar --server.port=5000
         │   ├── index.html           HTML骨架 (~180行) · 测试面板 (按`呼出)
         │   ├── css/game.css          全站样式 (~140行) · 滚动条暗色主题
         │   ├── vendor/leaflet/       Leaflet 地图库
-        │   ├── js/utils.js           API封装 (apiGet/apiPost/sendAction/refreshState)
-        │   │                         + 全局常量: window._STAT_ICONS, window._AI_MODES
-        │   ├── js/app.js             主应用 (~950行)
+        │   ├── js/utils.js           API封装+Toast通知+API日志+全局JS错误捕获
+        │   ├── js/app.js             主应用 (~1050行) + try-catch全入口覆盖
         │   │   ├── renderAll()       主渲染 (Phase1检测/部门面板/事件弹窗/战役结果)
         │   │   ├── openDept()        部门面板 (7部门action映射)
         │   │   ├── renderDeptContent() 部门内容渲染
@@ -158,7 +160,7 @@ java -jar target/qiyuzhulu-2.2.0.jar --server.port=5000
 | 端点 | 方法 | 说明 |
 |------|------|------|
 | `/api/state` | GET | 完整游戏状态 |
-| `/api/action` | POST | 游戏动作 (action字符串, 26分支) |
+| `/api/action` | POST | 游戏动作 (action字符串, 30+分支含军事/内政/外交/情报/科技/国策/设计局) |
 | `/api/new-game` | POST | 创建游戏 (policies:[]→Phase1, policies:[...]→快速开局) |
 | `/api/load` | POST | 读档 {slot} |
 | `/api/save` | POST | 存档 {slot} |

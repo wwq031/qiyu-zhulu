@@ -300,7 +300,10 @@ public class TurnAdvanceService {
                     .filter(q -> GameEngine.MEMORIALS.containsKey(q)
                             && GameEngine.REGION_NAMES.containsKey(q)).count();
             boolean allDone = processed >= totalMemorials && totalMemorials > 0;
-            boolean critical = (fs.getTreasury() < 30 || fs.getPopulationSupport() < 10 || fs.getCorruption() > 80) && processed >= 4;
+            // 崩溃条件：国库<80 或 民心<25 或 腐败>55（至少3份已处理）→ 提前崩溃
+            // 或已处理4份核心奏折 → 必然崩溃（帝国气数已尽）
+            boolean critical = processed >= 4
+                    || ((fs.getTreasury() < 80 || fs.getPopulationSupport() < 25 || fs.getCorruption() > 55) && processed >= 3);
 
             if (allDone || critical) {
                 engine.applyMemorialEffects(state); // 应用国魂
